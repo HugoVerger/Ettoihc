@@ -21,7 +21,7 @@ void add_song(char* playlist_name, char* song_path)
   int fp;  
   fp = open(playlist_name,O_WRONLY|O_CREAT|_APPEND,0666);// on creer la playlist si elle existe pas
   int w = write(fp,song_path,strlen(song_path));
-  int z = write(fp,"\n",strlen("\n"));
+  int z = write(fp,".m3u\n",strlen("\n"));
   close(fp);
 }
 
