@@ -1,5 +1,4 @@
-
-let main () =
+let bob () =
 ()
 
-let _ = main ()
+let _ = bob ()
