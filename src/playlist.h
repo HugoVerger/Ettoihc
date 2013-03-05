@@ -1,6 +1,8 @@
 // code by Val
 // lib for playlist
 
+#ifndef _PLAYLIST_H_
+#define _PLAYLIST_H_
 
 void create_pl(char* s)
 {
@@ -62,3 +64,5 @@ void del_song(char* playlist_name, char* song_path)
   rename(temp,playlist_name);
 
 }
+
+#endif
