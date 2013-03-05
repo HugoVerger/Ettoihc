@@ -5,10 +5,18 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-void create_pl(char* s)
+
+void create_pl(char s[])
 {
+  int size = strlen(s)+4;
+  int i =0;
+  char t[size];
+  for(i;i<=strlen(s);i++)
+	t[i]=s[i];
+  char ext[4] =".m3u";
+  char* pl = strcat(t,ext);
   int fp;
-  fp = open(s,O_RDWR|O_CREAT|O_APPEND,0666);
+  fp = open(pl,O_RDWR|O_CREAT|O_APPEND,0666);
 }
 
 void del_pl(char* pathname)
@@ -19,9 +27,9 @@ void del_pl(char* pathname)
 void add_song(char* playlist_name, char* song_path)
 {
   int fp;  
-  fp = open(playlist_name,O_WRONLY|O_CREAT|_APPEND,0666);// on creer la playlist si elle existe pas
+  fp = open(playlist_name,O_WRONLY|O_CREAT|O_APPEND,0666);// on creer la playlist si elle existe pas
   int w = write(fp,song_path,strlen(song_path));
-  int z = write(fp,".m3u\n",strlen("\n"));
+  int z = write(fp,"\n",strlen("\n"));
   close(fp);
 }
 
