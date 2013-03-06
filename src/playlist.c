@@ -40,6 +40,7 @@ void del_song(char* playlist_name, char* song_path)
   fin=fopen(playlist_name, "r");
   char* temp= "temp";//playlist temporaire
   create_pl(temp);
+  temp="temp.m3u";
   char line[255];//ligne de la playlist
   char csong[255]; //chaine tempo pour ne pas reecrire le '\n'
   int i= 0;
@@ -72,4 +73,33 @@ void del_song(char* playlist_name, char* song_path)
 //on remplace la playlist originale par sa mise a jour
   rename(temp,playlist_name);
 
+}
+
+
+char* get_song(char* playlist_name,char* song_name)
+{
+  FILE* fin =NULL;
+  fin = fopen(playlist_name, "r");
+  char tpath[255];
+  char path[255];
+  char* found= NULL;
+  int i =0;
+//initialisation du chemin
+  for(i;i<255;i++)
+            path[i]=0;
+  i=0;
+//recherche du chemin de la chanson(sans le'\n') 
+  while(fgets(tpath,255,fin)!=NULL)
+  {	
+	found=strstr(tpath,song_name);
+	if(found!=NULL)
+	{
+	  for(i;i<strlen(tpath)-1;i++)
+	  {
+	    path[i]=tpath[i];
+	  }
+	  return(path);
+	}
+  }
+  return("chanson non trouvee");
 }
