@@ -65,3 +65,48 @@ void destroySystem(FMOD_SYSTEM *system, FMOD_SOUND *sound)
     result = FMOD_System_Release(system);
     ERRCHECK(result);
 }
+
+
+int main()
+{
+    FMOD_SYSTEM     *system = NULL;
+    FMOD_SOUND      *sound = NULL;
+    FMOD_CHANNEL    *channel = 0;
+    int             key;
+    
+    system = initSystemSon(system);
+    char name[] = "/home/manuel_c/Ettoihc/media/wave.mp3";
+    sound = playSong(system, channel, name);
+    
+    while (1){
+    if (kbhit())
+        {
+            key = getch();
+
+            switch (key)
+            {
+                case ' ' :
+                {
+                    pause(system);
+                    break;
+                }
+                case '-' :
+                {
+                    adjustVol(system, -0.05f);
+                    break;
+                }
+                case '+' :
+                {
+                    adjustVol(system, 0.05f);
+                    break;
+                }
+            }
+        }
+        
+        FMOD_System_Update(system);
+    }
+    
+    destroySystem(system, sound);
+    
+    return 0;
+}
