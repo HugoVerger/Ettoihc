@@ -72,7 +72,6 @@ void del_song(char* playlist_name, char* song_path)
   fclose(fin);
 //on remplace la playlist originale par sa mise a jour
   rename(temp,playlist_name);
-
 }
 
 
