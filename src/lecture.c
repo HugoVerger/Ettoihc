@@ -2,15 +2,7 @@
 #include "../lib/inc/fmod_errors.h"
 #include "../lib/wincompat.h"
 #include <stdio.h>
-
-static void ERRCHECK(FMOD_RESULT problem)
-{
-    if (problem != FMOD_OK)
-    {
-        printf("FMOD error! (%d) %s\n", problem, FMOD_ErrorString(problem));
-        exit(-1);
-    }
-}
+#include "lecture.h"
 
 // Create a System object and initialize.
 FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *system)
@@ -22,6 +14,7 @@ FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *system)
     return system;
 }
 
+//Joue la musique
 FMOD_SOUND* playSong (FMOD_SYSTEM *system, FMOD_CHANNEL *channel, char *name)
 { 
     FMOD_RESULT       result;
@@ -47,6 +40,18 @@ void pause (FMOD_SYSTEM *system)
     FMOD_ChannelGroup_SetPaused(canal, !etat);
 }
 
+//Augmente ou diminue le volume
+void adjustVol (FMOD_SYSTEM *system, float vol)
+{
+    float volume;
+    FMOD_CHANNELGROUP *canal;
+    
+    FMOD_System_GetMasterChannelGroup(system, &canal);
+
+    FMOD_ChannelGroup_GetVolume(canal, &volume);
+    volume += vol;
+    FMOD_ChannelGroup_SetVolume(canal, volume);
+}
 
 // Fin du programme
 void destroySystem(FMOD_SYSTEM *system, FMOD_SOUND *sound)
@@ -59,39 +64,4 @@ void destroySystem(FMOD_SYSTEM *system, FMOD_SOUND *sound)
     ERRCHECK(result);
     result = FMOD_System_Release(system);
     ERRCHECK(result);
-}
-
-
-int main()
-{
-    FMOD_SYSTEM     *system = NULL;
-    FMOD_SOUND      *sound = NULL;
-    FMOD_CHANNEL    *channel = 0;
-    int             key;
-    
-    system = initSystemSon(system);
-    char name[] = "/home/manuel_c/Ettoihc/media/wave.mp3";
-    sound = playSong (system, channel, name);
-    
-    while (1){
-    if (kbhit())
-        {
-            key = getch();
-
-            switch (key)
-            {
-                case ' ' :
-                {
-                    pause(system);
-                    break;
-                }
-            }
-        }
-        
-        FMOD_System_Update(system);
-    }
-    
-    destroySystem(system, sound);
-    
-    return 0;
 }
