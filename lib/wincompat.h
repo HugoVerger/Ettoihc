@@ -30,15 +30,6 @@
 
 #define Sleep(x) usleep((x)*1000)
 
-static void ERRCHECK(FMOD_RESULT problem)
-{
-    if (problem != FMOD_OK)
-    {
-        printf("FMOD error! (%d) %s\n", problem, FMOD_ErrorString(problem));
-        exit(-1);
-    }
-}
-
 static int    inited=0;
 static struct termios ori;
 

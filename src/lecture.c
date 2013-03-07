@@ -2,13 +2,19 @@
 #include "../lib/inc/fmod_errors.h"
 #include "../lib/wincompat.h"
 #include <stdio.h>
-#include "lecture.h"
+
+static void ERRCHECK(FMOD_RESULT problem)
+{
+    if (problem != FMOD_OK)
+    {
+        printf("FMOD error! (%d) %s\n", problem, FMOD_ErrorString(problem));
+        exit(-1);
+    }
+}
 
 // Create a System object and initialize.
 FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *system)
 {
-    FMOD_RESULT       result; 
-     
     ERRCHECK(FMOD_System_Create(&system));
     ERRCHECK(FMOD_System_Init(system, 32, FMOD_INIT_NORMAL, NULL));
     return system;
@@ -29,7 +35,7 @@ FMOD_SOUND* playSong (FMOD_SYSTEM *system, FMOD_CHANNEL *channel, char *name)
 }
 
 //Pause
-void pause (FMOD_SYSTEM *system)
+void pauseSong (FMOD_SYSTEM *system)
 {
     FMOD_BOOL etat;
     FMOD_CHANNELGROUP *canal;

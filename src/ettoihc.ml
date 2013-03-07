@@ -1,4 +1,3 @@
-let bob () =
-()
+external bobette: unit -> unit = "prog"
 
-let _ = bob ()
+let _ = bobette ()

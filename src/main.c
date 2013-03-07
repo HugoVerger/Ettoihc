@@ -2,14 +2,15 @@
 #include "../lib/inc/fmod_errors.h"
 #include "../lib/wincompat.h"
 #include <stdio.h>
-#include "lecture.c"
+#include <caml/mlvalues.h>
 
-int main()
+CAMLprim value
+prog (value unit)
 {
     FMOD_SYSTEM     *system = NULL;
     FMOD_SOUND      *sound = NULL;
     FMOD_CHANNEL    *channel = 0;
-    int             key;
+    int             key = ' ';
     
     system = initSystemSon(system);
     char name[] = "/home/manuel_c/Ettoihc/media/wave.mp3";
@@ -24,7 +25,7 @@ int main()
             {
                 case ' ' :
                 {
-                    pause(system);
+                    pauseSong(system);
                     break;
                 }
                 case '-' :
@@ -45,5 +46,5 @@ int main()
     
     destroySystem(system, sound);
     
-    return 0;
+	return unit;
 }
