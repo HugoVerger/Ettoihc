@@ -5,15 +5,12 @@ BAKF=${_DATE}-Prog
 
 ################# C Compilation #################
 CC= gcc
-CFLAGS= -W -Wall -std=c99 -O2 -I  `ocamlc -where` -lfmodex64
+CFLAGS= -W -Wall -Werror -std=c99 -O2 -I  `ocamlc -where` -lfmodex64
 CS= src/main.c src/lecture.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
 CO= main.o lecture.o
 .SUFFIXES: .c .h
-
-.c.h:	makeheaders
-	./makeheaders $<
 
 ############### Compilation OCaML ###############
 OFLAGS= -I +lablgtk2 
@@ -51,8 +48,5 @@ Ettoihc:
 	cd src && rm -f *.cm? *.o *~
 	rm -f *.cm? *.o *~
 
-makeheader:
-	${CC} -o makeheaders makeheaders.c
-
 clean::
-	rm -f *~ *# *.o *.cm? ${BIN} makeheaders
+	rm -f *~ *# *.o *.cm? ${BIN}

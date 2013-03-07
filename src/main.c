@@ -3,6 +3,7 @@
 #include "../lib/wincompat.h"
 #include <stdio.h>
 #include <caml/mlvalues.h>
+#include "lecture.h"
 
 CAMLprim value
 prog (value unit)
