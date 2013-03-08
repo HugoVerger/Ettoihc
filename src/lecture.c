@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 FMOD_SYSTEM 		*systemSong;
-FMOD_SOUND 			*sound;
+FMOD_SOUND 			*sound = NULL;
 FMOD_CHANNELGROUP 	*channelg;
 FMOD_CHANNEL 		*channel;
 
@@ -49,13 +49,8 @@ void pauseSong ()
 //Augmente ou diminue le volume
 void adjustVol (float vol)
 {
-    float volume;
-    
     FMOD_System_GetMasterChannelGroup(systemSong, &channelg);
-
-    FMOD_ChannelGroup_GetVolume(channelg, &volume);
-    volume += vol;
-    FMOD_ChannelGroup_SetVolume(channelg, volume);
+    FMOD_ChannelGroup_SetVolume(channelg, vol);
 }
 
 // Fin du programme
@@ -64,7 +59,6 @@ void destroySystem()
     FMOD_RESULT       result;
     
     result = FMOD_Sound_Release(sound);
-    ERRCHECK(result);
     result = FMOD_System_Close(systemSong);
     ERRCHECK(result);
     result = FMOD_System_Release(systemSong);
