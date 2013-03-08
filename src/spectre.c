@@ -36,31 +36,27 @@ void draw()
     float spectre[TAILLE_SPECTRE];
     int hauteurBarre = 0, i = 0, j = 0;
     
-    while (quit())
-    {
-        SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 0, 0, 0));
+    SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 0, 0, 0));
         
-        checkTime();
+    checkTime();
  
-        FMOD_Channel_GetSpectrum(getChannel(), spectre, TAILLE_SPECTRE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+    FMOD_Channel_GetSpectrum(channel, spectre, TAILLE_SPECTRE, 0, FMOD_DSP_FFT_WINDOW_RECT);
  
-        SDL_LockSurface(ecran);
+    SDL_LockSurface(ecran);
  
-        for (i = 0 ; i < LARGEUR_FENETRE ; i++)
-        {
-            hauteurBarre = spectre[i] * 20 * HAUTEUR_FENETRE;
+    for (i = 0 ; i < LARGEUR_FENETRE ; i++)
+    {
+		hauteurBarre = spectre[i] * 20 * HAUTEUR_FENETRE;
 
-            if (hauteurBarre > HAUTEUR_FENETRE)
-                hauteurBarre = HAUTEUR_FENETRE;
+		if (hauteurBarre > HAUTEUR_FENETRE)
+			hauteurBarre = HAUTEUR_FENETRE;
 
-            for (j = HAUTEUR_FENETRE - hauteurBarre ; j < HAUTEUR_FENETRE ; j++)
-                setPixel(ecran, i, j, SDL_MapRGB(ecran->format, 255 - (j / RATIO), j / RATIO, 0));
-        }
+		for (j = HAUTEUR_FENETRE - hauteurBarre ; j < HAUTEUR_FENETRE ; j++)
+			setPixel(ecran, i, j, SDL_MapRGB(ecran->format, 255 - (j / RATIO), j / RATIO, 0));
+	}
  
-        SDL_UnlockSurface(ecran);
- 
-        SDL_Flip(ecran);
-    }
+	SDL_UnlockSurface(ecran);
+	SDL_Flip(ecran);
 }
 
 void destroySDL()

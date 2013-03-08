@@ -8,7 +8,6 @@
 FMOD_SYSTEM 		*systemSong;
 FMOD_SOUND 			*sound = NULL;
 FMOD_CHANNELGROUP 	*channelg;
-FMOD_CHANNEL 		*channel;
 int					getpause = 0;
 
 static void ERRCHECK(FMOD_RESULT problem)
@@ -18,12 +17,6 @@ static void ERRCHECK(FMOD_RESULT problem)
         printf("FMOD error! (%d) %s\n", problem, FMOD_ErrorString(problem));
         exit(-1);
     }
-}
-
-FMOD_CHANNEL* getChannel()
-{
-	FMOD_System_GetChannel(systemSong, 0, &channel); 
-	return channel;
 }
 
 // Create a System object and initialize.
@@ -52,13 +45,11 @@ void playSong (char *name)
 //Pause
 void pauseSong ()
 {
-    FMOD_BOOL etat;
-    FMOD_CHANNELGROUP *canal;
+    FMOD_BOOL etat;    
+    FMOD_System_GetMasterChannelGroup(systemSong, &channelg);
     
-    FMOD_System_GetMasterChannelGroup(systemSong, &canal);
-    
-    FMOD_ChannelGroup_GetPaused(canal, &etat);
-    FMOD_ChannelGroup_SetPaused(canal, !etat);
+    FMOD_ChannelGroup_GetPaused(channelg, &etat);
+    FMOD_ChannelGroup_SetPaused(channelg, !etat);
     getpause = !getpause;
 }
 

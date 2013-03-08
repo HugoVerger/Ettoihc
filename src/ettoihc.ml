@@ -159,8 +159,8 @@ let play_button =
   ignore(btn#connect#clicked 
   	(fun () -> 
   		play !filepath;
-		play_sound("/home/manuel_c/Ettoihc/media/wave.mp3")
-		));
+		play_sound("/home/manuel_c/Ettoihc/media/wave.mp3");
+		spectre ()));
   btn
 
 (* Bouton Pause *)

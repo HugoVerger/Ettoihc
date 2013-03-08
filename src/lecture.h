@@ -1,4 +1,4 @@
-FMOD_CHANNEL* getChannel();
+FMOD_CHANNEL 		*channel;
 
 void initSystemSon();
 
