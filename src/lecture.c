@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "lecture.h"
 
-FMOD_SYSTEM 		*systemSong;
+FMOD_SYSTEM 		*systemSong = NULL;
 FMOD_SOUND 			*sound = NULL;
 FMOD_CHANNELGROUP 	*channelg;
 int					getpause = 0;
@@ -23,7 +23,7 @@ static void ERRCHECK(FMOD_RESULT problem)
 void initSystemSon()
 {
     ERRCHECK(FMOD_System_Create(&systemSong));
-    ERRCHECK(FMOD_System_Init(systemSong, 32, FMOD_INIT_NORMAL, NULL));
+    ERRCHECK(FMOD_System_Init(systemSong, 1, FMOD_INIT_NORMAL, NULL));
 }
 
 //Joue la musique
@@ -62,14 +62,10 @@ void adjustVol (float vol)
 
 // Fin du programme
 void destroySystem()
-{    
-    FMOD_RESULT       result;
-    
-    result = FMOD_Sound_Release(sound);
-    result = FMOD_System_Close(systemSong);
-    ERRCHECK(result);
-    result = FMOD_System_Release(systemSong);
-    ERRCHECK(result);
+{
+    FMOD_Sound_Release(sound);
+    FMOD_System_Close(systemSong);
+    FMOD_System_Release(systemSong);
 }
 
 //Lien C - OCamL

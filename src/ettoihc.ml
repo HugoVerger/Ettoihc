@@ -83,6 +83,14 @@ let centerbox =
   		~packing:(mainbox#pack ~expand:false) () in
   	box#set_homogeneous false;
   	box
+  	
+let effectbox =
+	let win = GBin.scrolled_window
+  		~height: 20
+  		~hpolicy:`NEVER
+    	~vpolicy:`NEVER
+  		~packing:(mainbox#pack ~expand:true) () in
+  	win
  
 
 (* Zone de texte *)
@@ -92,7 +100,6 @@ let text =
     ~hpolicy:`NEVER
     ~vpolicy:`ALWAYS 
     ~shadow_type:`ETCHED_IN
-    ~height: 160
     ~packing:centerbox#add () in
   let txt = GText.view 
     ~packing:scroll#add ()
@@ -100,6 +107,10 @@ let text =
   	~cursor_visible: false in
   txt#misc#modify_font_by_name "Monospace 10";
   txt
+
+(* Zone d'effet *)
+
+
 
 (* Bouton d'ouverture du fichier *) 
 
@@ -111,7 +122,7 @@ let str_op = function
       
 let music_filter = GFile.filter
   ~name:"Music File"
-  ~patterns:["*.mp3"]()
+  ~patterns:(["*.mp3";"*.m3u"]) ()
   
 let open_button =
   let dlg = GWindow.file_chooser_dialog
@@ -149,7 +160,7 @@ let previous_button =
 
 let play filename =
   if filename = "" then failwith "Need a file"
-  else text#buffer#set_text (!filepath)
+  else (text#buffer#set_text (!filepath); play_sound(!filepath))
  
 let play_button =
   let btn = GButton.tool_button 
@@ -157,10 +168,7 @@ let play_button =
     ~label:"Play"
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked 
-  	(fun () -> 
-  		play !filepath;
-		play_sound("/home/manuel_c/Ettoihc/media/wave.mp3");
-		spectre ()));
+  	(fun () -> play !filepath));
   btn
 
 (* Bouton Pause *)
