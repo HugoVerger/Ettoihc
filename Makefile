@@ -13,12 +13,12 @@ CO= main.o lecture.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 
-OLIB=-cclib -lfmodex64 -cclib -lSDL
+OFLAGS= -I +lablgtk2 -I +sdl -I +graphics
+OLIB=-cclib -lfmodex64
 OCOPT=ocamlopt
 OCAMLC=ocamlc
-CMXA= lablgtk.cmxa
-CMA=lablgtk.cma 
+CMXA= lablgtk.cmxa bigarray.cmxa sdl.cmxa sdlloader.cmxa graphics.cmxa
+CMA=lablgtk.cma bigarray.cma sdl.cma sdlloader.cma graphics.cma
 ML= src/ettoihc.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
