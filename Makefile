@@ -6,19 +6,19 @@ BAKF=${_DATE}-Prog
 ################# C Compilation #################
 CC= gcc
 CFLAGS= -W -Wall -Werror -std=c99 -O2 -I  `ocamlc -where` -lfmodex64
-CS= src/main.c src/lecture.c
+CS= src/lecture.c src/spectre.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO= main.o lecture.o
+CO= lecture.o spectre.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 -I +sdl -I +graphics
+OFLAGS= -I +lablgtk2 -I +sdl
 OLIB=-cclib -lfmodex64
 OCOPT=ocamlopt
 OCAMLC=ocamlc
-CMXA= lablgtk.cmxa bigarray.cmxa sdl.cmxa sdlloader.cmxa graphics.cmxa
-CMA=lablgtk.cma bigarray.cma sdl.cma sdlloader.cma graphics.cma
+CMXA= lablgtk.cmxa bigarray.cmxa sdl.cmxa sdlloader.cmxa
+CMA=lablgtk.cma bigarray.cma sdl.cma sdlloader.cma
 ML= src/ettoihc.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}

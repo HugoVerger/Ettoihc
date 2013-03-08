@@ -1,3 +1,5 @@
+FMOD_CHANNEL* getChannel();
+
 void initSystemSon();
 
 void playSong (char *name);

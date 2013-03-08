@@ -7,6 +7,9 @@ external destroy_sound:	unit	-> unit = "ocaml_destroy"
 external play_sound: 	string	-> unit = "ocaml_play"
 external vol_sound:  	float	-> unit = "ocaml_vol"
 external pause_sound:	unit	-> unit = "ocaml_pause"
+external spectre:		unit	-> unit = "ocaml_spectre"
+external init_sdl:	unit	-> unit = "ocaml_initSDL"
+external destroy_sdl:	unit	-> unit = "ocaml_destroySDL"
 
 (*
 	Code OCamL
@@ -60,7 +63,7 @@ let menubox =
 let toolbar = GButton.toolbar  
   ~orientation:`HORIZONTAL  
   ~style:`BOTH
-  ~width:285
+  ~width:360
   ~height:10
   ~packing:(menubox#pack ~expand:false) ()
 
@@ -93,7 +96,8 @@ let text =
     ~packing:centerbox#add () in
   let txt = GText.view 
     ~packing:scroll#add ()
-    ~editable: false in
+    ~editable: false  
+  	~cursor_visible: false in
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
@@ -153,8 +157,20 @@ let play_button =
     ~label:"Play"
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked 
-  	(fun () -> play !filepath;
-		play_sound("/home/manuel_c/Ettoihc/media/wave.mp3")));
+  	(fun () -> 
+  		play !filepath;
+		play_sound("/home/manuel_c/Ettoihc/media/wave.mp3")
+		));
+  btn
+
+(* Bouton Pause *)
+
+let previous_button =
+  let btn = GButton.tool_button 
+    ~stock:`MEDIA_PAUSE
+    ~label:"Pause"
+    ~packing:toolbar#insert () in
+  ignore(btn#connect#clicked (fun () -> pause_sound ()));
   btn
 
 (* Bouton Next *)
@@ -210,11 +226,13 @@ let about_button =
   btn
 
 let _ =
+	init_sdl();
 	init_sound();
 	ignore(window#event#connect#delete confirm);
   	window#show ();
   	GMain.main ();
-	destroy_sound()
+	destroy_sound();
+	destroy_sdl()
 
 
 (*http://www.linux-nantes.org/~fmonnier/ocaml/ocaml-wrapping-c.php#ref_custom*)

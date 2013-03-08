@@ -3,11 +3,13 @@
 #include "../lib/inc/fmod_errors.h"
 #include "../lib/wincompat.h"
 #include <stdio.h>
+#include "lecture.h"
 
 FMOD_SYSTEM 		*systemSong;
 FMOD_SOUND 			*sound = NULL;
 FMOD_CHANNELGROUP 	*channelg;
 FMOD_CHANNEL 		*channel;
+int					getpause = 0;
 
 static void ERRCHECK(FMOD_RESULT problem)
 {
@@ -16,6 +18,12 @@ static void ERRCHECK(FMOD_RESULT problem)
         printf("FMOD error! (%d) %s\n", problem, FMOD_ErrorString(problem));
         exit(-1);
     }
+}
+
+FMOD_CHANNEL* getChannel()
+{
+	FMOD_System_GetChannel(systemSong, 0, &channel); 
+	return channel;
 }
 
 // Create a System object and initialize.
@@ -27,11 +35,18 @@ void initSystemSon()
 
 //Joue la musique
 void playSong (char *name)
-{     
-    ERRCHECK(FMOD_System_CreateSound(systemSong, name, FMOD_CREATESTREAM, 0, &sound)); //Cree un stream pour la musique
-    ERRCHECK(FMOD_Sound_SetMode(sound, FMOD_LOOP_OFF));
+{   
+	if (!getpause)
+	{
+    	ERRCHECK(FMOD_System_CreateSound(systemSong, name, FMOD_CREATESTREAM, 0, &sound)); //Cree un stream pour la musique
+    	ERRCHECK(FMOD_Sound_SetMode(sound, FMOD_LOOP_OFF));
     
-    ERRCHECK(FMOD_System_PlaySound(systemSong, FMOD_CHANNEL_FREE, sound, 0, &channel));
+    	ERRCHECK(FMOD_System_PlaySound(systemSong, FMOD_CHANNEL_FREE, sound, 0, &channel));
+    }
+    else
+    {
+    	pauseSong();
+    }
 }
 
 //Pause
@@ -44,6 +59,7 @@ void pauseSong ()
     
     FMOD_ChannelGroup_GetPaused(canal, &etat);
     FMOD_ChannelGroup_SetPaused(canal, !etat);
+    getpause = !getpause;
 }
 
 //Augmente ou diminue le volume
