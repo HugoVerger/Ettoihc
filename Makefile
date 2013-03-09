@@ -45,6 +45,7 @@ all: Ettoihc
 Ettoihc:
 	${CC} ${CFLAGS} -c ${CS}
 	${OCAMLC} -custom ${OFLAGS} -o ${BIN} ${CO} ${CMA} ${ML} ${OLIB}
+	${OCAMLC} -custom ${OFLAGS} -o bin/spectre ${CO} ${CMA} src/spectre.ml ${OLIB}
 	cd src && rm -f *.cm? *.o *~
 	rm -f *.cm? *.o *~
 

@@ -52,6 +52,8 @@ void draw()
     float spectre[TAILLE_SPECTRE];
     int hauteurBarre = 0, i = 0, j = 0;
     
+    while(quit()){
+    
     SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 0, 0, 0));
         
     checkTime();
@@ -73,7 +75,7 @@ void draw()
  
 	SDL_UnlockSurface(ecran);
 	SDL_Flip(ecran);
-}
+}}
 
 void destroySDL()
 {
