@@ -266,7 +266,7 @@ let previous_button =
   ignore(btn#connect#clicked (fun () -> pause := true; pause_sound ()));
   btn
 
-(* Bouton Stop *)
+(* Bouton Pause *)
 
 let stop_button =
   let btn = GButton.tool_button 

@@ -46,7 +46,6 @@ void stopSong ()
 {
 	FMOD_System_GetMasterChannelGroup(systemSong, &channelg);
 	FMOD_ChannelGroup_Stop (channelg);
-	FMOD_Sound_Release(sound);
 }
 
 //Pause
