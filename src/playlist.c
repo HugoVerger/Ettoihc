@@ -27,7 +27,13 @@ void del_pl(char* pathname)
 void add_song(char* playlist_name, char* song_path)
 {
   int fp;  
-  fp = open(playlist_name,O_WRONLY|O_CREAT|O_APPEND,0666);// on creer la playlist si elle existe pas
+  fp = open(playlist_name,O_WRONLY|O_APPEND);
+  if( fp == NULL)
+  {
+      create_pl(plalist_name);// on creer la playlist si elle existe pas
+      playlist_name = strcat(playlist_name,".m3u");
+      add_song(playlist_name,song_path);//on réessaye
+  }
   int w = write(fp,song_path,strlen(song_path));
   int z = write(fp,"\n",strlen("\n"));
   close(fp);
