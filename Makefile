@@ -6,20 +6,20 @@ BAKF=${_DATE}-Prog
 ################# C Compilation #################
 CC= gcc
 CFLAGS= -W -Wall -Werror -std=c99 -O2 -I  `ocamlc -where` -lfmodex64
-CS= src/lecture.c src/spectre.c src/meta.c
+CS= src/lecture.c src/spectre.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO= lecture.o spectre.o meta.o
+CO= lecture.o spectre.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 -I +sdl
+OFLAGS= -I +lablgtk2 -I +sdl -I src
 OLIB=-cclib -lfmodex64
 OCOPT=ocamlopt
 OCAMLC=ocamlc
 CMXA= lablgtk.cmxa bigarray.cmxa sdl.cmxa sdlloader.cmxa
 CMA=lablgtk.cma bigarray.cma sdl.cma sdlloader.cma
-ML= src/ettoihc.ml
+ML= src/meta.ml src/ettoihc.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
 CMX=${ML:.ml=.cmx}
@@ -48,6 +48,11 @@ Ettoihc:
 	${OCAMLC} -custom ${OFLAGS} -o bin/spectre ${CO} ${CMA} src/spectre.ml ${OLIB}
 	cd src && rm -f *.cm? *.o *~
 	rm -f *.cm? *.o *~
+
+depend: .depend
+.depend: ${ML} ${MLI}
+	rm -f .depend
+	${OCAMLDEP} ${ML} ${MLI} > .depend
 
 clean::
 	rm -f *~ *# *.o *.cm? ${BIN}

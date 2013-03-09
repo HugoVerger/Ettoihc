@@ -1,7 +1,6 @@
 (*
 	Fonctions C
 *)
-
 external init_sound:	unit	-> unit 	= "ocaml_init"
 external destroy_sound:	unit	-> unit 	= "ocaml_destroy"
 external play_sound: 	string	-> unit 	= "ocaml_play"
@@ -9,12 +8,23 @@ external stop_sound: 	unit	-> unit 	= "ocaml_stop"
 external vol_sound:  	float	-> unit 	= "ocaml_vol"
 external pause_sound:	unit	-> unit 	= "ocaml_pause"
 external spectre:		unit	-> unit 	= "ocaml_spectre"
-external title_sound:	string	-> string	= "ocaml_titre"
 external init_sdl:		unit	-> unit 	= "ocaml_initSDL"
 external destroy_sdl:	unit	-> unit 	= "ocaml_destroySDL"
 
+(* Declarations variables *)
+
+open Meta
+let filepath = ref ""
+let filedisplay = ref ""
+let allFile = ref ""
+let listFile = ref []
+let indexSong = ref 0
+let pause = ref true
+
 (*
-	Code OCamL
+//
+//		Structure interface
+//
 *)
 
 (* Fenêtre principale *)
@@ -92,13 +102,12 @@ let playlistbox =
   		~packing:(mainbox#pack ~expand:true) () in
   	win
  
-
 (* Zone de texte *)
 
 let text =
   let scroll = GBin.scrolled_window
     ~hpolicy:`NEVER
-    ~vpolicy:`ALWAYS 
+    ~vpolicy:`NEVER
     ~shadow_type:`ETCHED_IN
     ~packing:centerbox#add () in
   let txt = GText.view 
@@ -113,6 +122,7 @@ let text =
 let playlist =
   let scroll = GBin.scrolled_window
     ~hpolicy:`NEVER
+    ~vpolicy:`NEVER
     ~shadow_type:`ETCHED_IN
     ~packing:playlistbox#add () in
   let txt = GText.view 
@@ -122,17 +132,32 @@ let playlist =
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
-(* Bouton d'ouverture du fichier *) 
+(*
+//
+//		Declaration boutons
+//
+*)
 
-let filepath = ref ""
-let allFile = ref ""
-let listFile = ref []
-let indexSong = ref 0
-let pause = ref true
+
+(* Declaration fonctions *)
+
+let str_op = function
+	| Some x -> x
+	| _ -> failwith "Need a file"
+
+let actDisplay () =
+	if Id3v1.has_tag !filepath then
+		let t = Id3v1.read_file !filepath in
+		let s = Id3v1.getNum t ^ ", " ^ Id3v1.getTitle t in
+		s ^ " - " ^ Id3v1.getArtist t
+	else
+		 !filepath
 
 let play filename =
-  if filename = "" then failwith "Need a file"
-  else (text#buffer#set_text (!filepath); play_sound(!filepath))
+	if filename = "" then
+		failwith "Need a file"
+	else
+		(text#buffer#set_text (!filedisplay); play_sound(!filepath))
 
 let precedent = (fun () ->
 	(if (!indexSong != 0) then
@@ -144,7 +169,7 @@ let precedent = (fun () ->
   	else
   		(filepath := "";
   		stop_sound()));
-  	text#buffer#set_text (!filepath))
+  	text#buffer#set_text (!filedisplay))
   	
 let suivant = (fun () ->
 	(if (!indexSong + 1 != List.length !listFile) then
@@ -157,12 +182,11 @@ let suivant = (fun () ->
   		(filepath := "";
   		stop_sound();
   		indexSong := 0));
-  	text#buffer#set_text (!filepath))
-  
-let str_op = function
-  | Some x -> x
-  | _ -> failwith "Need a file"
-      
+  	text#buffer#set_text (!filedisplay))
+
+
+(* Bouton d'ouverture du fichier *) 
+
 let music_filter = GFile.filter
   ~name:"Music File"
   ~patterns:(["*.mp3";"*.m3u"]) ()
@@ -184,9 +208,9 @@ let open_button =
     	if dlg#run () = `OPEN then 
     		(filepath := (str_op(dlg#filename));
     		if (List.mem !filepath !listFile) then () else
-    			(allFile := !allFile ^ !filepath ^ "\n";
+    			(filedisplay := actDisplay ();
+    			allFile := !allFile ^ !filedisplay ^ "\n";
     			listFile := !listFile @ [!filepath];
-    			filepath := "";
     			playlist#buffer#set_text (!allFile)));
     dlg#misc#hide ()));
  btn
@@ -239,7 +263,7 @@ let next_button =
   ignore(btn#connect#clicked (fun () -> suivant ()));
   btn
 
-let separator2 = ignore (GButton.separator_tool_item ~packing:toolbar#insert ())
+let separator2 = GButton.separator_tool_item ~packing:toolbar#insert ()
 
 
 (* Bouton Volume *)
@@ -281,12 +305,13 @@ let about_button =
   ignore(btn#connect#clicked (fun () -> ignore (dlg#run ()); dlg#misc#hide ()));
   btn
 
+
+
 let _ =
 	init_sound();
 	ignore(window#event#connect#delete confirm);
   	window#show ();
   	GMain.main ();
 	destroy_sound()
-
 
 (*http://www.linux-nantes.org/~fmonnier/ocaml/ocaml-wrapping-c.php#ref_custom*)
