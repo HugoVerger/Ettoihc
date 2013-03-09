@@ -2,14 +2,16 @@
 	Fonctions C
 *)
 
-external init_sound:	unit	-> unit = "ocaml_init"
-external destroy_sound:	unit	-> unit = "ocaml_destroy"
-external play_sound: 	string	-> unit = "ocaml_play"
-external vol_sound:  	float	-> unit = "ocaml_vol"
-external pause_sound:	unit	-> unit = "ocaml_pause"
-external spectre:		unit	-> unit = "ocaml_spectre"
-external init_sdl:	unit	-> unit = "ocaml_initSDL"
-external destroy_sdl:	unit	-> unit = "ocaml_destroySDL"
+external init_sound:	unit	-> unit 	= "ocaml_init"
+external destroy_sound:	unit	-> unit 	= "ocaml_destroy"
+external play_sound: 	string	-> unit 	= "ocaml_play"
+external stop_sound: 	unit	-> unit 	= "ocaml_stop"
+external vol_sound:  	float	-> unit 	= "ocaml_vol"
+external pause_sound:	unit	-> unit 	= "ocaml_pause"
+external spectre:		unit	-> unit 	= "ocaml_spectre"
+external title_sound:	string	-> string	= "ocaml_titre"
+external init_sdl:		unit	-> unit 	= "ocaml_initSDL"
+external destroy_sdl:	unit	-> unit 	= "ocaml_destroySDL"
 
 (*
 	Code OCamL
@@ -84,11 +86,9 @@ let centerbox =
   	box#set_homogeneous false;
   	box
   	
-let effectbox =
-	let win = GBin.scrolled_window
+let playlistbox =
+	let win = GBin.viewport
   		~height: 20
-  		~hpolicy:`NEVER
-    	~vpolicy:`NEVER
   		~packing:(mainbox#pack ~expand:true) () in
   	win
  
@@ -110,11 +110,54 @@ let text =
 
 (* Zone d'effet *)
 
-
+let playlist =
+  let scroll = GBin.scrolled_window
+    ~hpolicy:`NEVER
+    ~shadow_type:`ETCHED_IN
+    ~packing:playlistbox#add () in
+  let txt = GText.view 
+    ~packing:scroll#add ()
+    ~editable: false  
+  	~cursor_visible: false in
+  txt#misc#modify_font_by_name "Monospace 10";
+  txt
 
 (* Bouton d'ouverture du fichier *) 
 
 let filepath = ref ""
+let allFile = ref ""
+let listFile = ref []
+let indexSong = ref 0
+let pause = ref true
+
+let play filename =
+  if filename = "" then failwith "Need a file"
+  else (text#buffer#set_text (!filepath); play_sound(!filepath))
+
+let precedent = (fun () ->
+	(if (!indexSong != 0) then
+  		begin
+  			indexSong := !indexSong - 1;
+  			filepath := List.nth !listFile !indexSong;
+  			play !filepath
+  		end
+  	else
+  		(filepath := "";
+  		stop_sound()));
+  	text#buffer#set_text (!filepath))
+  	
+let suivant = (fun () ->
+	(if (!indexSong + 1 != List.length !listFile) then
+  		begin
+  			indexSong := !indexSong + 1;
+  			filepath := List.nth !listFile !indexSong;
+  			play !filepath
+  		end
+  	else
+  		(filepath := "";
+  		stop_sound();
+  		indexSong := 0));
+  	text#buffer#set_text (!filepath))
   
 let str_op = function
   | Some x -> x
@@ -137,10 +180,14 @@ let open_button =
  let btn = GButton.tool_button 
     ~stock:`OPEN
     ~packing:toolbar#insert () in 
- ignore(btn#connect#clicked (fun () ->
-    if dlg#run () = `OPEN then 
-    	(filepath := (str_op(dlg#filename));
-    	text#buffer#set_text (!filepath));
+ 	ignore(btn#connect#clicked (fun () ->
+    	if dlg#run () = `OPEN then 
+    		(filepath := (str_op(dlg#filename));
+    		if (List.mem !filepath !listFile) then () else
+    			(allFile := !allFile ^ !filepath ^ "\n";
+    			listFile := !listFile @ [!filepath];
+    			filepath := "";
+    			playlist#buffer#set_text (!allFile)));
     dlg#misc#hide ()));
  btn
 
@@ -153,14 +200,10 @@ let previous_button =
     ~stock:`MEDIA_PREVIOUS
     ~label:"Previous"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> ()));
+  ignore(btn#connect#clicked (fun () -> precedent ()));
   btn
 
 (* Bouton Play *)
-
-let play filename =
-  if filename = "" then failwith "Need a file"
-  else (text#buffer#set_text (!filepath); play_sound(!filepath))
  
 let play_button =
   let btn = GButton.tool_button 
@@ -168,7 +211,12 @@ let play_button =
     ~label:"Play"
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked 
-  	(fun () -> play !filepath));
+  	(fun () ->
+  		if (!pause || (!filepath != List.nth !listFile !indexSong)) then
+  			(filepath := List.nth !listFile !indexSong;
+    		text#buffer#set_text (!filepath);
+    		play !filepath;
+    		pause := false)));
   btn
 
 (* Bouton Pause *)
@@ -178,7 +226,7 @@ let previous_button =
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> pause_sound ()));
+  ignore(btn#connect#clicked (fun () -> pause := true; pause_sound ()));
   btn
 
 (* Bouton Next *)
@@ -188,7 +236,7 @@ let next_button =
     ~stock:`MEDIA_NEXT
     ~label:"Next"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> ()));
+  ignore(btn#connect#clicked (fun () -> suivant ()));
   btn
 
 let separator2 = ignore (GButton.separator_tool_item ~packing:toolbar#insert ())
@@ -234,13 +282,11 @@ let about_button =
   btn
 
 let _ =
-	init_sdl();
 	init_sound();
 	ignore(window#event#connect#delete confirm);
   	window#show ();
   	GMain.main ();
-	destroy_sound();
-	destroy_sdl()
+	destroy_sound()
 
 
 (*http://www.linux-nantes.org/~fmonnier/ocaml/ocaml-wrapping-c.php#ref_custom*)

@@ -28,7 +28,11 @@ void initSDL()
         gmask = 0x0000ff00;
         bmask = 0x00ff0000;
         amask = 0x00000000;
-	#endif*/
+	#endif
+	SDL_CreateRGBSurface(SDL_SWSURFACE,LARGEUR_FENETRE, HAUTEUR_FENETRE, 
+                                      24, rmask, gmask, bmask, amask);
+	
+	*/
 	
 	SDL_Init(SDL_INIT_VIDEO);
     ecran = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);

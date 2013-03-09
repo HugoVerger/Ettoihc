@@ -42,6 +42,13 @@ void playSong (char *name)
     }
 }
 
+void stopSong ()
+{
+	FMOD_System_GetMasterChannelGroup(systemSong, &channelg);
+	FMOD_ChannelGroup_Stop (channelg);
+	FMOD_Sound_Release(sound);
+}
+
 //Pause
 void pauseSong ()
 {
@@ -81,7 +88,13 @@ value ocaml_play (value v)
   playSong(String_val(v));
   return v;
 }
-  
+
+value ocaml_stop (value v)
+{
+  stopSong();
+  return v;
+}
+
 value ocaml_vol (value v)
 {
   adjustVol(Double_val(v));
