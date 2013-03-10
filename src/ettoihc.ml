@@ -1,6 +1,7 @@
 (*
 	Fonctions C
 *)
+external playlistSave:	string 	-> string 	-> unit = "ocaml_playlist"
 external init_sound:	unit	-> unit 	= "ocaml_init"
 external destroy_sound:	unit	-> unit 	= "ocaml_destroy"
 external play_sound: 	string	-> unit 	= "ocaml_play"
@@ -17,6 +18,7 @@ open Meta
 let filepath = ref ""
 let filedisplay = ref ""
 let allFile = ref ""
+let playList = ref ""
 let listFile = ref []
 let indexSong = ref 0
 let pause = ref true
@@ -35,7 +37,7 @@ let window =
       ~title:"Ettoihc"
       ~position:`CENTER
       ~resizable:true
-      ~width:600 
+      ~width:660 
       ~height:400 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
@@ -75,7 +77,7 @@ let menubox =
 let toolbar = GButton.toolbar  
   ~orientation:`HORIZONTAL  
   ~style:`BOTH
-  ~width:420
+  ~width:490
   ~height:10
   ~packing:(menubox#pack ~expand:false) ()
 
@@ -223,10 +225,31 @@ let open_button =
     		if (List.mem !filepath !listFile) then () else
     			(filedisplay := actDisplay ();
     			allFile := !allFile ^ !filedisplay ^ "\n";
+    			playList := !playList ^ !filepath ^ "\n";
     			listFile := !listFile @ [!filepath];
     			playlist#buffer#set_text (!allFile)));
     dlg#misc#hide ()));
  btn
+
+(* Bouton Save *)
+
+let save_button =
+	let dlg = GWindow.file_chooser_dialog
+		~action:`SAVE
+		~parent:window
+		~position:`CENTER_ON_PARENT
+		~title:"Sauvegarde de la playlist"
+		~destroy_with_parent:true () in
+	dlg#add_button_stock `CANCEL `CANCEL;
+	dlg#add_select_button_stock `SAVE `SAVE;
+	let btn = GButton.tool_button
+		~stock: `SAVE
+		~packing: toolbar#insert () in
+	ignore(btn#connect#clicked (fun () ->
+	    if  (dlg#run () == `SAVE) then 
+			(playlistSave (str_op(dlg#filename)) !playList);
+	dlg#misc#hide ()));
+	btn
 
 let separator1 = ignore (GButton.separator_tool_item ~packing:toolbar#insert ())
 

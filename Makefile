@@ -6,10 +6,10 @@ BAKF=${_DATE}-Prog
 ################# C Compilation #################
 CC= gcc
 CFLAGS= -W -Wall -Werror -std=c99 -O2 -I  `ocamlc -where` -lfmodex64
-CS= src/lecture.c src/spectre.c
+CS= src/lecture.c src/spectre.c src/playlist.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO= lecture.o spectre.o
+CO= lecture.o spectre.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############

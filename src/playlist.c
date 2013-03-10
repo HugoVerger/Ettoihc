@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE 500
+#include <caml/mlvalues.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,19 +7,24 @@
 #include <unistd.h>
 
 
-void create_pl(char s[])
+void create_pl(char *name, char *s)
 {
-  int size = strlen(s)+4;
-  int i =0;
-  char t[size];
-  for(i;i<=strlen(s);i++)
-	t[i]=s[i];
-  char ext[4] =".m3u";
-  char* pl = strcat(t,ext);
-  int fp;
-  fp = open(pl,O_RDWR|O_CREAT|O_APPEND,0666);
+	int size = strlen(name)+4;
+	int max = strlen(name);
+	char t[size];
+	int fp, w;
+
+	for(int i = 0; i <= max; i++)
+		t[i]=name[i];
+
+	char* pl = strcat(t,".m3u");
+	
+	fp = open(pl,O_RDWR|O_CREAT|O_TRUNC,0666);
+	w = write(fp,s,strlen(s));w++;
+	close (fp);
 }
 
+/*
 void del_pl(char* pathname)
 {
   remove(pathname);
@@ -107,4 +113,10 @@ char* get_song(char* playlist_name,char* song_name)
 	}
   }
   return("chanson non trouvee");
+}*/
+
+value ocaml_playlist (value n,value s)
+{
+  create_pl(String_val(n),String_val(s));
+  return Val_unit;
 }
