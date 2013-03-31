@@ -133,12 +133,6 @@ let ajout_tab3 =
   notebook#insert_page 
     ~tab_label:name1#coerce page3box#coerce 
 
-let playlistbox =
-  let win = GBin.viewport
-    ~height: 20
-    ~packing:(page1box#pack ~expand:true) () in
-  win
-
 let mixPage = GPack.vbox
   ~packing:page3box#add()
 
@@ -198,7 +192,7 @@ let playlist =
     ~hpolicy:`NEVER
     ~vpolicy:`NEVER
     ~shadow_type:`ETCHED_IN
-    ~packing:playlistbox#add () in
+    ~packing:page1box#add () in
   let txt = GText.view 
     ~packing:scroll#add ()
     ~editable: false  
