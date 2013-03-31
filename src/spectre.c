@@ -83,7 +83,7 @@ void destroySDL()
 }
 
 /* La fonction setPixel permet de dessiner pixel par pixel dans une surface */
-static void setPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+void setPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
     int bpp = surface->format->BytesPerPixel;
  
@@ -114,22 +114,4 @@ static void setPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
         *(Uint32 *)p = pixel;
         break;
     }
-}
-
-value ocaml_spectre (value v)
-{
-  draw();
-  return v;
-}
-
-value ocaml_destroySDL (value v)
-{
-  destroySDL();
-  return v;
-}
-
-value ocaml_initSDL (value v)
-{
-  initSDL();
-  return v;
 }

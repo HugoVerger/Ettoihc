@@ -1,11 +1,4 @@
-#define _XOPEN_SOURCE 500
-#include <caml/mlvalues.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-
+#include "playlist.h"
 
 void create_pl(char *name, char *s)
 {
@@ -114,9 +107,3 @@ char* get_song(char* playlist_name,char* song_name)
   }
   return("chanson non trouvee");
 }*/
-
-value ocaml_playlist (value n,value s)
-{
-  create_pl(String_val(n),String_val(s));
-  return Val_unit;
-}

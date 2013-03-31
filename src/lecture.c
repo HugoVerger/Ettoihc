@@ -1,8 +1,3 @@
-#include <caml/mlvalues.h>
-#include "../lib/inc/fmod.h"
-#include "../lib/inc/fmod_errors.h"
-#include "../lib/wincompat.h"
-#include <stdio.h>
 #include "lecture.h"
 
 FMOD_SYSTEM 		*systemSong = NULL;
@@ -72,42 +67,4 @@ void destroySystem()
     FMOD_Sound_Release(sound);
     FMOD_System_Close(systemSong);
     FMOD_System_Release(systemSong);
-}
-
-//Lien C - OCamL
-
-value ocaml_pause (value v)
-{
-  pauseSong();
-  return v;
-}
-
-value ocaml_play (value v)
-{
-  playSong(String_val(v));
-  return v;
-}
-
-value ocaml_stop (value v)
-{
-  stopSong();
-  return v;
-}
-
-value ocaml_vol (value v)
-{
-  adjustVol(Double_val(v));
-  return v;
-}
-  
-value ocaml_destroy (value v)
-{
-  destroySystem();
-  return v;
-}
-
-value ocaml_init (value v)
-{
-  initSystemSon();
-  return v;
 }

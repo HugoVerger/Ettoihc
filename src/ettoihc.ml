@@ -14,7 +14,6 @@ external destroy_sdl:	unit	-> unit 	= "ocaml_destroySDL"
 
 (* Declarations variables *)
 
-open Meta
 let filepath = ref ""
 let filedisplay = ref ""
 let allFile = ref ""
@@ -147,15 +146,8 @@ let str_op = function
 	| Some x -> x
 	| _ -> failwith "Need a file"
 
-let actDisplay () =
-	if Id3v1.has_tag !filepath then
-		let t = Id3v1.read_file !filepath in
-		let s = Id3v1.getNum t ^ ", " ^ Id3v1.getTitle t in
-		s ^ " - " ^ Id3v1.getArtist t
-	else
-		 !filepath
-
-let play filename = filedisplay := actDisplay ();
+let play () = 
+		Playlist.actDisplay !filepath filedisplay;
 		text#buffer#set_text (!filedisplay);
 		play_sound(!filepath)
 
@@ -164,8 +156,8 @@ let precedent = (fun () ->
   		begin
   			indexSong := !indexSong - 1;
   			filepath := List.nth !listFile !indexSong;
-  			filedisplay := actDisplay ();
-  			play !filepath
+  			Playlist.actDisplay !filepath filedisplay;
+  			play ()
   		end
   	else
   		(if (!filedisplay != "") then
@@ -184,8 +176,8 @@ let suivant = (fun () ->
   		begin
   			indexSong := !indexSong + 1;
   			filepath := List.nth !listFile !indexSong;
-  			filedisplay := actDisplay ();
-  			play !filepath
+  			Playlist.actDisplay !filepath filedisplay;
+  			play ()
   		end
   	else
   		(if (!filedisplay != "") then
@@ -221,13 +213,20 @@ let open_button =
     ~packing:toolbar#insert () in 
  	ignore(btn#connect#clicked (fun () ->
     	if dlg#run () = `OPEN then 
-    		(filepath := (str_op(dlg#filename));
-    		if (List.mem !filepath !listFile) then () else
-    			(filedisplay := actDisplay ();
-    			allFile := !allFile ^ !filedisplay ^ "\n";
-    			playList := !playList ^ !filepath ^ "\n";
-    			listFile := !listFile @ [!filepath];
-    			playlist#buffer#set_text (!allFile)));
+    		begin
+    		filepath := str_op(dlg#filename);
+    		(if (Playlist.get_extension !filepath) then
+    			Playlist.addSong !filepath filedisplay allFile
+    							 playList listFile
+    		else
+    			(Playlist.cleanPlaylist filedisplay allFile playList
+    									listFile indexSong pause;
+    			stop_sound();
+    			text#buffer#set_text "";
+    			Playlist.addPlaylist !filepath filedisplay allFile
+    								 playList listFile));
+    		playlist#buffer#set_text (!allFile)
+    		end;
     dlg#misc#hide ()));
  btn
 
@@ -251,7 +250,8 @@ let save_button =
 	dlg#misc#hide ()));
 	btn
 
-let separator1 = ignore (GButton.separator_tool_item ~packing:toolbar#insert ())
+let separator1 = 
+	ignore (GButton.separator_tool_item ~packing:toolbar#insert ())
 
 (* Bouton Previous *)
 
@@ -272,10 +272,11 @@ let play_button =
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked 
   	(fun () ->
-  		if (List.length !listFile != 0 && (!pause || (!filepath != List.nth !listFile !indexSong))) then
+  		if (List.length !listFile != 0 && 
+  		(!pause || (!filepath != List.nth !listFile !indexSong))) then
   			(filepath := List.nth !listFile !indexSong;
     		text#buffer#set_text (!filedisplay);
-    		play !filepath;
+    		play ();
     		pause := false)));
   btn
 
@@ -341,21 +342,22 @@ let volume=
 (* Bouton "A propos" *)
 
 let about_button =
-  let dlg = GWindow.about_dialog
-    ~authors:["Nablah"]
-    ~version:"1.0"
-    ~website:"http://ettoihc.wordpress.com/"
-    ~website_label:"Ettoihc Website"
-    ~position:`CENTER_ON_PARENT
-    ~parent:window
-    ~width: 400
-    ~height: 150
-    ~destroy_with_parent:true () in
-  let btn = GButton.tool_button 
-    ~stock:`ABOUT 
-    ~packing:infobar#insert () in
-  ignore(btn#connect#clicked (fun () -> ignore (dlg#run ()); dlg#misc#hide ()));
-  btn
+	let dlg = GWindow.about_dialog
+		~authors:["Nablah"]
+		~version:"1.0"
+		~website:"http://ettoihc.wordpress.com/"
+		~website_label:"Ettoihc Website"
+		~position:`CENTER_ON_PARENT
+		~parent:window
+		~width: 400
+		~height: 150
+		~destroy_with_parent:true () in
+	let btn = GButton.tool_button 
+		~stock:`ABOUT 
+		~packing:infobar#insert () in
+	ignore(btn#connect#clicked (fun () -> 
+		ignore (dlg#run ()); dlg#misc#hide ()));
+	btn
 
 
 
