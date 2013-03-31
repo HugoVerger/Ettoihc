@@ -521,6 +521,7 @@ let _ =
   init_sound();
   ignore(window#event#connect#delete confirm);
   Playlist.loadBiblio biblioForDisplay biblioForSave biblioFile;
+  biblioForDisplay := !biblioForDisplay ^ "\n";
   biblioText#buffer#set_text (!biblioForDisplay);
   window#show ();
   GMain.main ();

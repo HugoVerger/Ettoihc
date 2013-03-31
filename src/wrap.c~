@@ -53,7 +53,7 @@ value ocaml_playlist (value n,value s)
 
 value ocaml_biblio (value s)
 {
-  	save_biblio(String_val(s));
+  	create_pl(String_val(s));
   	return Val_unit;
 }
 

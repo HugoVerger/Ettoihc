@@ -36,8 +36,8 @@ let loadBiblio biblioForDisplay biblioForSave biblioFile =
    	let allFile = ref "" in
    	try
   		while true; do
-    		 addSong (input_line ic) allFile biblioForDisplay
-    		 			biblioForSave biblioFile;
+    		 addSong (input_line ic) biblioForDisplay biblioFile
+    		 			biblioForSave allFile;
   		done;
 	with End_of_file ->
   	close_in ic
