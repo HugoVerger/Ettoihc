@@ -42,6 +42,8 @@ value ocaml_destroy (value v)
 value ocaml_init (value v)
 {
   	systemSong = initSystemSon(systemSong);
+  	init_effects (systemSong, distortion, flange, echo, chorus, parameq, 
+  				low_pass, high_pass);
   	return v;
 }
 

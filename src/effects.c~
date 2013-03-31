@@ -38,7 +38,7 @@ void flange_event(FMOD_SYSTEM* system,FMOD_DSP* flange)
 {
 	int active;
 	FMOD_DSP_GetActive(flange, &active);
-    FMOD_System_CreateDSPByType(system, 
+    FMOD_System_CreateDSPByType(systemSong, 
     							FMOD_DSP_TYPE_FLANGE, &flange);
   	if (active)
     {
@@ -55,7 +55,7 @@ void chorus_event(FMOD_SYSTEM* system,FMOD_DSP* chorus)
   	int active;
 
   	FMOD_DSP_GetActive(chorus, &active);
-    FMOD_System_CreateDSPByType(system,
+    FMOD_System_CreateDSPByType(systemSong,
     							FMOD_DSP_TYPE_CHORUS, &chorus);
   	if (active)
     {
@@ -73,7 +73,7 @@ void parameq_event(FMOD_SYSTEM* system,FMOD_DSP* parameq)
   	int active;
 
   	FMOD_DSP_GetActive(parameq, &active);
-    FMOD_System_CreateDSPByType(system,
+    FMOD_System_CreateDSPByType(systemSong,
     							FMOD_DSP_TYPE_PARAMEQ, &parameq);
   	if (active)
     {
