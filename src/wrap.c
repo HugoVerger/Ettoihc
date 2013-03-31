@@ -53,42 +53,42 @@ value ocaml_playlist (value n,value s)
 
 value ocaml_distortion (value v)
 {
-	distortion_event(systemSong, distortion);
+	distortion = distortion_event(systemSong, distortion);
   	return v;
 }
 
 value ocaml_echo (value v)
 {
-	echo_event(systemSong, echo);
+	echo = echo_event(systemSong, echo);
   	return v; 
 }
 
 value ocaml_flange(value v)
 {
-	flange_event(systemSong, flange);
+	flange = flange_event(systemSong, flange);
   	return v;
 }
 
 value ocaml_chorus (value v)
 {
-	chorus_event(systemSong, chorus);
+	chorus = chorus_event(systemSong, chorus);
   	return v ;
 }
 
 value ocaml_amelioration (value v)
 {
-	parameq_event(systemSong, parameq);
+	parameq = parameq_event(systemSong, parameq);
   	return v;
 }
 
 value ocaml_lpasse (value v)
 {
-	low_pass_event(systemSong, low_pass);
+	low_pass = low_pass_event(systemSong, low_pass);
   	return v;
 }
 
 value ocaml_hpasse (value v)
 {
-	high_pass_event(systemSong, high_pass);
+	high_pass = high_pass_event(systemSong, high_pass);
   	return v;
 }

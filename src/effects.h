@@ -3,16 +3,16 @@
 #include "../fmod/inc/fmod.h"
 #include "../fmod/inc/fmod_errors.h"
 
-void distortion_event(FMOD_SYSTEM* system,FMOD_DSP* distortion);
+FMOD_DSP* distortion_event(FMOD_SYSTEM* system,FMOD_DSP* distortion);
 
-void echo_event(FMOD_SYSTEM* system,FMOD_DSP* echo);
+FMOD_DSP* echo_event(FMOD_SYSTEM* system,FMOD_DSP* echo);
 
-void flange_event(FMOD_SYSTEM* system,FMOD_DSP* flange);
+FMOD_DSP* flange_event(FMOD_SYSTEM* system,FMOD_DSP* flange);
 
-void chorus_event(FMOD_SYSTEM* system,FMOD_DSP* chorus);
+FMOD_DSP* chorus_event(FMOD_SYSTEM* system,FMOD_DSP* chorus);
 
-void parameq_event(FMOD_SYSTEM* system,FMOD_DSP* parameq);
+FMOD_DSP* parameq_event(FMOD_SYSTEM* system,FMOD_DSP* parameq);
 
-void low_pass_event(FMOD_SYSTEM* system,FMOD_DSP* low_pass);
+FMOD_DSP* low_pass_event(FMOD_SYSTEM* system,FMOD_DSP* low_pass);
 
-void high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass);
+FMOD_DSP* high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass);
