@@ -6,18 +6,16 @@
 #ifndef _LECTURE_H_
 #define _LECTURE_H_
 
-FMOD_CHANNEL 		*channel;
+FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *systemSong);
 
-void initSystemSon();
+FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name);
 
-void playSong (char *name);
+void pauseSong (FMOD_SYSTEM *systemSong);
 
-void pauseSong ();
+void stopSong (FMOD_SYSTEM *systemSong);
 
-void stopSong ();
+void adjustVol (FMOD_SYSTEM *systemSong, float vol);
 
-void adjustVol (float vol);
-
-void destroySystem();
+void destroySystem(FMOD_SYSTEM *systemSong, FMOD_SOUND *sound);
 
 #endif

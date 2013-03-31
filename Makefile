@@ -6,10 +6,10 @@ BAKF=${_DATE}-Prog
 ################# C Compilation #################
 CC= clang
 CFLAGS= -W -Wall -Werror -pedantic -std=c99 -O2 -I  `ocamlc -where`
-CS= src/wrap.c src/lecture.c src/playlist.c
+CS= src/wrap.c src/lecture.c src/effects.c src/playlist.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO=  wrap.o lecture.o playlist.o
+CO=  wrap.o lecture.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############

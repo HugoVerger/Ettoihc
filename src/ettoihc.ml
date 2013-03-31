@@ -8,16 +8,24 @@ external play_sound: 	string	-> unit 	= "ocaml_play"
 external stop_sound: 	unit	-> unit 	= "ocaml_stop"
 external vol_sound:  	float	-> unit 	= "ocaml_vol"
 external pause_sound:	unit	-> unit 	= "ocaml_pause"
+external distortion_sound: unit	-> unit 	= "ocaml_distortion"
+external echo_sound:	unit	-> unit 	= "ocaml_echo"
+external flange_sound:	unit	-> unit 	= "ocaml_flange"
+external chorus_sound: 	unit	-> unit 	= "ocaml_chorus"
+external amelio_sound:	unit	-> unit 	= "ocaml_amelioration"
+external lpasse_sound:	unit	-> unit 	= "ocaml_lpasse"
+external hpasse_sound:	unit	-> unit 	= "ocaml_hpasse"
 
 (* Declarations variables *)
 
+let pause = ref true			(*Son en Cours*)
 let filepath = ref ""
-let filedisplay = ref ""
-let allFile = ref ""
-let playList = ref ""
-let listFile = ref []
 let indexSong = ref 0
-let pause = ref true
+let filedisplay = ref ""
+
+let playListForDisplay = ref ""	(*Playlist en Cours*)
+let playListForSave = ref ""
+let playListFile = ref []
 
 (*
 //
@@ -152,7 +160,7 @@ let precedent = (fun () ->
 	(if (!indexSong != 0) then
   		begin
   			indexSong := !indexSong - 1;
-  			filepath := List.nth !listFile !indexSong;
+  			filepath := List.nth !playListFile !indexSong;
   			Playlist.actDisplay !filepath filedisplay;
   			play ()
   		end
@@ -169,10 +177,10 @@ let precedent = (fun () ->
   	text#buffer#set_text (!filedisplay))
   	
 let suivant = (fun () ->
-	(if (!indexSong != List.length !listFile - 1) then
+	(if (!indexSong != List.length !playListFile - 1) then
   		begin
   			indexSong := !indexSong + 1;
-  			filepath := List.nth !listFile !indexSong;
+  			filepath := List.nth !playListFile !indexSong;
   			Playlist.actDisplay !filepath filedisplay;
   			play ()
   		end
@@ -213,16 +221,17 @@ let open_button =
     		begin
     		filepath := str_op(dlg#filename);
     		(if (Playlist.get_extension !filepath) then
-    			Playlist.addSong !filepath filedisplay allFile
-    							 playList listFile
+    			Playlist.addSong !filepath filedisplay playListForDisplay
+    							 playListForSave playListFile
     		else
-    			(Playlist.cleanPlaylist filedisplay allFile playList
-    									listFile indexSong pause;
+    			(Playlist.cleanPlaylist filedisplay playListForDisplay
+    									playListForSave	playListFile indexSong 
+    									pause;
     			stop_sound();
     			text#buffer#set_text "";
-    			Playlist.addPlaylist !filepath filedisplay allFile
-    								 playList listFile));
-    		playlist#buffer#set_text (!allFile)
+    			Playlist.addPlaylist !filepath filedisplay playListForDisplay
+    								 playListForSave playListFile));
+    		playlist#buffer#set_text (!playListForDisplay)
     		end;
     dlg#misc#hide ()));
  btn
@@ -243,7 +252,7 @@ let save_button =
 		~packing: toolbar#insert () in
 	ignore(btn#connect#clicked (fun () ->
 	    if  (dlg#run () == `SAVE) then 
-			(playlistSave (str_op(dlg#filename)) !playList);
+			(playlistSave (str_op(dlg#filename)) !playListForSave);
 	dlg#misc#hide ()));
 	btn
 
@@ -269,9 +278,9 @@ let play_button =
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked 
   	(fun () ->
-  		if (List.length !listFile != 0 && 
-  		(!pause || (!filepath != List.nth !listFile !indexSong))) then
-  			(filepath := List.nth !listFile !indexSong;
+  		if (List.length !playListFile != 0 && 
+  		(!pause || (!filepath != List.nth !playListFile !indexSong))) then
+  			(filepath := List.nth !playListFile !indexSong;
     		text#buffer#set_text (!filedisplay);
     		play ();
     		pause := false)));
