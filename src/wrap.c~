@@ -44,3 +44,22 @@ value ocaml_playlist (value n,value s)
   create_pl(String_val(n),String_val(s));
   return Val_unit;
 }
+
+
+value ocaml_spectre (value v)
+{
+  draw();
+  return v;
+}
+
+value ocaml_destroySDL (value v)
+{
+  destroySDL();
+  return v;
+}
+
+value ocaml_initSDL (value v)
+{
+  initSDL();
+  return v;
+}
