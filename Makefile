@@ -52,4 +52,5 @@ depend: .depend
 	${OCAMLDEP} ${ML} ${MLI} > .depend
 
 clean::
+	cd src/ && rm -f *~ *# *.cm?
 	rm -f *~ *# *.o *.cm? ${BIN}
