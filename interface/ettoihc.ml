@@ -92,6 +92,20 @@ let biblioText =
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
+(*
+let biblioTable = 
+  let scroll = GBin.scrolled_window
+    ~height:200
+    ~hpolicy:`ALWAYS
+    ~vpolicy:`ALWAYS
+    ~packing:biblioPage#add () in
+  GPack.table
+    ~row_spacings:1
+    ~col_spacings:0
+    ~border_width:1
+    ~homogeneous:false
+    ~packing:scroll#add_with_viewport ()*)
+
 (* Contenu onglet 3 *)
 
 let mixPage = 
