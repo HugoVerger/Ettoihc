@@ -19,93 +19,108 @@ let window =
   wnd
 
 
-
-(* Boites de la fenêtre principale *)
+(* Composants de la fenêtre principale *)
 
 let mainbox = 
   let box = GPack.vbox
     ~border_width:10
     ~packing:window#add () in
   box#set_homogeneous false;
-  	box
-
+  box  
+  
 let menubox = 
 	let box = GPack.hbox
   		~height: 60
   		~packing:(mainbox#pack ~expand:false) () in
   	box#set_homogeneous false;
   	box
-  
-let toolbar = GButton.toolbar  
-	~orientation:`HORIZONTAL  
-	~style:`BOTH
-	~width:490
-	~height:10
-	~packing:(menubox#pack ~expand:false) ()
-
-let volbox = GPack.hbox
-	~width: 90
-	~packing:(menubox#pack ~expand:false) ()
-	
-let infobar = GButton.toolbar  
-  ~orientation:`HORIZONTAL  
-  ~style:`BOTH
-  ~width:60
-  ~packing:(menubox#pack ~expand:false) ()
-
-let centerbox = 
-  let box = GPack.hbox
-    ~height: 20
-    ~packing:(mainbox#pack ~expand:false) () in
-  box#set_homogeneous false;
+let soundbox = 
+    let box = GPack.hbox
+      ~height: 20
+      ~packing:(mainbox#pack ~expand:false) () in
+    box#set_homogeneous false;
   box
-    
-
-let notebook =GPack.notebook
+let notebook = GPack.notebook
   ~packing: mainbox#add()
-  
-let page1box = GPack.hbox ()
-let ajout_tab1 =
+
+(* Contenu onglet 1 *)
+
+let lecturePage = 
+  let onglet1 = GPack.hbox () in
   let name1 = GMisc.label
     ~text:"En cours" () in
-  notebook#insert_page 
-    ~tab_label:name1#coerce page1box#coerce
+  ignore(notebook#insert_page 
+    ~tab_label:name1#coerce onglet1#coerce);
+  GPack.vbox
+    ~packing:onglet1#add()
 
-let page2box = GPack.vbox ()
-let ajout_tab2 =
+let playlist =
+  let scroll = GBin.scrolled_window
+    ~hpolicy:`NEVER
+    ~vpolicy:`NEVER
+    ~shadow_type:`ETCHED_IN
+    ~packing: lecturePage#add () in
+  let txt = GText.view 
+    ~packing:scroll#add ()
+    ~editable: false  
+    ~cursor_visible: false in
+  txt#misc#modify_font_by_name "Monospace 10";
+  txt
+
+(* Contenu onglet 2 *)
+
+let biblioPage =
+  let onglet2 = GPack.vbox () in
   let name1 = GMisc.label
     ~text:"Bibliotheque" () in
-  notebook#insert_page 
-    ~tab_label:name1#coerce page2box#coerce
+  ignore(notebook#insert_page 
+    ~tab_label:name1#coerce onglet2#coerce);
+  GPack.vbox
+    ~packing:onglet2#add()
 
-let page3box = GPack.vbox ()
-let ajout_tab3 =
+let biblioText =
+  let scroll = GBin.scrolled_window
+    ~hpolicy:`NEVER
+    ~vpolicy:`NEVER
+    ~shadow_type:`ETCHED_IN
+    ~packing: biblioPage#add () in
+  let txt = GText.view 
+    ~packing:scroll#add ()
+    ~editable: false  
+    ~cursor_visible: false in
+  txt#misc#modify_font_by_name "Monospace 10";
+  txt
+
+(* Contenu onglet 3 *)
+
+let mixPage = 
+  let onglet3 = GPack.vbox () in
   let name1 = GMisc.label
     ~text:"Effets" () in
-  notebook#insert_page 
-    ~tab_label:name1#coerce page3box#coerce 
+  ignore(notebook#insert_page 
+    ~tab_label:name1#coerce onglet3#coerce);
+  GPack.vbox
+    ~packing:onglet3#add()
 
-let mixPage = GPack.vbox
-  ~packing:page3box#add()
-
-let mixFrame1 =GBin.frame
-  ~width:800
-  ~height:250
-  ~border_width:0
-  ~packing:mixPage#add ()
-
-let mixFrame2 =GBin.frame
-  ~width:800
-  ~height:250
-  ~border_width:0
-  ~packing:mixPage#add ()
-  
-let firstLine =GPack.button_box `HORIZONTAL
+let firstLine =
+  let mixFrame1 =GBin.frame
+    ~width:800
+    ~height:250
+    ~border_width:0
+    ~packing:mixPage#add () in
+  GPack.button_box `HORIZONTAL
   	~layout:`SPREAD
   	~packing:mixFrame1#add()
-let secondLine =GPack.button_box `HORIZONTAL
-  ~layout:`SPREAD
-  ~packing:mixFrame2#add()
+
+let secondLine =
+  let mixFrame2 =GBin.frame
+    ~width:800
+    ~height:250
+    ~border_width:0
+    ~packing:mixPage#add () in
+  GPack.button_box `HORIZONTAL
+    ~layout:`SPREAD
+    ~packing:mixFrame2#add()
 
 
 (* Fenêtre d'ouverture *)
@@ -127,11 +142,6 @@ let openDialog filepath =
   if dlg#run () = `OPEN then
     	filepath := str_op(dlg#filename);
   dlg#misc#hide ()
-
-
-
-
-
 
 (* Fenêtre de sauvegarde *)
 
@@ -163,4 +173,4 @@ let confirm _ =
   let res = dlg#run () = `NO in
   dlg#destroy ();
   Wrap.biblioSave !biblioForSave;
-  res  
+  res
