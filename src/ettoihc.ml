@@ -1,3 +1,4 @@
+let pause = ref true	
 let biblioForSave = ref ""
 let playListForSave = ref ""
 
@@ -13,7 +14,7 @@ let window =
     ~title:"Ettoihc"
     ~position:`CENTER
     ~resizable:true
-    ~width:660 
+    ~width:710 
     ~height:420 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd

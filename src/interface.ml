@@ -1,9 +1,8 @@
 (* Declarations variables *)
 
-let pause = ref true			(*Son en Cours*)
+		(*Son en Cours*)
 let filepath = ref ""
 let indexSong = ref 0
-let filedisplay = ref ""
 
 let playListForDisplay = ref ""	(*Playlist en Cours*)
 let playListFile = ref []
@@ -11,65 +10,54 @@ let playListFile = ref []
 let biblioForDisplay = ref ""	(*Bibliotheque*)
 let biblioFile = ref [""]
 
-
-(*
-  //
-  //		Declaration boutons
-  //
-*)
-
-
 (* Declaration fonctions *)
 
-let play () = 
-  Playlist.actDisplay !filepath filedisplay;
-  Header.soundText#buffer#set_text (!filedisplay);
+let play () =
+  Header.actDisplay !filepath;
   Wrap.play_sound(!filepath)
 
 let precedent = (fun () ->
-  (if (!indexSong != 0) then
+  if (!indexSong != 0) then
       begin
-  	indexSong := !indexSong - 1;
-  	filepath := List.nth !playListFile !indexSong;
-  	Playlist.actDisplay !filepath filedisplay;
-  	play ()
+  	    indexSong := !indexSong - 1;
+  	    filepath := List.nth !playListFile !indexSong;
+        Header.actDisplay !filepath;
+  	    play ()
       end
    else
-      (if (!filedisplay != "") then
+      (if (!Header.filedisplay != "") then
   	  begin
   	    filepath := "";
-  	    filedisplay := "";
+        Header.actDisplay "";
   	    indexSong := 0;
   	    Wrap.stop_sound()
   	  end
       )
-  );
-  Header.soundText#buffer#set_text (!filedisplay))
+  )
   
 let suivant = (fun () ->
-  (if (!indexSong != List.length !playListFile - 1) then
+  if (!indexSong != List.length !playListFile - 1) then
       begin
-  	indexSong := !indexSong + 1;
-  	filepath := List.nth !playListFile !indexSong;
-  	Playlist.actDisplay !filepath filedisplay;
-  	play ()
+  	    indexSong := !indexSong + 1;
+  	    filepath := List.nth !playListFile !indexSong;
+        Header.actDisplay !filepath;
+  	    play ()
       end
    else
-      (if (!filedisplay != "") then
+      (if (!Header.filedisplay != "") then
   	  begin
   	    filepath := "";
-  	    filedisplay := "";
+        Header.actDisplay "";
   	    indexSong := 0;
   	    Wrap.stop_sound()
   	  end
       )
-  );
-  Header.soundText#buffer#set_text (!filedisplay))
+  )
 
 let checkBiblio () =
 	let rec noExist = function
 		|[] -> true
-		|h::t when h == !filepath -> false
+		|h::t when h = !filepath -> false
 		|_::t -> noExist t in
 	if (noExist !biblioFile) then
 		begin
@@ -96,15 +84,14 @@ let open_button =
       Ettoihc.openDialog filepath;
       checkBiblio();
     	(if (Playlist.get_extension !filepath) then
-    	    Playlist.addSong !filepath filedisplay playListForDisplay
+    	    Playlist.addSong !filepath Header.filedisplay playListForDisplay
     	      Ettoihc.playListForSave playListFile
     	 else
-    	    (Playlist.cleanPlaylist filedisplay playListForDisplay
-    	       Ettoihc.playListForSave	playListFile indexSong 
-    	       pause;
+    	    (Playlist.cleanPlaylist playListForDisplay
+    	       Ettoihc.playListForSave	playListFile indexSong;
     	     Wrap.stop_sound();
-    	     Header.soundText#buffer#set_text "";
-    	     Playlist.addPlaylist !filepath filedisplay playListForDisplay
+           Header.actDisplay !filepath;
+    	     Playlist.addPlaylist !filepath Header.filedisplay playListForDisplay
     	       					Ettoihc.playListForSave playListFile));
     	Ettoihc.playlist#buffer#set_text (!playListForDisplay);
     	Ettoihc.biblioText#buffer#set_text (!biblioForDisplay)
@@ -143,10 +130,10 @@ let play_button =
   ignore(btn#connect#clicked 
   	(fun () ->
   		if (List.length !playListFile != 0 && 
-  		(!pause || (!filepath != List.nth !playListFile !indexSong))) then
+  		(!Ettoihc.pause || (!filepath != List.nth !playListFile !indexSong))) then
   			(filepath := List.nth !playListFile !indexSong;
     		play ();
-    		pause := false)));
+    		Ettoihc.pause := false)));
   btn
 
 (* Bouton Pause *)
@@ -156,7 +143,7 @@ let previous_button =
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
     ~packing:Header.toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> pause := true; Wrap.pause_sound ()));
+  ignore(btn#connect#clicked (fun () -> Ettoihc.pause := true; Wrap.pause_sound ()));
   btn
 
 (* Bouton Stop *)
@@ -168,10 +155,9 @@ let stop_button =
     ~packing:Header.toolbar#insert () in
   ignore(btn#connect#clicked (fun () -> 
     filepath := "";
-    filedisplay := "";
+    Header.actDisplay "";
     indexSong := 0;
-    Wrap.stop_sound();
-    Header.soundText#buffer#set_text (!filedisplay)));
+    Wrap.stop_sound()));
   btn
 
 (* Bouton Next *)
@@ -186,47 +172,6 @@ let next_button =
 
 let separator2 = GButton.separator_tool_item ~packing:Header.toolbar#insert()
 
-
-(* Bouton Volume *)
-
-let file_vol = ref 50.
-let adj= GData.adjustment 
-  ~value:50.  ~lower:0.
-  ~upper:110.  ~step_incr:1. () 
-
-let vol_change vol_b() =
-  file_vol := vol_b#adjustment#value;
-  Wrap.vol_sound (!file_vol /. 100.)
-
-let volume=
-  let volume_button = GRange.scale `HORIZONTAL
-    ~draw_value:true
-    ~show:true
-    ~digits: 0
-    ~adjustment:adj
-    ~packing:Header.volbox#add () in 
-  ignore(volume_button#connect#value_changed (vol_change (volume_button)));
-  volume_button
-
-(* Bouton "A propos" *)
-
-let about_button =
-  let dlg = GWindow.about_dialog
-    ~authors:["Nablah"]
-    ~version:"1.0"
-    ~website:"http://ettoihc.wordpress.com/"
-    ~website_label:"Ettoihc Website"
-    ~position:`CENTER_ON_PARENT
-    ~parent:Ettoihc.window
-    ~width: 400
-    ~height: 150
-    ~destroy_with_parent:true () in
-  let btn = GButton.tool_button 
-    ~stock:`ABOUT 
-    ~packing:Header.infobar#insert () in
-  ignore(btn#connect#clicked (fun () -> 
-    ignore (dlg#run ()); dlg#misc#hide ()));
-  btn
 
 let distortion =
   let dbut = GButton.button
@@ -290,7 +235,6 @@ let highpass=
     ~packing:Ettoihc.secondLine#add() in
   ignore(hbut#connect#clicked ~callback:Wrap.hpasse_sound);
   hbut
-
 
 let _ =
   Wrap.init_sound();

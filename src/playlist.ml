@@ -1,26 +1,22 @@
-let actDisplay filepath filedisplay =
-	if Meta.Id3v1.has_tag filepath then
-		let t = Meta.Id3v1.read_file filepath in
-		filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
-	else
-		filedisplay := filepath
-
 let addSong filepath filedisplay allFile playList listFile =
 	if (List.mem filepath !listFile) then () else
 	begin
-    	actDisplay filepath filedisplay;
+    	 if Meta.Id3v1.has_tag filepath then
+		    let t = Meta.Id3v1.read_file filepath in
+		    filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
+	    else
+		    filedisplay := filepath;
     	allFile := !allFile ^ !filedisplay ^ "\n";
     	playList := !playList ^ filepath ^ "\n";
     	listFile := !listFile @ [filepath]
     end
 
-let cleanPlaylist filedisplay allFile playList listFile indexSong pause =
+let cleanPlaylist allFile playList listFile indexSong =
 	allFile := "";
 	playList := "";
-	filedisplay := "";
 	listFile := [];
 	indexSong := 0;
-	pause := true
+	Ettoihc.pause := true
 
 let addPlaylist filepath filedisplay allFile playList listFile =
    	let ic = open_in filepath in
