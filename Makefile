@@ -19,7 +19,7 @@ OCOPT=ocamlopt
 OCAMLC=ocamlc
 CMXA= lablgtk.cmxa bigarray.cmxa
 CMA=lablgtk.cma bigarray.cma 
-ML= src/meta.ml src/playlist.ml src/ettoihc.ml
+ML= src/wrap.ml src/meta.ml src/playlist.ml src/ettoihc.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
 CMX=${ML:.ml=.cmx}

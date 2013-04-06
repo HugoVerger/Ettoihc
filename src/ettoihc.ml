@@ -1,22 +1,3 @@
-(*
-  Fonctions C
-*)
-external playlistSave:	string 	-> string 	-> unit = "ocaml_playlist"
-external biblioSave:	string 	-> unit		= "ocaml_biblio"
-external init_sound:	unit	-> unit 	= "ocaml_init"
-external destroy_sound:	unit	-> unit 	= "ocaml_destroy"
-external play_sound: 	string	-> unit 	= "ocaml_play"
-external stop_sound: 	unit	-> unit 	= "ocaml_stop"
-external vol_sound:  	float	-> unit 	= "ocaml_vol"
-external pause_sound:	unit	-> unit 	= "ocaml_pause"
-external distortion_sound: unit	-> unit 	= "ocaml_distortion"
-external echo_sound:	unit	-> unit 	= "ocaml_echo"
-external flange_sound:	unit	-> unit 	= "ocaml_flange"
-external chorus_sound: 	unit	-> unit 	= "ocaml_chorus"
-external amelio_sound:	unit	-> unit 	= "ocaml_amelioration"
-external lpasse_sound:	unit	-> unit 	= "ocaml_lpasse"
-external hpasse_sound:	unit	-> unit 	= "ocaml_hpasse"
-
 (* Declarations variables *)
 
 let pause = ref true			(*Son en Cours*)
@@ -64,7 +45,7 @@ let confirm _ =
     ~buttons:GWindow.Buttons.yes_no () in
   let res = dlg#run () = `NO in
   dlg#destroy ();
-  biblioSave !biblioForSave;
+  Wrap.biblioSave !biblioForSave;
   res
 
 
@@ -216,7 +197,7 @@ let str_op = function
 let play () = 
   Playlist.actDisplay !filepath filedisplay;
   text#buffer#set_text (!filedisplay);
-  play_sound(!filepath)
+  Wrap.play_sound(!filepath)
 
 let precedent = (fun () ->
   (if (!indexSong != 0) then
@@ -232,7 +213,7 @@ let precedent = (fun () ->
   	    filepath := "";
   	    filedisplay := "";
   	    indexSong := 0;
-  	    stop_sound()
+  	    Wrap.stop_sound()
   	  end
       )
   );
@@ -252,7 +233,7 @@ let suivant = (fun () ->
   	    filepath := "";
   	    filedisplay := "";
   	    indexSong := 0;
-  	    stop_sound()
+  	    Wrap.stop_sound()
   	  end
       )
   );
@@ -308,7 +289,7 @@ let open_button =
     	    (Playlist.cleanPlaylist filedisplay playListForDisplay
     	       playListForSave	playListFile indexSong 
     	       pause;
-    	     stop_sound();
+    	     Wrap.stop_sound();
     	     text#buffer#set_text "";
     	     Playlist.addPlaylist !filepath filedisplay playListForDisplay
     	       					playListForSave playListFile));
@@ -334,7 +315,7 @@ let save_button =
     ~packing: toolbar#insert () in
   ignore(btn#connect#clicked (fun () ->
     if  (dlg#run () == `SAVE) then 
-      (playlistSave (str_op(dlg#filename)) !playListForSave);
+      (Wrap.playlistSave (str_op(dlg#filename)) !playListForSave);
     dlg#misc#hide ()));
   btn
 
@@ -375,7 +356,7 @@ let previous_button =
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> pause := true; pause_sound ()));
+  ignore(btn#connect#clicked (fun () -> pause := true; Wrap.pause_sound ()));
   btn
 
 (* Bouton Stop *)
@@ -389,7 +370,7 @@ let stop_button =
     filepath := "";
     filedisplay := "";
     indexSong := 0;
-    stop_sound();
+    Wrap.stop_sound();
     text#buffer#set_text (!filedisplay)));
   btn
 
@@ -415,7 +396,7 @@ let adj= GData.adjustment
 
 let vol_change vol_b() =
   file_vol := vol_b#adjustment#value;
-  vol_sound (!file_vol /. 100.)
+  Wrap.vol_sound (!file_vol /. 100.)
 
 let volume=
   let volume_button = GRange.scale `HORIZONTAL
@@ -453,7 +434,7 @@ let distortion =
     ~label:"Distorsion"
     ~relief:`NORMAL
     ~packing:firstLine#add() in
-  ignore(dbut#connect#clicked ~callback:distortion_sound);
+  ignore(dbut#connect#clicked ~callback:Wrap.distortion_sound);
   dbut
 
 let amelioration =
@@ -462,7 +443,7 @@ let amelioration =
     ~label:"Amélioration du son"
     ~relief:`NORMAL
     ~packing:firstLine#add() in
-  ignore(abut#connect#clicked ~callback:amelio_sound);
+  ignore(abut#connect#clicked ~callback:Wrap.amelio_sound);
   abut
 
 let flange=
@@ -471,7 +452,7 @@ let flange=
     ~label:"Flange"
     ~relief:`NORMAL
     ~packing:firstLine#add() in
-  ignore(fbut#connect#clicked ~callback:flange_sound);
+  ignore(fbut#connect#clicked ~callback:Wrap.flange_sound);
   fbut
 
 let chorus =
@@ -480,7 +461,7 @@ let chorus =
     ~label:"Chorus"
     ~relief:`NORMAL
     ~packing:secondLine#add() in
-  ignore(cbut#connect#clicked ~callback:chorus_sound);
+  ignore(cbut#connect#clicked ~callback:Wrap.chorus_sound);
   cbut
 
 let echo =
@@ -489,7 +470,7 @@ let echo =
     ~label:"Echo"
     ~relief:`NORMAL
     ~packing:secondLine#add() in
-  ignore(ebut#connect#clicked ~callback:echo_sound);
+  ignore(ebut#connect#clicked ~callback:Wrap.echo_sound);
   ebut
 
 let lowpass=
@@ -498,7 +479,7 @@ let lowpass=
     ~label:"Low Pass"
     ~relief:`NORMAL
     ~packing:secondLine#add() in
-  ignore(lbut#connect#clicked ~callback:lpasse_sound);
+  ignore(lbut#connect#clicked ~callback:Wrap.lpasse_sound);
   lbut
 
 let highpass=
@@ -507,15 +488,15 @@ let highpass=
     ~label:"High Pass"
     ~relief:`NORMAL
     ~packing:secondLine#add() in
-  ignore(hbut#connect#clicked ~callback:hpasse_sound);
+  ignore(hbut#connect#clicked ~callback:Wrap.hpasse_sound);
   hbut
 
 
 let _ =
-  init_sound();
+  Wrap.init_sound();
   ignore(window#event#connect#delete confirm);
   Playlist.loadBiblio biblioForDisplay biblioForSave biblioFile;
   biblioText#buffer#set_text (!biblioForDisplay);
   window#show ();
   GMain.main ();
-  destroy_sound()
+  Wrap.destroy_sound()
