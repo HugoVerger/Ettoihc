@@ -19,7 +19,6 @@ let window =
   ignore(wnd#connect#destroy GMain.quit);
   wnd
 
-
 (* Composants de la fenêtre principale *)
 
 let mainbox = 
@@ -43,6 +42,7 @@ let soundbox =
   box
 let notebook = GPack.notebook
   ~packing: mainbox#add()
+
 
 (* Contenu onglet 1 *)
 

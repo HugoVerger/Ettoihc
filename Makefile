@@ -13,13 +13,13 @@ CO=  wrap.o lecture.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 -I src -I fmod/inc -I fmod/lib
+OFLAGS= -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
 OLIB=-cclib -lfmodex64
 OCOPT=ocamlopt
 OCAMLC=ocamlc
 CMXA= lablgtk.cmxa bigarray.cmxa
 CMA=lablgtk.cma bigarray.cma 
-ML= src/ettoihc.ml src/wrap.ml src/meta.ml src/playlist.ml src/header.ml src/interface.ml
+ML= src/wrap.ml interface/ettoihc.ml src/meta.ml src/playlist.ml interface/current.ml interface/biblio.ml interface/mix.ml interface/header.ml 
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
 CMX=${ML:.ml=.cmx}
@@ -53,4 +53,5 @@ depend: .depend
 
 clean::
 	cd src/ && rm -f *~ *# *.cm?
+	cd interface/ && rm -f *~ *# *.cm?
 	rm -f *~ *# *.o *.cm? ${BIN}
