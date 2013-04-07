@@ -55,18 +55,17 @@ let lecturePage =
   GPack.vbox
     ~packing:onglet1#add()
 
-let playlist =
-  let scroll = GBin.scrolled_window
-    ~hpolicy:`NEVER
-    ~vpolicy:`NEVER
-    ~shadow_type:`ETCHED_IN
-    ~packing: lecturePage#add () in
-  let txt = GText.view 
-    ~packing:scroll#add ()
-    ~editable: false  
-    ~cursor_visible: false in
-  txt#misc#modify_font_by_name "Monospace 10";
-  txt
+let colsPlaylist = new GTree.column_list
+let songPlaylist = colsPlaylist#add Gobject.Data.string
+let artistPlaylist = colsPlaylist#add Gobject.Data.string
+let pathPlaylist = colsPlaylist#add Gobject.Data.string
+
+let storePlaylist = GTree.list_store colsPlaylist
+  
+let playlistView =
+  let model = storePlaylist in
+  let view = GTree.view ~model ~packing: lecturePage#add () in
+  view
 
 (* Contenu onglet 2 *)
 
@@ -79,32 +78,17 @@ let biblioPage =
   GPack.vbox
     ~packing:onglet2#add()
 
-let biblioText =
-  let scroll = GBin.scrolled_window
-    ~hpolicy:`NEVER
-    ~vpolicy:`NEVER
-    ~shadow_type:`ETCHED_IN
-    ~packing: biblioPage#add () in
-  let txt = GText.view 
-    ~packing:scroll#add ()
-    ~editable: false  
-    ~cursor_visible: false in
-  txt#misc#modify_font_by_name "Monospace 10";
-  txt
+let colsBiblio = new GTree.column_list
+let songBiblio = colsBiblio#add Gobject.Data.string
+let artistBiblio = colsBiblio#add Gobject.Data.string
+let pathBiblio = colsBiblio#add Gobject.Data.string
 
-(*
-let biblioTable = 
-  let scroll = GBin.scrolled_window
-    ~height:200
-    ~hpolicy:`ALWAYS
-    ~vpolicy:`ALWAYS
-    ~packing:biblioPage#add () in
-  GPack.table
-    ~row_spacings:1
-    ~col_spacings:0
-    ~border_width:1
-    ~homogeneous:false
-    ~packing:scroll#add_with_viewport ()*)
+let storeBiblio = GTree.list_store colsPlaylist
+  
+let biblioView =
+  let model = storePlaylist in
+  let view = GTree.view ~model ~packing: lecturePage#add () in
+  view
 
 (* Contenu onglet 3 *)
 
@@ -189,3 +173,9 @@ let confirm _ =
   dlg#destroy ();
   Wrap.biblioSave !biblioForSave;
   res
+  
+let get_extension s =
+	let ext = String.sub s ((String.length s) - 4) 4 in
+	match ext with
+		|".mp3"-> true
+		|_ -> false

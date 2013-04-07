@@ -1,45 +1,36 @@
-let addSong filepath filedisplay allFile playList listFile =
-	if (List.mem filepath !listFile) then () else
+let addSong filepath playList =
+	let rec checkExist = function
+		|[] -> false
+		|(_,_,file)::_ when file = filepath -> true
+		|(_,_,_)::t -> checkExist t in
+	if (checkExist !playList) then () else
 	begin
-    	 if Meta.Id3v1.has_tag filepath then
-		    let t = Meta.Id3v1.read_file filepath in
-		    filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
-	    else
-		    filedisplay := filepath;
-    	allFile := !allFile ^ !filedisplay ^ "\n";
-    	playList := !playList ^ filepath ^ "\n";
-    	listFile := !listFile @ [filepath]
-    end
+	  let artist = ref "" and song = ref "" in
+	  if Meta.Id3v1.has_tag filepath then
+        begin
+		      let t = Meta.Id3v1.read_file filepath in
+		    	artist := Meta.Id3v1.getArtist t;	
+		    	song := Meta.Id3v1.getTitle t;
+			  end;
+    	playList := !playList @ [(!song,!artist,filepath)]
+  end
 
-let cleanPlaylist allFile playList listFile indexSong =
-	allFile := "";
-	playList := "";
-	listFile := [];
+let getFile nmb playList =
+  let tmp = List.nth playList nmb in
+  let tmp2 = match tmp with (_,_,a) -> a in
+  tmp2
+
+let cleanPlaylist playList indexSong =
+	playList := [];
 	indexSong := 0;
+	Ettoihc.playListForSave := "";
 	Ettoihc.pause := true
 
-let addPlaylist filepath filedisplay allFile playList listFile =
+let addPlaylist filepath playList =
    	let ic = open_in filepath in
    	try
   		while true; do
-    		 addSong (input_line ic) filedisplay allFile playList listFile;
+    		 addSong (input_line ic) playList;
   		done;
 	with End_of_file ->
   	close_in ic
-  	
-let loadBiblio biblioForDisplay biblioForSave biblioFile =
-   	let ic = open_in "biblio" in
-   	let allFile = ref "" in
-   	try
-  		while true; do
-    		 addSong (input_line ic) allFile biblioForDisplay
-    		 			biblioForSave biblioFile;
-  		done;
-	with End_of_file ->
-  	close_in ic
-
-let get_extension s =
-	let ext = String.sub s ((String.length s) - 4) 4 in
-	match ext with
-		|".mp3"-> true
-		|_ -> false

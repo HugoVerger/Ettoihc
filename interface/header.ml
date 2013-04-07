@@ -49,43 +49,47 @@ let play () =
   actDisplay !Current.filepath;
   Wrap.play_sound(!Current.filepath)
 
-let precedent = (fun () ->
+let precedent () =
   if (!Current.indexSong != 0) then
-      begin
-  	    Current.indexSong := !Current.indexSong - 1;
-  	    Current.filepath := List.nth !Current.playListFile !Current.indexSong;
-        actDisplay !Current.filepath;
-  	    play ()
-      end
-   else
-      (if (!filedisplay != "") then
-  	  begin
-  	    Current.filepath := "";
-        actDisplay "";
-  	    Current.indexSong := 0;
-  	    Wrap.stop_sound()
-  	  end
-      )
-  )
+    begin
+ 	    Current.indexSong := !Current.indexSong - 1;
+  	  Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
+      actDisplay !Current.filepath;
+  	  play ()
+    end
+  else
+    begin
+      if (!filedisplay != "") then
+  	    begin
+  	      Current.filepath := "";
+          actDisplay "";
+  	      Current.indexSong := 0;
+  	      Wrap.stop_sound()
+  	    end
+    end;
+  !Current.indexSong = 0
+    
   
-let suivant = (fun () ->
-  if (!Current.indexSong != List.length !Current.playListFile - 1) then
+let suivant () =
+  if (!Current.indexSong != List.length !Current.playList - 1) then
       begin
   	    Current.indexSong := !Current.indexSong + 1;
-  	    Current.filepath := List.nth !Current.playListFile !Current.indexSong;
+  	    Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
         actDisplay !Current.filepath;
   	    play ()
-      end
-   else
-      (if (!filedisplay != "") then
-  	  begin
-  	    Current.filepath := "";
-        actDisplay "";
-  	    Current.indexSong := 0;
-  	    Wrap.stop_sound()
-  	  end
-      )
-  )
+    end
+  else
+    begin
+      if (!filedisplay != "") then
+        begin
+  	      Current.filepath := "";
+          actDisplay "";
+  	      Current.indexSong := 0;
+  	      Wrap.stop_sound()
+  	    end
+    end;
+  !Current.indexSong = List.length !Current.playList - 1
+  
 
 (* Bouton d'ouverture du fichier *) 
   
@@ -95,9 +99,8 @@ let open_button =
     ~packing: toolbar#insert () in 
   ignore(btn#connect#clicked 
     (fun () ->
-      Current.launchPlaylist filedisplay;
-      Biblio.checkBiblio ();
-      Ettoihc.biblioText#buffer#set_text (!Biblio.biblioForDisplay)));
+      Current.launchPlaylist ();
+      Database.checkBiblio ()));
   btn
 
 (* Bouton Save *)
@@ -111,34 +114,16 @@ let save_button =
 
 let separator1 = GButton.separator_tool_item ~packing: toolbar#insert ()
 
-(* Bouton Previous *)
-
-let previous_button =
-  let btn = GButton.tool_button 
-    ~stock:`MEDIA_PREVIOUS
-    ~label:"Previous"
-    ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> precedent ()));
-  btn
-
 (* Bouton Play/Pause *)
 
-let playpause_button =  
-  let btnplay = GButton.tool_button 
+let btnplay = GButton.tool_button 
     ~stock:`MEDIA_PLAY
     ~label:"Play"
-    ~packing:toolbar#insert () in
-  let btnpause = GButton.tool_button 
+    ~packing:toolbar#insert ()
+let btnpause = GButton.tool_button 
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
-    ~packing:toolbar#insert () in
-  ignore(btnpause#connect#clicked 
-    (fun () -> btnplay#misc#show (); btnpause#misc#hide (); 
-               Ettoihc.pause := true; Wrap.pause_sound ()));
-  ignore(btnplay#connect#clicked 
-  	(fun () -> btnpause#misc#show (); btnplay#misc#hide ();
-               Current.play (); play (); Ettoihc.pause := false)); 
-  btnpause#misc#hide ()
+    ~packing:toolbar#insert ()
 
 (* Bouton Stop *)
 
@@ -151,7 +136,24 @@ let stop_button =
     Current.filepath := "";
     Current.indexSong := 0;
     actDisplay "";
-    Wrap.stop_sound()));
+    Wrap.stop_sound();
+    btnpause#misc#hide (); 
+    btnplay#misc#show ();));
+  btn
+
+(* Bouton Previous *)
+
+let previous_button =
+  let btn = GButton.tool_button 
+    ~stock:`MEDIA_PREVIOUS
+    ~label:"Previous"
+    ~packing:toolbar#insert () in
+  ignore(btn#connect#clicked (fun () -> 
+      if (precedent ()) then 
+        begin
+          btnpause#misc#hide (); 
+          btnplay#misc#show ();
+        end));
   btn
 
 (* Bouton Next *)
@@ -161,7 +163,12 @@ let next_button =
     ~stock:`MEDIA_NEXT
     ~label:"Next"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> suivant ()));
+  ignore(btn#connect#clicked (fun () -> 
+      if (suivant ()) then 
+        begin
+          btnpause#misc#hide (); 
+          btnplay#misc#show ();
+        end));
   btn
 
 let separator2 = GButton.separator_tool_item ~packing: toolbar#insert()
@@ -208,7 +215,14 @@ let about_button =
 let _ =
   Wrap.init_sound();
   ignore(Ettoihc.window#event#connect#delete Ettoihc.confirm);
-  Biblio.startBiblio ();
+  ignore(btnpause#connect#clicked 
+    (fun () -> btnplay#misc#show (); btnpause#misc#hide (); 
+               Ettoihc.pause := true; Wrap.pause_sound ()));
+  ignore(btnplay#connect#clicked 
+  	(fun () -> btnpause#misc#show (); btnplay#misc#hide ();
+               Current.play (); play (); Ettoihc.pause := false)); 
+  btnpause#misc#hide ();
+  Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();
   Wrap.destroy_sound()
