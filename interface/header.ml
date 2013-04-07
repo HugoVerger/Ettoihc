@@ -3,7 +3,7 @@ let filedisplay = ref ""
 let toolbar = GButton.toolbar  
 	~orientation:`HORIZONTAL  
 	~style:`BOTH
-	~width:520
+	~width:470
 	~height:10
 	~packing:(Ettoihc.menubox#pack ~expand:false) ()
 
@@ -121,27 +121,24 @@ let previous_button =
   ignore(btn#connect#clicked (fun () -> precedent ()));
   btn
 
-(* Bouton Play *)
- 
-let play_button =
-  let btn = GButton.tool_button 
+(* Bouton Play/Pause *)
+
+let playpause_button =  
+  let btnplay = GButton.tool_button 
     ~stock:`MEDIA_PLAY
     ~label:"Play"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked 
-  	(fun () -> Current.play (); play (); Ettoihc.pause := false));
-  btn
-
-(* Bouton Pause *)
-
-let pause_button =
-  let btn = GButton.tool_button 
+  let btnpause = GButton.tool_button 
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked 
-    (fun () -> Ettoihc.pause := true; Wrap.pause_sound ()));
-  btn
+  ignore(btnpause#connect#clicked 
+    (fun () -> btnplay#misc#show (); btnpause#misc#hide (); 
+               Ettoihc.pause := true; Wrap.pause_sound ()));
+  ignore(btnplay#connect#clicked 
+  	(fun () -> btnpause#misc#show (); btnplay#misc#hide ();
+               Current.play (); play (); Ettoihc.pause := false)); 
+  btnpause#misc#hide ()
 
 (* Bouton Stop *)
 

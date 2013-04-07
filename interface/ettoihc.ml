@@ -14,7 +14,7 @@ let window =
     ~title:"Ettoihc"
     ~position:`CENTER
     ~resizable:true
-    ~width:710 
+    ~width:660 
     ~height:420 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
