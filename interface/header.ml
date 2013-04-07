@@ -47,7 +47,8 @@ let actDisplay filepath =
 
 let play () =
   actDisplay !Current.filepath;
-  Wrap.play_sound(!Current.filepath)
+  Wrap.play_sound(!Current.filepath);
+  Ettoihc.pause := false
 
 let precedent () =
   if (!Current.indexSong != 0) then
@@ -64,6 +65,7 @@ let precedent () =
   	      Current.filepath := "";
           actDisplay "";
   	      Current.indexSong := 0;
+  	      Ettoihc.pause := true;
   	      Wrap.stop_sound()
   	    end
     end;
@@ -85,6 +87,7 @@ let suivant () =
   	      Current.filepath := "";
           actDisplay "";
   	      Current.indexSong := 0;
+  	      Ettoihc.pause := true;
   	      Wrap.stop_sound()
   	    end
     end;
@@ -219,9 +222,14 @@ let _ =
     (fun () -> btnplay#misc#show (); btnpause#misc#hide (); 
                Ettoihc.pause := true; Wrap.pause_sound ()));
   ignore(btnplay#connect#clicked 
-  	(fun () -> btnpause#misc#show (); btnplay#misc#hide ();
-               Current.play (); play (); Ettoihc.pause := false)); 
+  	(fun () -> if (!Current.filepath = "") then () else
+          begin
+            btnpause#misc#show (); btnplay#misc#hide ();
+            Current.play (); play ()
+          end)); 
   btnpause#misc#hide ();
+  ignore(Ettoihc.playlistView#connect#row_activated 
+            ~callback: (Current.on_row_activated Ettoihc.playlistView));
   Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();

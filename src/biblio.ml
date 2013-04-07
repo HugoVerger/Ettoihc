@@ -17,10 +17,10 @@ let addSong filepath biblio =
   end
   
 let addPlaylist filepath biblio =
-   	let ic = open_in filepath in
-   	try
-  		while true; do
-    		 addSong (input_line ic) biblio;
-  		done;
-	with End_of_file ->
-  	close_in ic 
+  let ic = open_in filepath in
+  (try
+    while true; do
+    	addSong (input_line ic) biblio;
+  	done;
+  with End_of_file ->
+  	close_in ic);

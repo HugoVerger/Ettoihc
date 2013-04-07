@@ -3,11 +3,14 @@ let indexSong = ref 0
 let playList = ref []
 
 let play () =
-  let tmp = List.nth !playList !indexSong in
-  let tmp2 = match tmp with (_,_,a) -> a in
-  if (List.length !playList != 0 && 
-  	(!Ettoihc.pause || (!filepath != tmp2))) then
-      filepath := tmp2
+  if (!playList != []) then
+    begin
+      let tmp = List.nth !playList !indexSong in
+      let tmp2 = match tmp with (_,_,a) -> a in
+      if (List.length !playList != 0 && 
+            (!Ettoihc.pause || (!filepath != tmp2))) then
+        filepath := tmp2
+    end
       
 let launchPlaylist () =
   let fill (song, artist, path) =
@@ -30,4 +33,11 @@ let launchPlaylist () =
       List.iter fill !playList;
     end
 
-
+let on_row_activated (view:GTree.view) path column =
+  let model = view#model in
+  let row = model#get_iter path in
+  let song = model#get ~row ~column:Ettoihc.songPlaylist in
+  let artist = model#get ~row ~column:Ettoihc.artistPlaylist in
+  let path = model#get ~row ~column:Ettoihc.pathPlaylist in
+  Printf.printf "Double-clicked row contains %s %s %s\n" song artist path;
+  flush stdout

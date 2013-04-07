@@ -1,9 +1,20 @@
 let biblio = ref []
 
+let addBiblio n =
+  let fill (song, artist, path) =
+    let iter = Ettoihc.storeBiblio#append () in
+    Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.songBiblio song;
+    Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.artistBiblio artist;
+    Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.pathBiblio path; in
+  fill (List.nth !biblio n)
+
 let checkBiblio () =
   let filepath = !Current.filepath in
   if (Ettoihc.get_extension filepath) then
-    Biblio.addSong filepath biblio
+    begin
+      Biblio.addSong filepath biblio;
+      addBiblio (List.length !biblio - 1)
+    end
   else
     begin
       Biblio.addPlaylist filepath biblio

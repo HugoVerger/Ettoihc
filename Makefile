@@ -55,4 +55,4 @@ clean::
 	cd src/ && rm -f *~ *# *.cm?
 	cd interface/ && rm -f *~ *# *.cm?
 	rm -f *~ *# *.o *.cm? ${BIN} biblio
-	echo "" > biblio
+	echo "media/wave.mp3" > biblio

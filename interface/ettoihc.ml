@@ -55,6 +55,11 @@ let lecturePage =
   GPack.vbox
     ~packing:onglet1#add()
 
+let scrollPlaylist = GBin.scrolled_window
+  ~hpolicy:`ALWAYS
+  ~vpolicy:`ALWAYS
+  ~packing:lecturePage#add ()
+
 let colsPlaylist = new GTree.column_list
 let songPlaylist = colsPlaylist#add Gobject.Data.string
 let artistPlaylist = colsPlaylist#add Gobject.Data.string
@@ -64,7 +69,7 @@ let storePlaylist = GTree.list_store colsPlaylist
   
 let playlistView =
   let model = storePlaylist in
-  let view = GTree.view ~model ~packing: lecturePage#add () in
+  let view = GTree.view ~model ~packing: scrollPlaylist#add () in
   let col = GTree.view_column 
     ~title:"Song"
     ~renderer:(GTree.cell_renderer_text [], ["text", songPlaylist]) () in
@@ -93,6 +98,11 @@ let biblioPage =
   GPack.vbox
     ~packing:onglet2#add()
 
+let scrollBiblio = GBin.scrolled_window
+  ~hpolicy:`ALWAYS
+  ~vpolicy:`ALWAYS
+  ~packing:biblioPage#add ()
+
 let colsBiblio = new GTree.column_list
 let songBiblio = colsBiblio#add Gobject.Data.string
 let artistBiblio = colsBiblio#add Gobject.Data.string
@@ -102,7 +112,7 @@ let storeBiblio = GTree.list_store colsBiblio
   
 let biblioView =
   let model = storeBiblio in
-  let view = GTree.view ~model ~packing: biblioPage#add () in
+  let view = GTree.view ~model ~packing: scrollBiblio#add () in
   let col = GTree.view_column 
     ~title:"Song"
     ~renderer:(GTree.cell_renderer_text [], ["text", songBiblio]) () in
