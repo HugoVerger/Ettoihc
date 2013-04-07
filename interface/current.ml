@@ -10,22 +10,24 @@ let play () =
       filepath := tmp2
       
 let launchPlaylist () =
+  let fill (song, artist, path) =
+    let iter = Ettoihc.storePlaylist#append () in
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
+  in
   Ettoihc.openDialog filepath;
   if (Ettoihc.get_extension !filepath) then
-    Playlist.addSong !filepath playList
+    begin
+      if (Playlist.addSong !filepath playList) then () else
+        fill (List.nth !playList ((List.length !playList) -1))
+    end
   else
     begin
       Playlist.cleanPlaylist playList indexSong;
       Wrap.stop_sound();
-      Playlist.addPlaylist !filepath playList
-    end;
-    
-    (*(* Column #1: song *)
-    let col = GTree.view_column ~title:"Song"
-      ~renderer:(GTree.cell_renderer_text [], ["text", Ettoihc.songPlaylist]) () in
-    ignore (Ettoihc.playlistView#append_column col);
+      Playlist.addPlaylist !filepath playList;
+      List.iter fill !playList;
+    end
 
-    (* Column #2: artist *)
-    let col = GTree.view_column ~title:"Artist"
-      ~renderer:(GTree.cell_renderer_text [], ["text", Ettoihc.artistPlaylist]) () in
-    ignore (Ettoihc.playlistView#append_column col);*)
+

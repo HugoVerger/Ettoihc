@@ -3,17 +3,19 @@ let addSong filepath playList =
 		|[] -> false
 		|(_,_,file)::_ when file = filepath -> true
 		|(_,_,_)::t -> checkExist t in
-	if (checkExist !playList) then () else
-	begin
-	  let artist = ref "" and song = ref "" in
-	  if Meta.Id3v1.has_tag filepath then
-        begin
-		      let t = Meta.Id3v1.read_file filepath in
-		    	artist := Meta.Id3v1.getArtist t;	
-		    	song := Meta.Id3v1.getTitle t;
-			  end;
-    	playList := !playList @ [(!song,!artist,filepath)]
-  end
+  let tmp = checkExist !playList in
+	if tmp then () else
+	  begin
+	    let artist = ref "" and song = ref "" in
+	    if Meta.Id3v1.has_tag filepath then
+          begin
+		        let t = Meta.Id3v1.read_file filepath in
+		    	  artist := Meta.Id3v1.getArtist t;	
+		    	  song := Meta.Id3v1.getTitle t;
+			    end;
+      playList := !playList @ [(!song,!artist,filepath)];
+    end;
+  tmp
 
 let getFile nmb playList =
   let tmp = List.nth playList nmb in
@@ -30,7 +32,7 @@ let addPlaylist filepath playList =
    	let ic = open_in filepath in
    	try
   		while true; do
-    		 addSong (input_line ic) playList;
+    		 ignore(addSong (input_line ic) playList);
   		done;
 	with End_of_file ->
   	close_in ic

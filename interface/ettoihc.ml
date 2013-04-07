@@ -65,6 +65,21 @@ let storePlaylist = GTree.list_store colsPlaylist
 let playlistView =
   let model = storePlaylist in
   let view = GTree.view ~model ~packing: lecturePage#add () in
+  let col = GTree.view_column 
+    ~title:"Song"
+    ~renderer:(GTree.cell_renderer_text [], ["text", songPlaylist]) () in
+  col#set_min_width 150;
+  ignore (view#append_column col);
+  let col = GTree.view_column 
+    ~title:"Artist"
+    ~renderer:(GTree.cell_renderer_text [], ["text", artistPlaylist]) () in
+  col#set_min_width 150;
+  ignore (view#append_column col);
+  let col = GTree.view_column 
+    ~title:"Path"
+    ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) () in
+  col#set_min_width 360;
+  ignore (view#append_column col);
   view
 
 (* Contenu onglet 2 *)
@@ -86,8 +101,23 @@ let pathBiblio = colsBiblio#add Gobject.Data.string
 let storeBiblio = GTree.list_store colsPlaylist
   
 let biblioView =
-  let model = storePlaylist in
-  let view = GTree.view ~model ~packing: lecturePage#add () in
+  let model = storeBiblio in
+  let view = GTree.view ~model ~packing: biblioPage#add () in
+  let col = GTree.view_column 
+    ~title:"Song"
+    ~renderer:(GTree.cell_renderer_text [], ["text", songBiblio]) () in
+  col#set_min_width 150;
+  ignore (view#append_column col);
+  let col = GTree.view_column 
+    ~title:"Artist"
+    ~renderer:(GTree.cell_renderer_text [], ["text", artistBiblio]) () in
+  col#set_min_width 150;
+  ignore (view#append_column col);
+  let col = GTree.view_column 
+    ~title:"Path"
+    ~renderer:(GTree.cell_renderer_text [], ["text", pathBiblio]) () in
+  col#set_min_width 360;
+  ignore (view#append_column col);
   view
 
 (* Contenu onglet 3 *)
