@@ -19,10 +19,10 @@ let loadBiblio () =
   	close_in ic
 
 let startBiblio () =
-  loadBiblio ()(*;
+  loadBiblio ();
   let fill (song, artist, path) =
     let iter = Ettoihc.storeBiblio#append () in
     Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.songBiblio song;
     Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.artistBiblio artist;
     Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.pathBiblio path; in
-  List.iter fill !biblio*)
+  List.iter fill !biblio

@@ -98,7 +98,7 @@ let songBiblio = colsBiblio#add Gobject.Data.string
 let artistBiblio = colsBiblio#add Gobject.Data.string
 let pathBiblio = colsBiblio#add Gobject.Data.string
 
-let storeBiblio = GTree.list_store colsPlaylist
+let storeBiblio = GTree.list_store colsBiblio
   
 let biblioView =
   let model = storeBiblio in
