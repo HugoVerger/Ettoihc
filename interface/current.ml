@@ -21,7 +21,6 @@ let launchPlaylist () =
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
     Ettoihc.playListForSave := !Ettoihc.playListForSave ^ path ^ "\n";
   in
-  Ettoihc.openDialog filepath;
   if (Ettoihc.get_extension !filepath) then
     begin
       if (Playlist.addSong !filepath playList) then () else

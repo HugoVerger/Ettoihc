@@ -102,8 +102,12 @@ let open_button =
     ~packing: toolbar#insert () in 
   ignore(btn#connect#clicked 
     (fun () ->
-      Current.launchPlaylist ();
-      Database.checkBiblio ()));
+      Ettoihc.openDialog Current.filepath;
+      if !Current.filepath = "" then () else
+        begin        
+          Current.launchPlaylist ();
+          Database.checkBiblio ()
+        end));
   btn
 
 (* Bouton Save *)
@@ -136,12 +140,14 @@ let stop_button =
     ~label:"Stop"
     ~packing:toolbar#insert () in
   ignore(btn#connect#clicked (fun () -> 
-    Current.filepath := "";
-    Current.indexSong := 0;
+  	Current.filepath := "";
     actDisplay "";
-    Wrap.stop_sound();
+  	Current.indexSong := 0;
+  	Ettoihc.pause := true;
+  	Wrap.stop_sound();
     btnpause#misc#hide (); 
-    btnplay#misc#show ();));
+    btnplay#misc#show ();
+    Current.play ()));
   btn
 
 (* Bouton Previous *)

@@ -185,7 +185,7 @@ let openDialog filepath =
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_select_button_stock `OPEN `OPEN;    
   if dlg#run () = `OPEN then
-    	filepath := str_op(dlg#filename);
+    filepath := str_op(dlg#filename);
   dlg#misc#hide ()
 
 (* Fenêtre de sauvegarde *)
