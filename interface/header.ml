@@ -51,16 +51,16 @@ let play () =
   Ettoihc.pause := false
 
 let precedent () =
-  if (!Current.indexSong != 0) then
+  if (!filedisplay = "") then () else
     begin
- 	    Current.indexSong := !Current.indexSong - 1;
-  	  Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
-      actDisplay !Current.filepath;
-  	  play ()
-    end
-  else
-    begin
-      if (!filedisplay != "") then
+      if (!Current.indexSong != 0) then
+        begin
+ 	        Current.indexSong := !Current.indexSong - 1;
+  	      Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
+          actDisplay !Current.filepath;
+  	      play ()
+        end
+      else
   	    begin
   	      Current.filepath := "";
           actDisplay "";
@@ -73,22 +73,23 @@ let precedent () =
     
   
 let suivant () =
-  if (!Current.indexSong != List.length !Current.playList - 1) then
-      begin
-  	    Current.indexSong := !Current.indexSong + 1;
-  	    Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
-        actDisplay !Current.filepath;
-  	    play ()
-    end
-  else
+  if (!filedisplay = "") then () else
     begin
-      if (!filedisplay != "") then
+      if (!Current.indexSong != List.length !Current.playList - 1) then
+        begin
+  	      Current.indexSong := !Current.indexSong + 1;
+  	      Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
+          actDisplay !Current.filepath;
+  	      play ()
+        end
+      else
         begin
   	      Current.filepath := "";
           actDisplay "";
   	      Current.indexSong := 0;
   	      Ettoihc.pause := true;
-  	      Wrap.stop_sound()
+  	      Wrap.stop_sound();
+          Current.play ()
   	    end
     end;
   !Current.indexSong = List.length !Current.playList - 1
