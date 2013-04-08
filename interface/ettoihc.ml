@@ -1,6 +1,7 @@
 let pause = ref true	
 let biblioForSave = ref ""
 let playListForSave = ref ""
+let play = ref (fun () -> ())
 
 let str_op = function
   | Some x -> x
@@ -61,6 +62,7 @@ let scrollPlaylist = GBin.scrolled_window
   ~packing:lecturePage#add ()
 
 let colsPlaylist = new GTree.column_list
+let nmbPlaylist = colsPlaylist#add Gobject.Data.int
 let songPlaylist = colsPlaylist#add Gobject.Data.string
 let artistPlaylist = colsPlaylist#add Gobject.Data.string
 let pathPlaylist = colsPlaylist#add Gobject.Data.string
@@ -70,6 +72,10 @@ let storePlaylist = GTree.list_store colsPlaylist
 let playlistView =
   let model = storePlaylist in
   let view = GTree.view ~model ~packing: scrollPlaylist#add () in
+  let col = GTree.view_column
+    ~renderer:(GTree.cell_renderer_text [], ["text", nmbPlaylist]) () in
+  col#set_min_width 20;
+  ignore (view#append_column col);
   let col = GTree.view_column 
     ~title:"Song"
     ~renderer:(GTree.cell_renderer_text [], ["text", songPlaylist]) () in
@@ -83,7 +89,7 @@ let playlistView =
   let col = GTree.view_column 
     ~title:"Path"
     ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) () in
-  col#set_min_width 360;
+  col#set_min_width 330;
   ignore (view#append_column col);
   view
 

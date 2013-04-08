@@ -230,6 +230,7 @@ let _ =
   btnpause#misc#hide ();
   ignore(Ettoihc.playlistView#connect#row_activated 
             ~callback: (Current.on_row_activated Ettoihc.playlistView));
+  Ettoihc.play := (fun () -> btnpause#misc#show (); btnplay#misc#hide (); play ());
   Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();
