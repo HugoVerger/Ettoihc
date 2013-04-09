@@ -10,6 +10,8 @@ FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *systemSong);
 
 FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name);
 
+long getLength(FMOD_SOUND *sound);
+
 void pauseSong (FMOD_SYSTEM *systemSong);
 
 void stopSong (FMOD_SYSTEM *systemSong);

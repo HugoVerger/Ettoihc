@@ -37,17 +37,20 @@ let actDisplay filepath =
     filedisplay := ""
   else
     (begin
+      let time = Wrap.length_sound () in
+      let min = ((time/1000)/60) and sec = (time/1000) mod 60 and ms = (time/10) mod 100 in
+      let timeS = " - "^(string_of_int (min))^":"^(string_of_int(sec))^":"^(string_of_int (ms)) in
       if Meta.Id3v1.has_tag filepath then
 		    let t = Meta.Id3v1.read_file filepath in
-		    filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
+		    filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t ^  timeS
 	    else
 		    filedisplay := filepath
     end);
   soundText#buffer#set_text (!filedisplay)
 
 let play () =
-  actDisplay !Current.filepath;
   Wrap.play_sound(!Current.filepath);
+  actDisplay !Current.filepath;
   Ettoihc.pause := false
 
 let precedent () =

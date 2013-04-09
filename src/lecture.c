@@ -40,6 +40,13 @@ FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name)
     return sound;
 }
 
+long getLength (FMOD_SOUND *sound)
+{
+  unsigned int lenms = 0;
+  FMOD_Sound_GetLength(sound, &lenms, FMOD_TIMEUNIT_MS);
+  return (long)lenms;
+}
+
 void stopSong (FMOD_SYSTEM *systemSong)
 {
 	FMOD_CHANNELGROUP *channelg;
