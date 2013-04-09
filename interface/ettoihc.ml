@@ -183,7 +183,7 @@ let openDialog filepath signal =
     ~destroy_with_parent:true () in
   dlg#set_filter music_filter;
   dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_select_button_stock `MEDIA_PLAY `MEDIA_PLAY;
+  dlg#add_button_stock `MEDIA_PLAY `MEDIA_PLAY;
   dlg#add_button_stock (`STOCK "Add Biblio") (`STOCK "Add Biblio");
   let tmp = dlg#run () in
   if tmp = (`STOCK "Add Biblio") then
@@ -221,7 +221,7 @@ let saveDialog () =
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_select_button_stock `SAVE `SAVE;
   if  (dlg#run () == `SAVE) then 
-      (Wrap.playlistSave (str_op(dlg#filename)) !playListForSave);
+       Wrap.playlistSave (str_op(dlg#filename)) !playListForSave;
   dlg#misc#hide ()
 
 (* Fenêtre de confirmation de sortie *)

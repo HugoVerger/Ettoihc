@@ -106,7 +106,7 @@ let open_button =
   let btn = GButton.tool_button 
     ~stock:`OPEN
     ~packing: toolbar#insert () in
-  let signal = ref "" in
+  let signal = ref "cancel" in
   ignore(btn#connect#clicked 
     (fun () ->
       Ettoihc.openDialog Current.filepath signal;
