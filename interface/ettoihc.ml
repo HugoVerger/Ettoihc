@@ -174,7 +174,7 @@ let music_filter = GFile.filter
   ~name:"Music File"
   ~patterns:(["*.mp3";"*.m3u"]) ()
 
-let openDialog filepath = 
+let openDialog filepath signal = 
   let dlg = GWindow.file_chooser_dialog
     ~action:`OPEN
     ~parent:window
@@ -183,9 +183,29 @@ let openDialog filepath =
     ~destroy_with_parent:true () in
   dlg#set_filter music_filter;
   dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_select_button_stock `OPEN `OPEN;    
-  if dlg#run () = `OPEN then
-    filepath := str_op(dlg#filename);
+  dlg#add_select_button_stock `MEDIA_PLAY `MEDIA_PLAY;
+  dlg#add_button_stock (`STOCK "Add Biblio") (`STOCK "Add Biblio");
+  let tmp = dlg#run () in
+  if tmp = (`STOCK "Add Biblio") then
+    begin
+      filepath := str_op(dlg#filename);
+      signal := "biblio"
+    end
+  else
+    begin
+      if tmp = `MEDIA_PLAY then
+        begin
+          filepath := str_op(dlg#filename);
+          signal := "play";
+        end
+      else
+        begin
+          if tmp = `CANCEL then
+            begin
+              signal := "cancel"
+            end;
+        end;
+    end;
   dlg#misc#hide ()
 
 (* Fenêtre de sauvegarde *)

@@ -56,7 +56,8 @@ let precedent () =
       if (!Current.indexSong != 0) then
         begin
  	        Current.indexSong := !Current.indexSong - 1;
-  	      Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
+  	      Current.filepath := 
+            Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
   	      play ()
         end
@@ -78,7 +79,8 @@ let suivant () =
       if (!Current.indexSong != List.length !Current.playList - 1) then
         begin
   	      Current.indexSong := !Current.indexSong + 1;
-  	      Current.filepath := Playlist.getFile !Current.indexSong !Current.playList;
+  	      Current.filepath := 
+            Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
   	      play ()
         end
@@ -100,14 +102,26 @@ let suivant () =
 let open_button =
   let btn = GButton.tool_button 
     ~stock:`OPEN
-    ~packing: toolbar#insert () in 
+    ~packing: toolbar#insert () in
+  let signal = ref "" in
   ignore(btn#connect#clicked 
     (fun () ->
-      Ettoihc.openDialog Current.filepath;
-      if !Current.filepath = "" then () else
-        begin        
-          Current.launchPlaylist ();
-          Database.checkBiblio ()
+      Ettoihc.openDialog Current.filepath signal;
+      if !signal = "cancel" then () else
+        begin
+          if !signal = "biblio" then
+            Database.checkBiblio ()
+          else
+            begin
+              if !signal = "play" then
+                begin
+                  Current.indexSong := (List.length !Current.playList) - 1;
+                  Current.launchPlaylist ();
+                  Current.indexSong := !Current.indexSong + 1;
+                  Current.play();
+                  !Ettoihc.play ()
+                end
+            end
         end));
   btn
 
@@ -237,7 +251,8 @@ let _ =
   btnpause#misc#hide ();
   ignore(Ettoihc.playlistView#connect#row_activated 
             ~callback: (Current.on_row_activated Ettoihc.playlistView));
-  Ettoihc.play := (fun () -> btnpause#misc#show (); btnplay#misc#hide (); play ());
+  Ettoihc.play := (fun () -> 
+    btnpause#misc#show (); btnplay#misc#hide (); play ());
   Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();

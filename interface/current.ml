@@ -15,7 +15,8 @@ let play () =
 let launchPlaylist () =
   let fill (song, artist, path) =
     let iter = Ettoihc.storePlaylist#append () in
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist (List.length !playList);
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist 
+                                                (List.length !playList);
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
