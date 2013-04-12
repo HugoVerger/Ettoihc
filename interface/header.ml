@@ -254,7 +254,9 @@ let _ =
   btnpause#misc#hide ();
   ignore(Ettoihc.playlistView#connect#row_activated 
             ~callback: (Current.on_row_activated Ettoihc.playlistView));
-  ignore(Ettoihc.biblioView#connect#row_activated 
+ (* ignore(Ettoihc.playlistView#event#connect#button_press 
+            ~callback:(Current.on_button_pressed Ettoihc.playlistView));*)
+  ignore(Ettoihc.biblioView#connect#row_activated
             ~callback: (Database.on_row_activated Ettoihc.biblioView));
   Ettoihc.play := (fun () -> 
     btnpause#misc#show (); btnplay#misc#hide (); play ());
