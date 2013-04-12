@@ -68,29 +68,23 @@ let view_popup_menu treeview ev =
     ~time:(GdkEvent.Button.time ev)
 
 let on_button_pressed treeview ev =
-  if GdkEvent.Button.button ev = 3 then (
-
-    (* optional: select row if no row is selected or only
-     *  one other row is selected (will only do something
-     *  if you set a tree selection mode as described later
-     *  in the tutorial) *)
-    if true then begin
+  if GdkEvent.Button.button ev = 3 then
+    begin
       let selection = treeview#selection in
-
-      (* Note: gtk_tree_selection_count_selected_rows() does not
-       *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! *)
-      if selection#count_selected_rows <= 1 then (
-    	let x = int_of_float (GdkEvent.Button.x ev) in
-    	let y = int_of_float (GdkEvent.Button.y ev) in
-        let path = match treeview#get_path_at_pos ~x ~y  with
-          |Some(p,_,_,_) -> p
-          |None -> failwith "bug" in
-    	selection#unselect_all ();
-    	selection#select_path path
-      )
-    end; (* end of optional bit *)
-
-    view_popup_menu treeview ev;
-    true (* we handled this *)
-  ) else
-    false (* we did not handle this *)
+      if selection#count_selected_rows <= 1 then
+        begin
+     	    let x = int_of_float (GdkEvent.Button.x ev) in
+     	    let y = int_of_float (GdkEvent.Button.y ev) in
+          match treeview#get_path_at_pos ~x ~y  with
+            |Some(p,_,_,_) -> 
+              begin
+                selection#unselect_all ();
+    	          selection#select_path p;
+                view_popup_menu treeview ev;
+              end
+            |None -> ()
+        end;
+      true
+    end
+  else
+    false
