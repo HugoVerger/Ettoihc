@@ -89,7 +89,7 @@ let playlistView =
   let col = GTree.view_column 
     ~title:"Path"
     ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) () in
-  col#set_min_width 330;
+  col#set_min_width 290;
   ignore (view#append_column col);
   view
 
@@ -132,7 +132,7 @@ let biblioView =
   let col = GTree.view_column 
     ~title:"Path"
     ~renderer:(GTree.cell_renderer_text [], ["text", pathBiblio]) () in
-  col#set_min_width 360;
+  col#set_min_width 290;
   ignore (view#append_column col);
   view
 

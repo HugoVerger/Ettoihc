@@ -37,3 +37,14 @@ let startBiblio () =
     Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.artistBiblio artist;
     Ettoihc.storeBiblio#set ~row:iter ~column:Ettoihc.pathBiblio path; in
   List.iter fill !biblio
+
+let on_row_activated (view:GTree.view) path column =
+  let model = view#model in
+  let row = model#get_iter path in
+  let pathFile = model#get ~row ~column:Ettoihc.pathBiblio in
+  Current.filepath := pathFile;
+  Current.indexSong := (List.length !Current.playList) - 1;
+  Current.launchPlaylist ();
+  Current.indexSong := !Current.indexSong + 1;
+  Current.play();
+  !Ettoihc.play ()
