@@ -43,20 +43,26 @@ let on_row_activated (view:GTree.view) path column =
   play ();
   !Ettoihc.play ()
 
-(*
+
+let remove_nth n =
+  let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
+  Ettoihc.storePlaylist#remove iter
+
+
 let cleanPlaylist () =
   Playlist.cleanPlaylist playList indexSong;
   filepath := "";
-  indexSong := 0;
+  Ettoihc.storePlaylist#clear ();
   Ettoihc.pause := true;
-  Wrap.stop_sound ()
+  Wrap.stop_sound ();
+  !Ettoihc.stop ()
 
 let view_popup_menu treeview ev =
   let menu = GMenu.menu () in
   let menuitem = GMenu.menu_item 
     ~label:"Clean Playlist"
     ~packing:menu#append () in
-  menuitem#connect#activate ~callback:(fun () -> cleanPlaylist ());
+  ignore(menuitem#connect#activate ~callback:(fun () -> cleanPlaylist ()));
   menu#popup 
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)
@@ -76,7 +82,9 @@ let on_button_pressed treeview ev =
       if selection#count_selected_rows <= 1 then (
     	let x = int_of_float (GdkEvent.Button.x ev) in
     	let y = int_of_float (GdkEvent.Button.y ev) in
-        let Some (path, _, _, _) = treeview#get_path_at_pos ~x ~y in
+        let path = match treeview#get_path_at_pos ~x ~y  with
+          |Some(p,_,_,_) -> p
+          |None -> failwith "bug" in
     	selection#unselect_all ();
     	selection#select_path path
       )
@@ -85,4 +93,4 @@ let on_button_pressed treeview ev =
     view_popup_menu treeview ev;
     true (* we handled this *)
   ) else
-    false (* we did not handle this *)*)
+    false (* we did not handle this *)

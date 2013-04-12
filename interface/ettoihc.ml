@@ -2,6 +2,7 @@ let pause = ref true
 let biblioForSave = ref ""
 let playListForSave = ref ""
 let play = ref (fun () -> ())
+let stop = ref (fun () -> ())
 
 let str_op = function
   | Some x -> x

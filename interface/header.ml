@@ -54,7 +54,7 @@ let play () =
   Ettoihc.pause := false
 
 let precedent () =
-  if (!filedisplay = "") then () else
+  if not (!filedisplay = "") then
     begin
       if (!Current.indexSong != 0) then
         begin
@@ -77,7 +77,7 @@ let precedent () =
     
   
 let suivant () =
-  if (!filedisplay = "") then () else
+  if not (!filedisplay = "") then
     begin
       if (!Current.indexSong != List.length !Current.playList - 1) then
         begin
@@ -110,7 +110,7 @@ let open_button =
   ignore(btn#connect#clicked 
     (fun () ->
       Ettoihc.openDialog Current.filepath signal;
-      if !signal = "cancel" then () else
+      if not (!signal = "cancel") then
         begin
           if !signal = "biblio" then
             Database.checkBiblio ()
@@ -254,12 +254,14 @@ let _ =
   btnpause#misc#hide ();
   ignore(Ettoihc.playlistView#connect#row_activated 
             ~callback: (Current.on_row_activated Ettoihc.playlistView));
- (* ignore(Ettoihc.playlistView#event#connect#button_press 
-            ~callback:(Current.on_button_pressed Ettoihc.playlistView));*)
+  ignore(Ettoihc.playlistView#event#connect#button_press 
+            ~callback:(Current.on_button_pressed Ettoihc.playlistView));
   ignore(Ettoihc.biblioView#connect#row_activated
             ~callback: (Database.on_row_activated Ettoihc.biblioView));
   Ettoihc.play := (fun () -> 
     btnpause#misc#show (); btnplay#misc#hide (); play ());
+  Ettoihc.stop := (fun () -> 
+    btnpause#misc#hide (); btnplay#misc#show (); actDisplay "");
   Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();
