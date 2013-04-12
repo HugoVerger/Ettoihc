@@ -43,12 +43,6 @@ let on_row_activated (view:GTree.view) path column =
   play ();
   !Ettoihc.play ()
 
-
-let remove_nth n =
-  let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
-  Ettoihc.storePlaylist#remove iter
-
-
 let cleanPlaylist () =
   Playlist.cleanPlaylist playList indexSong;
   filepath := "";
@@ -57,12 +51,54 @@ let cleanPlaylist () =
   Wrap.stop_sound ();
   !Ettoihc.stop ()
 
-let view_popup_menu treeview ev =
+let rec actNmb = function
+  |n when n = (List.length !playList) -> ()
+  |n -> 
+    let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist n;
+    actNmb (n+1)
+
+let deleteList n =
+  let elt = List.nth !playList (n - 1) in
+  let rec delete = function
+    |[] -> []
+    |h::t when h = elt-> t
+    |h::t -> h :: delete t in
+  delete !playList
+
+let removeSong path =
+  let model = Ettoihc.playlistView#model in
+  let row = model#get_iter path in
+  let path = model#get ~row ~column:Ettoihc.pathPlaylist in
+  let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
+  if not (nmb = 1) then
+    begin
+      let iter = Ettoihc.storePlaylist#iter_children ~nth:(nmb - 1) None in
+      if path = !filepath then
+        begin
+          Ettoihc.pause := true;
+          Wrap.stop_sound ();
+          filepath := "";
+          indexSong := 0;
+          !Ettoihc.stop ()
+        end;
+      ignore(Ettoihc.storePlaylist#remove iter);
+      actNmb (nmb);
+      playList := deleteList nmb
+    end
+  else
+    cleanPlaylist ()
+
+let view_popup_menu treeview ev p=
   let menu = GMenu.menu () in
-  let menuitem = GMenu.menu_item 
+  let cleanItem = GMenu.menu_item 
     ~label:"Clean Playlist"
     ~packing:menu#append () in
-  ignore(menuitem#connect#activate ~callback:(fun () -> cleanPlaylist ()));
+  let supItem = GMenu.menu_item 
+    ~label:"Remove"
+    ~packing:menu#append () in
+  ignore(cleanItem#connect#activate ~callback:(fun () -> cleanPlaylist ()));
+  ignore(supItem#connect#activate ~callback:(fun () -> removeSong p));
   menu#popup 
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)
@@ -80,7 +116,7 @@ let on_button_pressed treeview ev =
               begin
                 selection#unselect_all ();
     	          selection#select_path p;
-                view_popup_menu treeview ev;
+                view_popup_menu treeview ev p;
               end
             |None -> ()
         end;
