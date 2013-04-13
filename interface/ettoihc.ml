@@ -51,7 +51,7 @@ let notebook = GPack.notebook
 let lecturePage = 
   let onglet1 = GPack.hbox () in
   let name1 = GMisc.label
-    ~text:"En cours" () in
+    ~text:"Now Playing" () in
   ignore(notebook#insert_page 
     ~tab_label:name1#coerce onglet1#coerce);
   GPack.vbox
@@ -99,7 +99,7 @@ let playlistView =
 let biblioPage =
   let onglet2 = GPack.vbox () in
   let name1 = GMisc.label
-    ~text:"Bibliotheque" () in
+    ~text:"Library" () in
   ignore(notebook#insert_page 
     ~tab_label:name1#coerce onglet2#coerce);
   GPack.vbox
@@ -142,16 +142,17 @@ let biblioView =
 let mixPage = 
   let onglet3 = GPack.vbox () in
   let name1 = GMisc.label
-    ~text:"Effets" () in
+    ~text:"Effects" () in
   ignore(notebook#insert_page 
     ~tab_label:name1#coerce onglet3#coerce);
   GPack.vbox
+    ~homogeneous:false
     ~packing:onglet3#add()
 
 let firstLine =
   let mixFrame1 =GBin.frame
-    ~width:800
-    ~height:250
+    ~width:300
+    ~height:260
     ~border_width:0
     ~packing:mixPage#add () in
   GPack.button_box `HORIZONTAL
@@ -160,14 +161,15 @@ let firstLine =
 
 let secondLine =
   let mixFrame2 =GBin.frame
-    ~width:800
-    ~height:250
+    ~width:300
+    ~height:100
     ~border_width:0
     ~packing:mixPage#add () in
-  GPack.button_box `HORIZONTAL
+  let bb = GPack.button_box `HORIZONTAL
     ~layout:`SPREAD
-    ~packing:mixFrame2#add()
-
+    ~packing:mixFrame2#add() in
+  bb#set_homogeneous false;
+  bb
 
 (* Fenêtre d'ouverture *)
 

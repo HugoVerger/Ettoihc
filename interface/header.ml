@@ -265,4 +265,4 @@ let _ =
   Database.startBiblio ();
   Ettoihc.window#show ();
   GMain.main ();
-  Wrap.destroy_sound()
+  Wrap.destroy_sound ()
