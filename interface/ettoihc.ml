@@ -149,15 +149,38 @@ let mixPage =
     ~homogeneous:false
     ~packing:onglet3#add()
 
-let firstLine =
+let boxLine1 =
+  GPack.hbox ~packing:mixPage#add ()
+
+let firstLineBox1 =
   let mixFrame1 =GBin.frame
-    ~width:300
+    ~width:80
     ~height:260
     ~border_width:0
-    ~packing:mixPage#add () in
+    ~packing:boxLine1#add () in
   GPack.button_box `HORIZONTAL
   	~layout:`SPREAD
   	~packing:mixFrame1#add()
+  	
+let mixFrame1 =GBin.frame
+    ~height:260
+    ~width:420
+    ~border_width:0
+    ~packing:boxLine1#add ()
+    
+let firstLineBox2Vbox = GPack.vbox 
+  ~homogeneous:false 
+  ~packing:mixFrame1#add()
+
+let firstLineBox2 =
+  ignore(GMisc.label 
+    ~height:10 ~text:"Egalizeur"
+    ~packing:firstLineBox2Vbox#add ());
+  let bb = GPack.hbox
+    ~spacing:5
+    ~border_width:10
+  	~packing:firstLineBox2Vbox#add() in
+  bb
 
 let secondLine =
   let mixFrame2 =GBin.frame

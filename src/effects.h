@@ -18,4 +18,4 @@ FMOD_DSP* low_pass_event(FMOD_SYSTEM* system,FMOD_DSP* low_pass);
 
 FMOD_DSP* high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass);
 
-FMOD_DSP* rock (FMOD_SYSTEM* system, FMOD_DSP* dsp, float center, float gain);
+FMOD_DSP* egaliseur (FMOD_SYSTEM* system, FMOD_DSP* dsp, float center, float gain);

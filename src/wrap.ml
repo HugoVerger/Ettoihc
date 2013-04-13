@@ -2,6 +2,7 @@
   Fonctions C
 *)
 external playlistSave:  string-> string -> unit = "ocaml_playlist"
+external egaliseur:     float -> float  -> unit = "ocaml_egaliseur"
 external biblioSave:    string-> unit   = "ocaml_biblio"
 external init_sound:    unit	-> unit   = "ocaml_init"
 external destroy_sound:	unit	-> unit   = "ocaml_destroy"

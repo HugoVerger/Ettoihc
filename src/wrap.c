@@ -11,7 +11,7 @@ FMOD_SOUND      *sound = NULL;
 FMOD_DSP        *distortion = 0, *flange = 0, *echo = 0, *chorus = 0,
                 *parameq = 0, *low_pass = 0, *high_pass = 0, *dsp0 = 0,
                 *dsp1 = 0, *dsp2 = 0, *dsp3 = 0, *dsp4 = 0, *dsp5 = 0,
-                *dsp6 = 0, *dsp7 = 0, *dsp8 = 0,*dsp9 = 0;
+                *dsp6 = 0, *dsp7 = 0, *dsp8 = 0, *dsp9 = 0;
 long            soundLength = 0;
 int             egalizeurOn = 0;
 
@@ -97,33 +97,55 @@ value ocaml_rock (value v)
 {
   if (egalizeurOn)
    {
-    dsp0 = rock(systemSong, dsp0, 29., 1.);
-    dsp1 = rock(systemSong, dsp1, 59., 1.);
-    dsp2 = rock(systemSong, dsp2, 119., 1.);
-    dsp3 = rock(systemSong, dsp3, 237., 1.);
-    dsp4 = rock(systemSong, dsp4, 474., 1.);
-    dsp5 = rock(systemSong, dsp5, 947., 1.);
-    dsp6 = rock(systemSong, dsp6, 2000., 1.);
-    dsp7 = rock(systemSong, dsp7, 4000., 1.);
-    dsp8 = rock(systemSong, dsp8, 8000., 1.);
-    dsp9 = rock(systemSong, dsp9, 15000., 1.);
+    dsp0 = egaliseur(systemSong, dsp0, 29., 1.);
+    dsp1 = egaliseur(systemSong, dsp1, 59., 1.);
+    dsp2 = egaliseur(systemSong, dsp2, 119., 1.);
+    dsp3 = egaliseur(systemSong, dsp3, 237., 1.);
+    dsp4 = egaliseur(systemSong, dsp4, 474., 1.);
+    dsp5 = egaliseur(systemSong, dsp5, 947., 1.);
+    dsp6 = egaliseur(systemSong, dsp6, 2000., 1.);
+    dsp7 = egaliseur(systemSong, dsp7, 4000., 1.);
+    dsp8 = egaliseur(systemSong, dsp8, 8000., 1.);
+    dsp9 = egaliseur(systemSong, dsp9, 15000., 1.);
     egalizeurOn = 0;
   } 
   else
   {
-    dsp0 = rock(systemSong, dsp0, 29., 2.);
-    dsp1 = rock(systemSong, dsp1, 59., 1.4);
-    dsp2 = rock(systemSong, dsp2, 119., 0.625);
-    dsp3 = rock(systemSong, dsp3, 237., 0.550);
-    dsp4 = rock(systemSong, dsp4, 474., 0.800);
-    dsp5 = rock(systemSong, dsp5, 947., 1.3);
-    dsp6 = rock(systemSong, dsp6, 2000., 2.3);
-    dsp7 = rock(systemSong, dsp7, 4000., 2.5);
-    dsp8 = rock(systemSong, dsp8, 8000., 2.5);
-    dsp9 = rock(systemSong, dsp9, 15000., 2.5);
+    dsp0 = egaliseur(systemSong, dsp0, 29., 2.);
+    dsp1 = egaliseur(systemSong, dsp1, 59., 1.4);
+    dsp2 = egaliseur(systemSong, dsp2, 119., 0.625);
+    dsp3 = egaliseur(systemSong, dsp3, 237., 0.550);
+    dsp4 = egaliseur(systemSong, dsp4, 474., 0.800);
+    dsp5 = egaliseur(systemSong, dsp5, 947., 1.3);
+    dsp6 = egaliseur(systemSong, dsp6, 2000., 2.3);
+    dsp7 = egaliseur(systemSong, dsp7, 4000., 2.5);
+    dsp8 = egaliseur(systemSong, dsp8, 8000., 2.5);
+    dsp9 = egaliseur(systemSong, dsp9, 15000., 2.5);
     egalizeurOn = 1;
   }
   return v;
+}
+
+value ocaml_egaliseur (value f, value g)
+{
+  int tmp = (int)Double_val(f);
+  float gain = Double_val(g) / 100;
+  switch (tmp) 
+  {
+    case 29 : dsp0 = egaliseur(systemSong, dsp0, 29., gain); break;
+    case 59 : dsp1 = egaliseur(systemSong, dsp1, 59., gain); break;
+    case 119 : dsp2 = egaliseur(systemSong, dsp2, 119., gain); break;
+    case 237 : dsp3 = egaliseur(systemSong, dsp3, 237., gain); break;
+    case 474 : dsp4 = egaliseur(systemSong, dsp4, 474., gain); break;
+    case 947 : dsp5 = egaliseur(systemSong, dsp5, 947., gain); break;
+    case 2000 : dsp6 = egaliseur(systemSong, dsp6, 2000., gain); break;
+    case 4000 : dsp7 = egaliseur(systemSong, dsp7, 4000., gain); break;
+    case 8000 : dsp8 = egaliseur(systemSong, dsp8, 8000., gain); break;
+    case 15000 : dsp9 = egaliseur(systemSong, dsp9, 15000., gain); break;
+    default : break;
+  }
+  
+  return Val_unit;
 }
 
 value ocaml_lpasse (value v)

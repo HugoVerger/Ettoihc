@@ -12,10 +12,16 @@ FMOD_DSP* distortion_event(FMOD_SYSTEM* system,FMOD_DSP* distortion, float quant
 
 FMOD_DSP* echo_event(FMOD_SYSTEM* system,FMOD_DSP* echo, float quantity)
 {
+  if (quantity == 0.)
+    FMOD_DSP_Remove(echo);
+  else
+  {
   FMOD_DSP_Remove(echo);
   FMOD_System_CreateDSPByType(system, FMOD_DSP_TYPE_ECHO, &echo);
   FMOD_System_AddDSP(system, echo, 0);
   FMOD_DSP_SetParameter(echo, FMOD_DSP_ECHO_DELAY, quantity);
+  }
+  
   return echo;
 }
 
@@ -90,10 +96,10 @@ FMOD_DSP* high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass)
 	return high_pass;
 }
 
-FMOD_DSP* rock (FMOD_SYSTEM* system, FMOD_DSP* dsp, float center, float gain)
+FMOD_DSP* egaliseur (FMOD_SYSTEM* system, FMOD_DSP* dsp, float center, 
+                    float gain)
 {
   FMOD_DSP_Remove(dsp);
-
   FMOD_System_CreateDSPByType(system, FMOD_DSP_TYPE_PARAMEQ, &dsp);
   FMOD_DSP_SetParameter(dsp, FMOD_DSP_PARAMEQ_CENTER, center);
   FMOD_DSP_SetParameter(dsp, FMOD_DSP_PARAMEQ_GAIN, gain);
