@@ -174,7 +174,7 @@ let firstLineBox2Vbox = GPack.vbox
 
 let firstLineBox2 =
   ignore(GMisc.label 
-    ~height:10 ~text:"Egalizeur"
+    ~height:10 ~text:"Equalizeur"
     ~packing:firstLineBox2Vbox#add ());
   let bb = GPack.hbox
     ~spacing:5

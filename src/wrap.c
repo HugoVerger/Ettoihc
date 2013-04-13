@@ -93,7 +93,7 @@ value ocaml_chorus (value v)
   return v ;
 }
 
-value ocaml_rock (value v)
+value ocaml_egaliseur (value s)
 {
   if (egalizeurOn)
    {
@@ -108,25 +108,67 @@ value ocaml_rock (value v)
     dsp8 = egaliseur(systemSong, dsp8, 8000., 1.);
     dsp9 = egaliseur(systemSong, dsp9, 15000., 1.);
     egalizeurOn = 0;
-  } 
+  }
   else
   {
-    dsp0 = egaliseur(systemSong, dsp0, 29., 2.);
-    dsp1 = egaliseur(systemSong, dsp1, 59., 1.4);
-    dsp2 = egaliseur(systemSong, dsp2, 119., 0.625);
-    dsp3 = egaliseur(systemSong, dsp3, 237., 0.550);
-    dsp4 = egaliseur(systemSong, dsp4, 474., 0.800);
-    dsp5 = egaliseur(systemSong, dsp5, 947., 1.3);
-    dsp6 = egaliseur(systemSong, dsp6, 2000., 2.3);
-    dsp7 = egaliseur(systemSong, dsp7, 4000., 2.5);
-    dsp8 = egaliseur(systemSong, dsp8, 8000., 2.5);
-    dsp9 = egaliseur(systemSong, dsp9, 15000., 2.5);
+    const char *tmp = String_val(s);
+    switch (tmp[0])
+    {
+      case 'r' : //rock
+        dsp0 = egaliseur(systemSong, dsp0, 29., 2.);
+        dsp1 = egaliseur(systemSong, dsp1, 59., 1.4);
+        dsp2 = egaliseur(systemSong, dsp2, 119., 0.625);
+        dsp3 = egaliseur(systemSong, dsp3, 237., 0.550);
+        dsp4 = egaliseur(systemSong, dsp4, 474., 0.800);
+        dsp5 = egaliseur(systemSong, dsp5, 947., 1.3);
+        dsp6 = egaliseur(systemSong, dsp6, 2000., 2.3);
+        dsp7 = egaliseur(systemSong, dsp7, 4000., 2.5);
+        dsp8 = egaliseur(systemSong, dsp8, 8000., 2.5);
+        dsp9 = egaliseur(systemSong, dsp9, 15000., 2.5);
+        break;
+      case 'c' : //classique
+        dsp0 = egaliseur(systemSong, dsp0, 29., 1.);
+        dsp1 = egaliseur(systemSong, dsp1, 59., 1.);
+        dsp2 = egaliseur(systemSong, dsp2, 119., 1.);
+        dsp3 = egaliseur(systemSong, dsp3, 237., 1.);
+        dsp4 = egaliseur(systemSong, dsp4, 474., 1.);
+        dsp5 = egaliseur(systemSong, dsp5, 947., 1.);
+        dsp6 = egaliseur(systemSong, dsp6, 2000., 0.58);
+        dsp7 = egaliseur(systemSong, dsp7, 4000., 0.58);
+        dsp8 = egaliseur(systemSong, dsp8, 8000., 0.58);
+        dsp9 = egaliseur(systemSong, dsp9, 15000., 0.48);
+        break;
+      case 't' : //techno
+        dsp0 = egaliseur(systemSong, dsp0, 29., 2.);
+        dsp1 = egaliseur(systemSong, dsp1, 59., 1.6);
+        dsp2 = egaliseur(systemSong, dsp2, 119., 0.95);
+        dsp3 = egaliseur(systemSong, dsp3, 237., 0.625);
+        dsp4 = egaliseur(systemSong, dsp4, 474., 0.7);
+        dsp5 = egaliseur(systemSong, dsp5, 947., 0.95);
+        dsp6 = egaliseur(systemSong, dsp6, 2000., 2.);
+        dsp7 = egaliseur(systemSong, dsp7, 4000., 2.4);
+        dsp8 = egaliseur(systemSong, dsp8, 8000., 2.4);
+        dsp9 = egaliseur(systemSong, dsp9, 15000., 2.2);
+        break;
+      default : 
+        dsp0 = egaliseur(systemSong, dsp0, 29., 1.);
+        dsp1 = egaliseur(systemSong, dsp1, 59., 1.);
+        dsp2 = egaliseur(systemSong, dsp2, 119., 1.);
+        dsp3 = egaliseur(systemSong, dsp3, 237., 1.);
+        dsp4 = egaliseur(systemSong, dsp4, 474., 1.);
+        dsp5 = egaliseur(systemSong, dsp5, 947., 1.);
+        dsp6 = egaliseur(systemSong, dsp6, 2000., 1.);
+        dsp7 = egaliseur(systemSong, dsp7, 4000., 1.);
+        dsp8 = egaliseur(systemSong, dsp8, 8000., 1.);
+        dsp9 = egaliseur(systemSong, dsp9, 15000., 1.);
+        break;
+    }
     egalizeurOn = 1;
   }
-  return v;
+  return Val_unit;
 }
 
-value ocaml_egaliseur (value f, value g)
+value ocaml_egaliseurPerso (value f, value g)
 {
   int tmp = (int)Double_val(f);
   float gain = Double_val(g) / 100;
