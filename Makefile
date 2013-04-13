@@ -13,12 +13,12 @@ CO=  wrap.o lecture.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
+OFLAGS= -thread -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
 OLIB=-cclib -lfmodex64
 OCOPT=ocamlopt
 OCAMLC=ocamlc
-CMXA= lablgtk.cmxa bigarray.cmxa
-CMA=lablgtk.cma bigarray.cma 
+CMXA= lablgtk.cmxa bigarray.cmxa unix.cmxa threads.cmxa
+CMA=lablgtk.cma bigarray.cma unix.cma threads.cma
 ML= src/wrap.ml interface/ettoihc.ml src/meta.ml src/playlist.ml src/biblio.ml interface/current.ml interface/database.ml interface/mix.ml interface/header.ml 
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
@@ -44,7 +44,7 @@ all: Ettoihc
 
 Ettoihc:
 	${CC} ${CFLAGS} -c  ${CS}
-	${OCAMLC} -custom ${OFLAGS} -o ${BIN} ${CO} ${CMA} ${ML} -cclib fmod/lib/libfmodex64.so
+	${OCOPT} ${OFLAGS} -o ${BIN} ${CO} ${CMXA} ${ML} -cclib fmod/lib/libfmodex64.so
 
 depend: .depend
 .depend: ${ML} ${MLI}
@@ -52,7 +52,7 @@ depend: .depend
 	${OCAMLDEP} ${ML} ${MLI} > .depend
 
 clean::
-	cd src/ && rm -f *~ *# *.cm?
-	cd interface/ && rm -f *~ *# *.cm?
-	rm -f *~ *# *.o *.cm? ${BIN} biblio
+	cd src/ && rm -f *~ *# *.cm? *.o
+	cd interface/ && rm -f *~ *# *.cm? *.o
+	rm -f *~ *# *.o ${BIN} biblio
 	echo "media/wave.mp3" > biblio
