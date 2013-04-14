@@ -35,7 +35,7 @@ let soundText =
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
-(* Range en cours de lecture *)
+(* Fonctions du menu *)
 let actLengthSong () =
   lengthSong := Wrap.length_sound ();
   let min = (!lengthSong  / 1000) / 60 in
@@ -67,11 +67,6 @@ let actTimeLine pbar () =
     end;
   true
 
-let timeLine = GRange.progress_bar ~packing:Ettoihc.timeLinebox#add ()
-
-let timer = GMain.Timeout.add ~ms:10 ~callback:(actTimeLine timeLine)
-
-(* Fonctions du menu *)
 
 let actDisplay filepath =
   if (filepath = "") then
@@ -282,3 +277,18 @@ let about_button =
   ignore(btn#connect#clicked (fun () ->
     ignore (dlg#run ()); dlg#misc#hide ()));
   btn
+
+(* Range en cours de lecture *)
+let timeLine = GRange.progress_bar ~packing:Ettoihc.timeLinebox#add ()
+
+let timer = GMain.Timeout.add ~ms:10 ~callback:(actTimeLine timeLine)
+let timer2 = GMain.Timeout.add ~ms:1 ~callback:(fun () -> 
+  if (!lengthSong = !timeSong) then
+    begin
+      if (suivant ()) then
+        begin
+          btnpause#misc#hide ();
+          btnplay#misc#show ();
+        end
+    end;
+  true)
