@@ -15,15 +15,15 @@ let distorsion =
     file_dist := dist_b#adjustment#value;
     Wrap.dist_sound (!file_dist /. 100.) in
   let adj= GData.adjustment 
-    ~value:0.  
+    ~value:0.
     ~lower:0.
     ~upper:110.
     ~step_incr:1. () in
   let box = GPack.vbox
-	  ~height: 130
+    ~height: 130
     ~homogeneous:false
     ~spacing:0
-	  ~packing:(Ettoihc.firstLineBox1#pack ~expand:false) () in
+    ~packing:(Ettoihc.firstLineBox1#pack ~expand:false) () in
   let dist_scale = GRange.scale `VERTICAL
     ~draw_value:true
     ~value_pos:`BOTTOM
@@ -31,7 +31,7 @@ let distorsion =
     ~digits: 0
     ~inverted:true
     ~adjustment:adj
-    ~packing:box#add () in 
+    ~packing:box#add () in
   ignore(dist_scale#connect#value_changed (dist_change dist_scale));
   ignore(GMisc.label ~height:10 ~text:"Distorsion" ~packing:box#add ());
   dist_scale
@@ -47,10 +47,10 @@ let echo =
     ~upper:110.
     ~step_incr:1. () in
   let box = GPack.vbox
-	  ~height: 130
+    ~height: 130
     ~homogeneous:false
     ~spacing:0
-	  ~packing:(Ettoihc.firstLineBox1#pack ~expand:false) () in
+    ~packing:(Ettoihc.firstLineBox1#pack ~expand:false) () in
   let echo_scale = GRange.scale `VERTICAL
     ~draw_value:true
     ~value_pos:`BOTTOM
@@ -69,7 +69,7 @@ let egaliseur =
   let adj1 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box1 = GPack.vbox
-	  ~height: 130 ~homogeneous:false
+    ~height: 130 ~homogeneous:false
     ~spacing:0 ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale1 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
@@ -80,8 +80,8 @@ let egaliseur =
   let adj2 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:1. () in
   let box2 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale2 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj2 ~packing:box2#add () in
@@ -91,8 +91,8 @@ let egaliseur =
   let adj3 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box3 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale3 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj3 ~packing:box3#add () in
@@ -102,8 +102,8 @@ let egaliseur =
   let adj4 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box4 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale4 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj4 ~packing:box4#add () in
@@ -113,8 +113,8 @@ let egaliseur =
   let adj5 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box5 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale5 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj5 ~packing:box5#add () in
@@ -124,8 +124,8 @@ let egaliseur =
   let adj6 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box6 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale6 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj6 ~packing:box6#add () in
@@ -135,8 +135,8 @@ let egaliseur =
   let adj7 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box7 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale7 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj7 ~packing:box7#add () in
@@ -146,8 +146,8 @@ let egaliseur =
   let adj8 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box8 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale8 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj8 ~packing:box8#add () in
@@ -157,8 +157,8 @@ let egaliseur =
   let adj9 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box9 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale9 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj9 ~packing:box9#add () in
@@ -168,8 +168,8 @@ let egaliseur =
   let adj10 = GData.adjustment
     ~value:100. ~lower:5. ~upper:310. ~step_incr:5. () in
   let box10 = GPack.vbox
-	  ~height: 130 ~homogeneous:false ~spacing:0 
-	  ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
+    ~height: 130 ~homogeneous:false ~spacing:0
+    ~packing:(Ettoihc.firstLineBox2#pack ~expand:false) () in
   let scale10 = GRange.scale `VERTICAL
     ~draw_value:true ~value_pos:`BOTTOM ~show:true
     ~digits: 0 ~inverted:true ~adjustment:adj10 ~packing:box10#add () in
@@ -210,8 +210,8 @@ let menuEqual =
     !scaleRef8#set_value 58.;
     !scaleRef9#set_value 48.;
     Wrap.egal_sound "classique"));
-  let item = GMenu.menu_item 
-    ~label:"Rock                          " 
+  let item = GMenu.menu_item
+    ~label:"Rock                          "
     ~packing:file_menu#append () in
   ignore(item#connect#activate ~callback:(fun () ->
     !scaleRef0#set_value 200.;
@@ -225,8 +225,8 @@ let menuEqual =
     !scaleRef8#set_value 250.;
     !scaleRef9#set_value 250.;
     Wrap.egal_sound "rock"));
-  let item = GMenu.menu_item 
-    ~label:"Techno" 
+  let item = GMenu.menu_item
+    ~label:"Techno"
     ~packing:file_menu#append () in
   ignore(item#connect#activate ~callback:(fun () ->
     !scaleRef0#set_value 200.;

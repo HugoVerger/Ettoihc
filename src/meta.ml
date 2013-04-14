@@ -1,21 +1,24 @@
 let chop_whitespace str from =
   let i = ref (String.length str) in
-  while !i > from &&
-        (let c = str.[!i-1] in c = '\000' || c = ' ' || c = '\t')
-  do decr i done;
+  while !i > from && (let c = str.[!i-1] in c = '\000' || c = ' ' || c = '\t')
+  do 
+    decr i
+  done;
   String.sub str from (!i - from)
 
 
 module Id3v1 = struct
 
-  type tag = { 
-      mutable title: string; 
-      mutable artist: string; 
-      mutable album: string;
-      mutable year:string; 
-      mutable comment: string; 
-      mutable tracknum: int; 
-      mutable genre: int }
+  type tag = 
+  {
+    mutable title: string;
+    mutable artist: string;
+    mutable album: string;
+    mutable year:string;
+    mutable comment: string;
+    mutable tracknum: int;
+    mutable genre: int
+  }
 
   let read_channel ic =
     let len = in_channel_length ic in
@@ -36,18 +39,18 @@ module Id3v1 = struct
     { title = title; artist = artist; album = album; year = year;
       comment = comment; tracknum = tracknum; genre = genre }
 
-let getTitle t = t.title
-let getArtist t = t.artist
-let getAlbum t = t.album
-let getYear t = t.year
-let getComment t = t.comment
-let getNum t = string_of_int t.tracknum
-let getGenre t = t.genre
+  let getTitle t = t.title
+  let getArtist t = t.artist
+  let getAlbum t = t.album
+  let getYear t = t.year
+  let getComment t = t.comment
+  let getNum t = string_of_int t.tracknum
+  let getGenre t = t.genre
 
-let read_file filename =
+  let read_file filename =
     let ic = open_in_bin filename in
-      let res = read_channel ic in
-      close_in ic; res
+    let res = read_channel ic in
+    close_in ic; res
 
       
   let has_tag filename =

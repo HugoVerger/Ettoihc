@@ -1,18 +1,18 @@
 let filedisplay = ref ""
 
-let toolbar = GButton.toolbar  
-	~orientation:`HORIZONTAL  
-	~style:`BOTH
-	~width:470
-	~height:10
-	~packing:(Ettoihc.menubox#pack ~expand:false) ()
+let toolbar = GButton.toolbar
+  ~orientation:`HORIZONTAL
+  ~style:`BOTH
+  ~width:470
+  ~height:10
+  ~packing:(Ettoihc.menubox#pack ~expand:false) ()
 
 let volbox = GPack.hbox
-	~width: 90
-	~packing:(Ettoihc.menubox#pack ~expand:false) ()
-	
-let infobar = GButton.toolbar  
-  ~orientation:`HORIZONTAL  
+  ~width: 90
+  ~packing:(Ettoihc.menubox#pack ~expand:false) ()
+
+let infobar = GButton.toolbar
+  ~orientation:`HORIZONTAL
   ~style:`BOTH
   ~width:80
   ~packing:(Ettoihc.menubox#pack ~expand:false) ()
@@ -24,9 +24,9 @@ let soundText =
     ~vpolicy:`NEVER
     ~shadow_type:`ETCHED_IN
     ~packing:Ettoihc.soundbox#add () in
-  let txt = GText.view 
+  let txt = GText.view
     ~packing:scroll#add ()
-    ~editable: false  
+    ~editable: false
     ~cursor_visible: false in
   txt#misc#modify_font_by_name "Monospace 10";
   txt
@@ -36,16 +36,19 @@ let actDisplay filepath =
   if (filepath = "") then
     filedisplay := ""
   else
-    (begin
+    begin
       let time = Wrap.length_sound () in
-      let min = ((time/1000)/60) and sec = (time/1000) mod 60 and ms = (time/10) mod 100 in
-      let timeS = " - "^(string_of_int (min))^":"^(string_of_int(sec))^":"^(string_of_int (ms)) in
+      let min = ((time/1000)/60) and sec = (time/1000) mod 60
+          and ms = (time/10) mod 100 in
+      let timeS = " - "^(string_of_int (min))^":"^(string_of_int(sec))
+                  ^":"^(string_of_int (ms)) in
       if Meta.Id3v1.has_tag filepath then
-		    let t = Meta.Id3v1.read_file filepath in
-		    filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t ^  timeS
-	    else
-		    filedisplay := filepath
-    end);
+        let t = Meta.Id3v1.read_file filepath in
+        filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
+                       ^  timeS
+      else
+        filedisplay := filepath
+    end;
   soundText#buffer#set_text (!filedisplay)
 
 let play () =
@@ -58,20 +61,20 @@ let precedent () =
     begin
       if (!Current.indexSong != 0) then
         begin
- 	        Current.indexSong := !Current.indexSong - 1;
-  	      Current.filepath := 
+          Current.indexSong := !Current.indexSong - 1;
+          Current.filepath :=
             Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
-  	      play ()
+          play ()
         end
       else
-  	    begin
-  	      Current.filepath := "";
+        begin
+          Current.filepath := "";
           actDisplay "";
-  	      Current.indexSong := 0;
-  	      Ettoihc.pause := true;
-  	      Wrap.stop_sound()
-  	    end
+          Current.indexSong := 0;
+          Ettoihc.pause := true;
+          Wrap.stop_sound()
+        end
     end;
   !Current.indexSong = 0
     
@@ -81,51 +84,50 @@ let suivant () =
     begin
       if (!Current.indexSong != List.length !Current.playList - 1) then
         begin
-  	      Current.indexSong := !Current.indexSong + 1;
-  	      Current.filepath := 
-            Playlist.getFile !Current.indexSong !Current.playList;
+          Current.indexSong := !Current.indexSong + 1;
+          Current.filepath :=
+              Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
-  	      play ()
+          play ()
         end
       else
         begin
-  	      Current.filepath := "";
+          Current.filepath := "";
           actDisplay "";
-  	      Current.indexSong := 0;
-  	      Ettoihc.pause := true;
-  	      Wrap.stop_sound();
+          Current.indexSong := 0;
+          Ettoihc.pause := true;
+          Wrap.stop_sound();
           Current.play ()
-  	    end
+        end
     end;
   !Current.indexSong = List.length !Current.playList - 1
-  
+
 
 (* Bouton d'ouverture du fichier *) 
-  
+
 let open_button =
-  let btn = GButton.tool_button 
+  let btn = GButton.tool_button
     ~stock:`OPEN
     ~packing: toolbar#insert () in
   let signal = ref "cancel" in
-  ignore(btn#connect#clicked 
-    (fun () ->
-      Ettoihc.openDialog Current.filepath signal;
-      if not (!signal = "cancel") then
-        begin
-          if !signal = "biblio" then
-            Database.checkBiblio ()
-          else
-            begin
-              if !signal = "play" then
-                begin
-                  Current.indexSong := (List.length !Current.playList) - 1;
-                  Current.launchPlaylist ();
-                  Current.indexSong := !Current.indexSong + 1;
-                  Current.play();
-                  !Ettoihc.play ()
-                end
-            end
-        end));
+  ignore(btn#connect#clicked (fun () ->
+    Ettoihc.openDialog Current.filepath signal;
+    if not (!signal = "cancel") then
+      begin
+        if !signal = "biblio" then
+          Database.checkBiblio ()
+        else
+          begin
+            if !signal = "play" then
+              begin
+                Current.indexSong := (List.length !Current.playList) - 1;
+                Current.launchPlaylist ();
+                Current.indexSong := !Current.indexSong + 1;
+                Current.play();
+                !Ettoihc.play ()
+              end
+          end
+      end));
   btn
 
 (* Bouton Save *)
@@ -141,11 +143,11 @@ let separator1 = GButton.separator_tool_item ~packing: toolbar#insert ()
 
 (* Bouton Play/Pause *)
 
-let btnplay = GButton.tool_button 
+let btnplay = GButton.tool_button
     ~stock:`MEDIA_PLAY
     ~label:"Play"
     ~packing:toolbar#insert ()
-let btnpause = GButton.tool_button 
+let btnpause = GButton.tool_button
     ~stock:`MEDIA_PAUSE
     ~label:"Pause"
     ~packing:toolbar#insert ()
@@ -153,16 +155,16 @@ let btnpause = GButton.tool_button
 (* Bouton Stop *)
 
 let stop_button =
-  let btn = GButton.tool_button 
+  let btn = GButton.tool_button
     ~stock:`MEDIA_STOP
     ~label:"Stop"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> 
-  	Current.filepath := "";
+  ignore(btn#connect#clicked (fun () ->
+    Current.filepath := "";
     actDisplay "";
-  	Current.indexSong := 0;
-  	Ettoihc.pause := true;
-  	Wrap.stop_sound();
+    Current.indexSong := 0;
+    Ettoihc.pause := true;
+    Wrap.stop_sound();
     btnpause#misc#hide (); 
     btnplay#misc#show ();
     Current.play ()));
@@ -171,14 +173,14 @@ let stop_button =
 (* Bouton Previous *)
 
 let previous_button =
-  let btn = GButton.tool_button 
+  let btn = GButton.tool_button
     ~stock:`MEDIA_PREVIOUS
     ~label:"Previous"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> 
-      if (precedent ()) then 
+  ignore(btn#connect#clicked (fun () ->
+      if (precedent ()) then
         begin
-          btnpause#misc#hide (); 
+          btnpause#misc#hide ();
           btnplay#misc#show ();
         end));
   btn
@@ -186,14 +188,14 @@ let previous_button =
 (* Bouton Next *)
 
 let next_button =
-  let btn = GButton.tool_button 
+  let btn = GButton.tool_button
     ~stock:`MEDIA_NEXT
     ~label:"Next"
     ~packing:toolbar#insert () in
-  ignore(btn#connect#clicked (fun () -> 
-      if (suivant ()) then 
+  ignore(btn#connect#clicked (fun () ->
+      if (suivant ()) then
         begin
-          btnpause#misc#hide (); 
+          btnpause#misc#hide ();
           btnplay#misc#show ();
         end));
   btn
@@ -201,22 +203,22 @@ let next_button =
 let separator2 = GButton.separator_tool_item ~packing: toolbar#insert()
 
 (* Barre de volume *)
-let volume=
+let volume =
   let file_vol = ref 50. in
   let vol_change vol_b() =
     file_vol := vol_b#adjustment#value;
     Wrap.vol_sound (!file_vol /. 100.) in
-  let adj= GData.adjustment 
-    ~value:50.  
+  let adj= GData.adjustment
+    ~value:50.
     ~lower:0.
-    ~upper:110.  
+    ~upper:110.
     ~step_incr:1. () in
   let volume_scale = GRange.scale `HORIZONTAL
     ~draw_value:true
     ~show:true
     ~digits: 0
     ~adjustment:adj
-    ~packing:volbox#add () in 
+    ~packing:volbox#add () in
   ignore(volume_scale#connect#value_changed (vol_change volume_scale));
   volume_scale
 
@@ -224,7 +226,7 @@ let volume=
 let about_button =
   let dlg = GWindow.about_dialog
     ~authors:["Nablah"]
-    ~version:"1.0"
+    ~version:"1.1"
     ~website:"http://ettoihc.wordpress.com/"
     ~website_label:"Ettoihc Website"
     ~position:`CENTER_ON_PARENT
@@ -232,37 +234,9 @@ let about_button =
     ~width: 400
     ~height: 150
     ~destroy_with_parent:true () in
-  let btn = GButton.tool_button 
-    ~stock:`ABOUT 
+  let btn = GButton.tool_button
+    ~stock:`ABOUT
     ~packing:infobar#insert () in
-  ignore(btn#connect#clicked (fun () -> 
+  ignore(btn#connect#clicked (fun () ->
     ignore (dlg#run ()); dlg#misc#hide ()));
   btn
-
-let _ =
-  Wrap.init_sound();
-  ignore(Ettoihc.window#event#connect#delete Ettoihc.confirm);
-  ignore(btnpause#connect#clicked 
-    (fun () -> btnplay#misc#show (); btnpause#misc#hide (); 
-               Ettoihc.pause := true; Wrap.pause_sound ()));
-  ignore(btnplay#connect#clicked 
-  	(fun () -> if (!Current.filepath = "") then () else
-          begin
-            btnpause#misc#show (); btnplay#misc#hide ();
-            Current.play (); play ()
-          end)); 
-  btnpause#misc#hide ();
-  ignore(Ettoihc.playlistView#connect#row_activated 
-            ~callback: (Current.on_row_activated Ettoihc.playlistView));
-  ignore(Ettoihc.playlistView#event#connect#button_press 
-            ~callback:(Current.on_button_pressed Ettoihc.playlistView));
-  ignore(Ettoihc.biblioView#connect#row_activated
-            ~callback: (Database.on_row_activated Ettoihc.biblioView));
-  Ettoihc.play := (fun () -> 
-    btnpause#misc#show (); btnplay#misc#hide (); play ());
-  Ettoihc.stop := (fun () -> 
-    btnpause#misc#hide (); btnplay#misc#show (); actDisplay "");
-  Database.startBiblio ();
-  Ettoihc.window#show ();
-  GMain.main ();
-  Wrap.destroy_sound ()

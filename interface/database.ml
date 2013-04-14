@@ -21,13 +21,13 @@ let checkBiblio () =
     end
 
 let loadBiblio () =
- 	let ic = open_in "biblio" in
-   	try
-  		while true; do
-        Biblio.addSong (input_line ic) biblio;
-  		done;
-	with End_of_file ->
-  	close_in ic
+  let ic = open_in "biblio" in
+  try
+    while true; do
+      Biblio.addSong (input_line ic) biblio;
+    done;
+  with End_of_file ->
+    close_in ic
 
 let startBiblio () =
   loadBiblio ();

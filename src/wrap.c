@@ -96,7 +96,7 @@ value ocaml_chorus (value v)
 value ocaml_egaliseur (value s)
 {
   if (egalizeurOn)
-   {
+  {
     dsp0 = egaliseur(systemSong, dsp0, 29., 1.);
     dsp1 = egaliseur(systemSong, dsp1, 59., 1.);
     dsp2 = egaliseur(systemSong, dsp2, 119., 1.);
@@ -186,7 +186,6 @@ value ocaml_egaliseurPerso (value f, value g)
     case 15000 : dsp9 = egaliseur(systemSong, dsp9, 15000., gain); break;
     default : break;
   }
-  
   return Val_unit;
 }
 

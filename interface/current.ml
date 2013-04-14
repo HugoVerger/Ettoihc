@@ -8,14 +8,14 @@ let play () =
       let tmp = List.nth !playList !indexSong in
       let tmp2 = match tmp with (_,_,a) -> a in
       if (List.length !playList != 0 && 
-            (!Ettoihc.pause || (!filepath != tmp2))) then
+                (!Ettoihc.pause || (!filepath != tmp2))) then
         filepath := tmp2
     end
-      
+
 let launchPlaylist () =
   let fill (song, artist, path) =
     let iter = Ettoihc.storePlaylist#append () in
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist 
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist
                                                 (List.length !playList);
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
@@ -53,7 +53,7 @@ let cleanPlaylist () =
 
 let rec actNmb = function
   |n when n = (List.length !playList) -> ()
-  |n -> 
+  |n ->
     let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist n;
     actNmb (n+1)
@@ -91,15 +91,15 @@ let removeSong path =
 
 let view_popup_menu treeview ev p=
   let menu = GMenu.menu () in
-  let cleanItem = GMenu.menu_item 
+  let cleanItem = GMenu.menu_item
     ~label:"Clean Playlist"
     ~packing:menu#append () in
-  let supItem = GMenu.menu_item 
+  let supItem = GMenu.menu_item
     ~label:"Remove"
     ~packing:menu#append () in
   ignore(cleanItem#connect#activate ~callback:(fun () -> cleanPlaylist ()));
   ignore(supItem#connect#activate ~callback:(fun () -> removeSong p));
-  menu#popup 
+  menu#popup
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)
 
@@ -109,13 +109,13 @@ let on_button_pressed treeview ev =
       let selection = treeview#selection in
       if selection#count_selected_rows <= 1 then
         begin
-     	    let x = int_of_float (GdkEvent.Button.x ev) in
-     	    let y = int_of_float (GdkEvent.Button.y ev) in
+          let x = int_of_float (GdkEvent.Button.x ev) in
+          let y = int_of_float (GdkEvent.Button.y ev) in
           match treeview#get_path_at_pos ~x ~y  with
-            |Some(p,_,_,_) -> 
+            |Some(p,_,_,_) ->
               begin
                 selection#unselect_all ();
-    	          selection#select_path p;
+                selection#select_path p;
                 view_popup_menu treeview ev p;
               end
             |None -> ()
