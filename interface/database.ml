@@ -43,8 +43,11 @@ let on_row_activated (view:GTree.view) path column =
   let row = model#get_iter path in
   let pathFile = model#get ~row ~column:Ettoihc.pathBiblio in
   Current.filepath := pathFile;
-  Current.indexSong := (List.length !Current.playList) - 1;
-  Current.launchPlaylist ();
-  Current.indexSong := !Current.indexSong + 1;
-  Current.play();
-  !Ettoihc.play ()
+  if not (Playlist.addSong pathFile Current.playList) then
+    begin
+      let playList = !Current.playList in
+      Current.fill (List.nth playList ((List.length playList) -1));
+      Current.indexSong := (List.length playList) - 1;
+      Current.play();
+      !Ettoihc.play ()
+    end

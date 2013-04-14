@@ -12,19 +12,19 @@ let play () =
         filepath := tmp2
     end
 
+let fill (song, artist, path) =
+  let iter = Ettoihc.storePlaylist#append () in
+  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist
+                                              (List.length !playList);
+  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
+  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
+  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
+  Ettoihc.playListForSave := !Ettoihc.playListForSave ^ path ^ "\n"
+
 let launchPlaylist () =
-  let fill (song, artist, path) =
-    let iter = Ettoihc.storePlaylist#append () in
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist
-                                                (List.length !playList);
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
-    Ettoihc.playListForSave := !Ettoihc.playListForSave ^ path ^ "\n";
-  in
   if (Ettoihc.get_extension !filepath) then
     begin
-      if (Playlist.addSong !filepath playList) then () else
+      if not (Playlist.addSong !filepath playList) then
         fill (List.nth !playList ((List.length !playList) -1))
     end
   else
