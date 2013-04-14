@@ -12,6 +12,8 @@ FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name);
 
 long getLength(FMOD_SOUND *sound);
 
+long getTime();
+
 void pauseSong (FMOD_SYSTEM *systemSong);
 
 void stopSong (FMOD_SYSTEM *systemSong);

@@ -1,4 +1,8 @@
 let filedisplay = ref ""
+let pulse_mode = ref false
+let lengthSong = ref 0
+let lengthSongString = ref "00:00:00"
+let timeSong = ref 0
 
 let toolbar = GButton.toolbar
   ~orientation:`HORIZONTAL
@@ -31,21 +35,52 @@ let soundText =
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
+(* Range en cours de lecture *)
+let actLengthSong () =
+  lengthSong := Wrap.length_sound ();
+  let min = (!lengthSong  / 1000) / 60 in
+  let sec = (!lengthSong  / 1000) mod 60 in
+  let ms = (!lengthSong  / 10) mod 100 in
+  let minS = (if min < 10 then "0" else "") ^ string_of_int (min) in
+  let secS = (if sec < 10 then "0" else "") ^ string_of_int (sec) in
+  let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
+  lengthSongString := minS ^ ":" ^ secS ^ ":" ^ msS
+
+let actTimeLine pbar () =
+  timeSong := Wrap.time_sound ();
+  if (!pulse_mode) then
+    pbar#pulse ()
+  else
+    begin
+      if (!lengthSong = 0) then
+        pbar#set_fraction 0.
+      else
+        pbar#set_fraction ((float)!timeSong /. (float)!lengthSong);
+        let min = (!timeSong / 1000) / 60 in
+        let sec = (!timeSong / 1000) mod 60 in
+        let ms = (!timeSong / 10) mod 100 in
+        let minS = (if min < 10 then "0" else "") ^ string_of_int (min) in
+        let secS = (if sec < 10 then "0" else "") ^ string_of_int (sec) in
+        let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
+        let timeS = minS ^ ":" ^ secS ^ ":" ^ msS in
+        pbar#set_text (timeS ^ " / " ^ !lengthSongString)
+    end;
+  true
+
+let timeLine = GRange.progress_bar ~packing:Ettoihc.timeLinebox#add ()
+
+let timer = GMain.Timeout.add ~ms:10 ~callback:(actTimeLine timeLine)
+
 (* Fonctions du menu *)
+
 let actDisplay filepath =
   if (filepath = "") then
     filedisplay := ""
   else
     begin
-      let time = Wrap.length_sound () in
-      let min = ((time/1000)/60) and sec = (time/1000) mod 60
-          and ms = (time/10) mod 100 in
-      let timeS = " - "^(string_of_int (min))^":"^(string_of_int(sec))
-                  ^":"^(string_of_int (ms)) in
       if Meta.Id3v1.has_tag filepath then
         let t = Meta.Id3v1.read_file filepath in
         filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
-                       ^  timeS
       else
         filedisplay := filepath
     end;
@@ -53,17 +88,19 @@ let actDisplay filepath =
 
 let play () =
   Wrap.play_sound(!Current.filepath);
+  actLengthSong ();
   actDisplay !Current.filepath;
   Ettoihc.pause := false
 
 let precedent () =
+  let tmp = (!Current.indexSong != 0) in
   if not (!filedisplay = "") then
     begin
-      if (!Current.indexSong != 0) then
+      if tmp then
         begin
           Current.indexSong := !Current.indexSong - 1;
           Current.filepath :=
-            Playlist.getFile !Current.indexSong !Current.playList;
+              Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
           play ()
         end
@@ -73,16 +110,19 @@ let precedent () =
           actDisplay "";
           Current.indexSong := 0;
           Ettoihc.pause := true;
-          Wrap.stop_sound()
+          lengthSongString := "00:00:00";
+          Wrap.stop_sound();
+          Current.play ()
         end
     end;
-  !Current.indexSong = 0
+  not tmp
     
   
 let suivant () =
+  let tmp = (!Current.indexSong != List.length !Current.playList - 1) in
   if not (!filedisplay = "") then
     begin
-      if (!Current.indexSong != List.length !Current.playList - 1) then
+      if tmp then
         begin
           Current.indexSong := !Current.indexSong + 1;
           Current.filepath :=
@@ -96,11 +136,12 @@ let suivant () =
           actDisplay "";
           Current.indexSong := 0;
           Ettoihc.pause := true;
+          lengthSongString := "00:00:00";
           Wrap.stop_sound();
           Current.play ()
         end
     end;
-  !Current.indexSong = List.length !Current.playList - 1
+  not tmp
 
 
 (* Bouton d'ouverture du fichier *) 
@@ -165,6 +206,7 @@ let stop_button =
     Current.indexSong := 0;
     Ettoihc.pause := true;
     Wrap.stop_sound();
+    lengthSongString := "00:00:00";
     btnpause#misc#hide (); 
     btnplay#misc#show ();
     Current.play ()));

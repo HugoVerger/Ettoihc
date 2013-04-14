@@ -1,5 +1,7 @@
 #include "lecture.h"
 
+FMOD_CHANNEL      *channel;  
+
 static void ERRCHECK(FMOD_RESULT problem)
 {
   if (problem != FMOD_OK)
@@ -19,8 +21,7 @@ FMOD_SYSTEM* initSystemSon(FMOD_SYSTEM *systemSong)
 
 //Joue la musique
 FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name)
-{   
-  FMOD_CHANNEL      *channel;    
+{     
   FMOD_CHANNELGROUP *channelg;
   int               etat;
 
@@ -44,6 +45,13 @@ long getLength (FMOD_SOUND *sound)
   unsigned int lenms = 0;
   FMOD_Sound_GetLength(sound, &lenms, FMOD_TIMEUNIT_MS);
   return (long)lenms;
+}
+
+long getTime ()
+{
+  unsigned int ms = 0;
+  FMOD_Channel_GetPosition(channel, &ms, FMOD_TIMEUNIT_MS);
+  return (long)ms;
 }
 
 void stopSong (FMOD_SYSTEM *systemSong)

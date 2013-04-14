@@ -17,7 +17,7 @@ let window =
     ~position:`CENTER
     ~resizable:true
     ~width:660
-    ~height:420 () in
+    ~height:440 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
 
@@ -40,6 +40,13 @@ let menubox =
 let soundbox =
   let box = GPack.hbox
     ~height: 20
+    ~packing:(mainbox#pack ~expand:false) () in
+  box#set_homogeneous false;
+  box
+
+let timeLinebox =
+  let box = GPack.hbox
+    ~height: 15
     ~packing:(mainbox#pack ~expand:false) () in
   box#set_homogeneous false;
   box

@@ -12,7 +12,6 @@ FMOD_DSP        *distortion = 0, *flange = 0, *echo = 0, *chorus = 0,
                 *parameq = 0, *low_pass = 0, *high_pass = 0, *dsp0 = 0,
                 *dsp1 = 0, *dsp2 = 0, *dsp3 = 0, *dsp4 = 0, *dsp5 = 0,
                 *dsp6 = 0, *dsp7 = 0, *dsp8 = 0, *dsp9 = 0;
-long            soundLength = 0;
 int             egalizeurOn = 0;
 
 value ocaml_play (value v)
@@ -23,8 +22,12 @@ value ocaml_play (value v)
 
 value ocaml_length ()
 {
-  soundLength = getLength(sound);
-  return Val_long(soundLength);
+  return Val_long(getLength(sound));
+}
+
+value ocaml_time ()
+{
+  return Val_long(getTime());
 }
 
 value ocaml_pause (value v)
