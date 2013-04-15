@@ -145,7 +145,7 @@ let set_draw () =
   Wrap.spectre_sound (tab);
   while (!n <= 350) do
     print_float (Array.get tab !n);
-    let elt = (Array.get tab !n) *. 2000. *. 350. in
+    let elt = min ((Array.get tab !n) *. 100. *. 350.) 350. in
     back#line ~x:(!n) ~y:(int_of_float(elt)) ~x:(!n) ~y:350;
     n := !n + 1
   done;
