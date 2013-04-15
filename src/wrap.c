@@ -13,6 +13,7 @@ FMOD_DSP        *distortion = 0, *flange = 0, *echo = 0, *chorus = 0,
                 *dsp1 = 0, *dsp2 = 0, *dsp3 = 0, *dsp4 = 0, *dsp5 = 0,
                 *dsp6 = 0, *dsp7 = 0, *dsp8 = 0, *dsp9 = 0;
 int             egalizeurOn = 0;
+float           spectre[350];
 
 value ocaml_play (value v)
 {
@@ -46,6 +47,17 @@ value ocaml_vol (value v)
 {
   adjustVol(systemSong, Double_val(v));
   return Val_unit;
+}
+
+value ocaml_spectre ()
+{
+  spectreSong(spectre);
+  return Val_unit;
+}
+
+value ocaml_getSpectre ()
+{
+  return Val_int ((int)(*spectre));
 }
 
 value ocaml_destroy (value v)

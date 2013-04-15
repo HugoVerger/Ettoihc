@@ -5,14 +5,21 @@ let addSong filepath biblio =
     |(_,_,_)::t -> checkExist t in
   if (checkExist !biblio) then () else
     begin
-      let artist = ref "" and song = ref "" in
+      let title = ref "" and album = ref "" and year = ref "" in
+      let comment = ref "" and genre = ref "" and artist = ref "" in
+      let tracknum = ref "" in
       if Meta.Id3v1.has_tag filepath then
         begin
-          let t = Meta.Id3v1.read_file filepath in
-          artist := Meta.Id3v1.getArtist t;
-          song := Meta.Id3v1.getTitle t;
+          let t = Meta.v1_of_v2 (Meta.read_both_as_v2 filepath) in
+          title := t.Meta.Id3v1.title ;
+          artist := t.Meta.Id3v1.artist ;
+          album := t.Meta.Id3v1.album ;
+          year := t.Meta.Id3v1.year ;
+          comment := t.Meta.Id3v1.comment ;
+          tracknum := (string_of_int(t.Meta.Id3v1.tracknum));
+          genre := (string_of_int(t.Meta.Id3v1.genre));
         end;
-      biblio := !biblio @ [(!song,!artist,filepath)];
+      biblio := !biblio @ [(!title,!artist,filepath)];
       Ettoihc.biblioForSave := !Ettoihc.biblioForSave ^ filepath ^ "\n"
     end
 

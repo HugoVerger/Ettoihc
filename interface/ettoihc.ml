@@ -16,8 +16,8 @@ let window =
     ~title:"Ettoihc"
     ~position:`CENTER
     ~resizable:true
-    ~width:660
-    ~height:440 () in
+    ~width:700
+    ~height:445 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
 
@@ -63,7 +63,7 @@ let lecturePage =
     ~text:"Now Playing" () in
   ignore(notebook#insert_page
     ~tab_label:name1#coerce onglet1#coerce);
-  GPack.vbox
+  GPack.hbox
     ~packing:onglet1#add()
 
 let scrollPlaylist = GBin.scrolled_window
@@ -81,7 +81,7 @@ let storePlaylist = GTree.list_store colsPlaylist
 
 let playlistView =
   let model = storePlaylist in
-  let view = GTree.view ~model ~packing: scrollPlaylist#add () in
+  let view = GTree.view ~model ~width:350 ~packing: scrollPlaylist#add () in
   let col = GTree.view_column
     ~renderer:(GTree.cell_renderer_text [], ["text", nmbPlaylist]) () in
   col#set_min_width 20;
@@ -96,12 +96,15 @@ let playlistView =
     ~renderer:(GTree.cell_renderer_text [], ["text", artistPlaylist]) () in
   col#set_min_width 150;
   ignore (view#append_column col);
-  let col = GTree.view_column
+  ignore(GTree.view_column
     ~title:"Path"
-    ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) () in
-  col#set_min_width 290;
-  ignore (view#append_column col);
+    ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) ());
   view
+
+let drawing_area = GMisc.drawing_area 
+  ~width:350
+  ~height:350
+  ~packing: lecturePage#add ()
 
 (* Contenu onglet 2 *)
 

@@ -124,3 +124,28 @@ let on_button_pressed treeview ev =
     end
   else
     false
+
+(* Tracé en arrière-plan. *)
+let back = GDraw.pixmap ~width:350 ~height:350 ()
+
+(* Boîte à outils pour le dessin. *)
+let drawing = 
+  Ettoihc.drawing_area#misc#realize ();
+  new GDraw.drawable Ettoihc.drawing_area#misc#window
+
+let set_draw () =
+  back#set_foreground (`NAME "#ffffff");
+  let n = ref 0 in
+  while (!n <= 350) do
+    back#line ~x:(!n) ~y:(Wrap.getSpectre (!n)) ~x:(!n) ~y:350;
+    drawing#put_pixmap ~x:0 ~y:0 back#pixmap;
+    n := !n + 1
+  done
+
+let timer = GMain.Timeout.add ~ms:1000 ~callback:(fun() -> 
+  if not (!Ettoihc.pause) then
+    begin
+      Wrap.spectre_sound ();
+      set_draw ()
+    end;
+  true)

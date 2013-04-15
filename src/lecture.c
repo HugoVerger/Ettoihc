@@ -81,6 +81,15 @@ void adjustVol (FMOD_SYSTEM *systemSong, float vol)
   FMOD_ChannelGroup_SetVolume(channelg, vol);
 }
 
+void spectreSong (float spectre[350])
+{
+  FMOD_Channel_GetSpectrum(channel, spectre, 350, 0, 
+                          FMOD_DSP_FFT_WINDOW_RECT);
+  for (int i = 0; i < 350; i = i + 10)
+    printf("%f", (*spectre));
+  printf("\n");
+}
+
 // Fin du programme
 void destroySystem(FMOD_SYSTEM *systemSong, FMOD_SOUND *sound)
 {

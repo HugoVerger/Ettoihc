@@ -74,8 +74,13 @@ let actDisplay filepath =
   else
     begin
       if Meta.Id3v1.has_tag filepath then
-        let t = Meta.Id3v1.read_file filepath in
-        filedisplay := Meta.Id3v1.getTitle t ^ " - " ^ Meta.Id3v1.getArtist t
+        begin
+          let title = ref "" and artist = ref "" in
+          let t = Meta.v1_of_v2 (Meta.read_both_as_v2 filepath) in
+          title := t.Meta.Id3v1.title ;
+          artist := t.Meta.Id3v1.artist;
+          filedisplay := !title ^ " - " ^ !artist
+        end
       else
         filedisplay := filepath
     end;
