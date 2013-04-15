@@ -133,19 +133,30 @@ let drawing =
   Ettoihc.drawing_area#misc#realize ();
   new GDraw.drawable Ettoihc.drawing_area#misc#window
 
-let set_draw () =
+let reset_draw () =
   back#set_foreground (`NAME "#ffffff");
-  let n = ref 0 in
-  while (!n <= 350) do
-    back#line ~x:(!n) ~y:(Wrap.getSpectre (!n)) ~x:(!n) ~y:350;
-    drawing#put_pixmap ~x:0 ~y:0 back#pixmap;
-    n := !n + 1
-  done
+  back#rectangle ~x:0 ~y:0 ~width:350 ~height:350 ~filled:true ();
+  drawing#put_pixmap ~x:0 ~y:0 back#pixmap
 
-let timer = GMain.Timeout.add ~ms:1000 ~callback:(fun() -> 
+let set_draw () =
+  back#set_foreground (`NAME "#000000");
+  let n = ref 0 in
+  let tab = Array.make 512 0. in
+  Wrap.spectre_sound (tab);
+  while (!n <= 350) do
+    print_float (Array.get tab !n);
+    let elt = (Array.get tab !n) *. 2000. *. 350. in
+    back#line ~x:(!n) ~y:(int_of_float(elt)) ~x:(!n) ~y:350;
+    n := !n + 1
+  done;
+  drawing#put_pixmap ~x:0 ~y:0 back#pixmap;
+  print_string "\n";
+  flush stdout
+
+let timer = GMain.Timeout.add ~ms:20 ~callback:(fun() -> 
   if not (!Ettoihc.pause) then
     begin
-      Wrap.spectre_sound ();
+      reset_draw ();
       set_draw ()
     end;
   true)

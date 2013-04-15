@@ -1,6 +1,7 @@
 #include "lecture.h"
 
-FMOD_CHANNEL      *channel;  
+FMOD_CHANNEL      *channel;
+float             spectum[512];
 
 static void ERRCHECK(FMOD_RESULT problem)
 {
@@ -81,13 +82,11 @@ void adjustVol (FMOD_SYSTEM *systemSong, float vol)
   FMOD_ChannelGroup_SetVolume(channelg, vol);
 }
 
-void spectreSong (float spectre[350])
+float* spectreSong ()
 {
-  FMOD_Channel_GetSpectrum(channel, spectre, 350, 0, 
+  FMOD_Channel_GetSpectrum(channel, spectum, 512, 0, 
                           FMOD_DSP_FFT_WINDOW_RECT);
-  for (int i = 0; i < 350; i = i + 10)
-    printf("%f", (*spectre));
-  printf("\n");
+  return spectum;
 }
 
 // Fin du programme

@@ -20,7 +20,7 @@ void stopSong (FMOD_SYSTEM *systemSong);
 
 void adjustVol (FMOD_SYSTEM *systemSong, float vol);
 
-void spectreSong (float spectre[512]);
+float* spectreSong ();
 
 void destroySystem(FMOD_SYSTEM *systemSong, FMOD_SOUND *sound);
 
