@@ -14,13 +14,13 @@ long getLength(FMOD_SOUND *sound);
 
 long getTime();
 
+FMOD_CHANNEL* getChannel();
+
 void pauseSong (FMOD_SYSTEM *systemSong);
 
 void stopSong (FMOD_SYSTEM *systemSong);
 
 void adjustVol (FMOD_SYSTEM *systemSong, float vol);
-
-float* spectreSong ();
 
 void destroySystem(FMOD_SYSTEM *systemSong, FMOD_SOUND *sound);
 

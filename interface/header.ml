@@ -64,8 +64,7 @@ let actTimeLine pbar () =
         let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
         let timeS = minS ^ ":" ^ secS ^ ":" ^ msS in
         pbar#set_text (timeS ^ " / " ^ !lengthSongString)
-    end;
-  true
+    end
 
 
 let actDisplay filepath =
@@ -286,8 +285,10 @@ let about_button =
 (* Range en cours de lecture *)
 let timeLine = GRange.progress_bar ~packing:Ettoihc.timeLinebox#add ()
 
-let timer = GMain.Timeout.add ~ms:10 ~callback:(actTimeLine timeLine)
-let timer2 = GMain.Timeout.add ~ms:1 ~callback:(fun () -> 
+let timer = GMain.Timeout.add ~ms:1 ~callback:(fun () -> 
+  actTimeLine timeLine ();
+  if not (!Ettoihc.pause) then
+    Wrap.spectre ();
   if (!lengthSong = !timeSong) then
     begin
       if (suivant ()) then

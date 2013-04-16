@@ -1,19 +1,7 @@
 #include "spectre.h"
 #include "lecture.h"
 
-int tempsActuel = 0, tempsPrecedent = 0;
 SDL_Surface *ecran = NULL;
-
-
-void checkTime()
-{
-  tempsActuel = SDL_GetTicks();
-  if (tempsActuel - tempsPrecedent < DELAI_RAFRAICHISSEMENT)
-  {
-    SDL_Delay(DELAI_RAFRAICHISSEMENT - (tempsActuel - tempsPrecedent));
-  }
-  tempsPrecedent = SDL_GetTicks();
-}
 
 void initSDL()
 {
@@ -22,46 +10,31 @@ void initSDL()
                            SDL_SWSURFACE | SDL_DOUBLEBUF);
 }
 
-int quit()
-{
-  SDL_Event event;
-  SDL_PollEvent(&event);
-  switch(event.type){
-    case SDL_QUIT: return 0; break;}
-  return 1;
-}
-
-void draw()
+void draw(FMOD_CHANNEL *channel)
 {
   float spectre[TAILLE_SPECTRE];
   int hauteurBarre = 0, i = 0, j = 0;
 
-  while(quit())
-  {
-    SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 0, 0, 0));
 
-    checkTime();
+  SDL_FillRect(ecran, NULL, SDL_MapRGB(ecran->format, 0, 0, 0));
  
-    FMOD_Channel_GetSpectrum(channel, spectre, TAILLE_SPECTRE,
-                             0, FMOD_DSP_FFT_WINDOW_RECT);
+  FMOD_Channel_GetSpectrum(channel, spectre, TAILLE_SPECTRE, 0, FMOD_DSP_FFT_WINDOW_RECT);
+ 
+  SDL_LockSurface(ecran);
+ 
+  for (i = 0 ; i < LARGEUR_FENETRE ; i++)
+  {
+    hauteurBarre = spectre[i] * 20 * HAUTEUR_FENETRE;
 
-    SDL_LockSurface(ecran);
+    if (hauteurBarre > HAUTEUR_FENETRE)
+      hauteurBarre = HAUTEUR_FENETRE;
 
-    for (i = 0 ; i < LARGEUR_FENETRE ; i++)
-    {
-      hauteurBarre = spectre[i] * 20 * HAUTEUR_FENETRE;
-
-      if (hauteurBarre > HAUTEUR_FENETRE)
-        hauteurBarre = HAUTEUR_FENETRE;
-
-      for (j = HAUTEUR_FENETRE - hauteurBarre ; j < HAUTEUR_FENETRE ; j++)
-        setPixel(ecran, i, j, 
-                SDL_MapRGB(ecran->format, 255 - (j / RATIO), j / RATIO, 0));
-    }
-
-    SDL_UnlockSurface(ecran);
-	SDL_Flip(ecran);
+    for (j = HAUTEUR_FENETRE - hauteurBarre ; j < HAUTEUR_FENETRE ; j++)
+      setPixel(ecran, i, j, SDL_MapRGB(ecran->format, 255 - (j / RATIO), j / RATIO, 0));
   }
+ 
+  SDL_UnlockSurface(ecran);
+  SDL_Flip(ecran);
 }
 
 void destroySDL()

@@ -16,10 +16,11 @@ let window =
     ~title:"Ettoihc"
     ~position:`CENTER
     ~resizable:true
-    ~width:700
-    ~height:445 () in
+    ~width:710
+    ~height:500 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
+
 
 (* Composants de la fenêtre principale *)
 
@@ -81,7 +82,7 @@ let storePlaylist = GTree.list_store colsPlaylist
 
 let playlistView =
   let model = storePlaylist in
-  let view = GTree.view ~model ~width:350 ~packing: scrollPlaylist#add () in
+  let view = GTree.view ~model ~height:350 ~width:350 ~packing: scrollPlaylist#add () in
   let col = GTree.view_column
     ~renderer:(GTree.cell_renderer_text [], ["text", nmbPlaylist]) () in
   col#set_min_width 20;
@@ -101,10 +102,12 @@ let playlistView =
     ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) ());
   view
 
-let drawing_area = GMisc.drawing_area 
-  ~width:350
-  ~height:350
-  ~packing: lecturePage#add ()
+let socket = ignore(GWindow.socket
+    ~show:true ~width:350 
+    ~height:350 ~packing:lecturePage#add ());
+  Wrap.init_sdl ()(*;
+  let n = (bob#get_oid) in
+  Wrap.spectreTest n*)
 
 (* Contenu onglet 2 *)
 

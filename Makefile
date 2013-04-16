@@ -5,20 +5,20 @@ BAKF=${_DATE}-Prog
 
 ################# C Compilation #################
 CC= clang
-CFLAGS= -W -Wall -Werror -pedantic -std=c99 -O2 -I  `ocamlc -where`
-CS= src/wrap.c src/lecture.c src/effects.c src/playlist.c
+CFLAGS= -W -Wall -pedantic -std=c99 -O2 -I  `ocamlc -where` `pkg-config --cflags --libs sdl` 
+CS= src/wrap.c src/lecture.c src/spectre.c src/effects.c src/playlist.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO=  wrap.o lecture.o effects.o playlist.o
+CO=  wrap.o lecture.o spectre.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
 OFLAGS= -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
-OLIB=-cclib -lfmodex64
+OLIB=-cclib fmod/lib/libfmodex64.so -cclib libSDL.so
 OCOPT=ocamlopt
 OCAMLC=ocamlc
-CMXA= lablgtk.cmxa bigarray.cmxa unix.cmxa
-CMA=lablgtk.cma bigarray.cma unix.cma
+CMXA= bigarray.cmxa lablgtk.cmxa unix.cmxa
+CMA= bigarray.cma lablgtk.cma unix.cma
 ML= src/wrap.ml interface/ettoihc.ml src/mp3.ml src/meta.ml src/playlist.ml src/biblio.ml interface/current.ml interface/database.ml interface/mix.ml interface/header.ml interface/main.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
@@ -43,8 +43,8 @@ CMA=${CMXA:.cmxa=.cma}
 all: Ettoihc
 
 Ettoihc:
-	${CC} ${CFLAGS} -c  ${CS}
-	${OCOPT} ${OFLAGS} -o ${BIN} ${CO} ${CMXA} ${ML} -cclib fmod/lib/libfmodex64.so
+	${CC} ${CFLAGS} -c ${CS}
+	${OCOPT} ${OFLAGS} -o ${BIN} ${CO} ${CMXA} ${ML} ${OLIB}
 
 depend: .depend
 .depend: ${ML} ${MLI}
@@ -56,3 +56,6 @@ clean::
 	cd interface/ && rm -f *~ *# *.cm? *.o
 	rm -f *~ *# *.o ${BIN} biblio
 	echo "media/wave.mp3" > biblio
+
+#http://oandrieu.nerim.net/ocaml/lablgtk/doc/type_GWindow.html
+#http://wiki.njh.eu/OCaml_and_SDL

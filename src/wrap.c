@@ -1,6 +1,7 @@
 #include <caml/alloc.h>
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
+#include <SDL.h> 
 #include "lecture.h"
 #include "playlist.h"
 #include "spectre.h"
@@ -46,17 +47,6 @@ value ocaml_stop (value v)
 value ocaml_vol (value v)
 {
   adjustVol(systemSong, Double_val(v));
-  return Val_unit;
-}
-
-value ocaml_spectre (value float_array)
-{
-  spectre = spectreSong();
-
-  for (int i = 0; i < 512; i++)
-  {
-    Store_double_field(float_array, i, *spectre + i);
-  }
   return Val_unit;
 }
 
@@ -213,5 +203,53 @@ value ocaml_lpasse (value v)
 value ocaml_hpasse (value v)
 {
   high_pass = high_pass_event(systemSong, high_pass);
+  return v;
+}
+
+
+/*char winhack[1024]; 
+SDL_Surface *display;
+
+value do_sdl_stuff()
+{
+  draw(getChannel());
+
+  return Val_unit; 
+} 
+
+void clear(void) 
+{
+  SDL_Event event; 
+  event.type = SDL_USEREVENT; 
+  event.user.code = 0; 
+  SDL_PushEvent( &event ); 
+}
+
+value spectreTest (value v)
+{
+  snprintf( winhack, sizeof winhack, "SDL_WINDOWID=%i", Int_val(v));
+  SDL_putenv(winhack);
+  SDL_Init( SDL_INIT_VIDEO );
+  display = SDL_SetVideoMode(512, 512, 0, 0);
+  clear(); 
+
+  return Val_unit;
+}*/
+
+value ocaml_spectre (value v)
+{
+  draw(getChannel());
+  return v;
+}
+
+value ocaml_destroySDL (value v)
+{
+  destroySDL();
+  return v;
+}
+
+value ocaml_initSDL (value v)
+{
+  initSDL();
   return v;
 }

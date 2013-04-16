@@ -55,6 +55,11 @@ long getTime ()
   return (long)ms;
 }
 
+FMOD_CHANNEL* getChannel ()
+{
+  return channel;
+}
+
 void stopSong (FMOD_SYSTEM *systemSong)
 {
   FMOD_CHANNELGROUP *channelg;
@@ -80,13 +85,6 @@ void adjustVol (FMOD_SYSTEM *systemSong, float vol)
   FMOD_CHANNELGROUP *channelg;
   FMOD_System_GetMasterChannelGroup(systemSong, &channelg);
   FMOD_ChannelGroup_SetVolume(channelg, vol);
-}
-
-float* spectreSong ()
-{
-  FMOD_Channel_GetSpectrum(channel, spectum, 512, 0, 
-                          FMOD_DSP_FFT_WINDOW_RECT);
-  return spectum;
 }
 
 // Fin du programme
