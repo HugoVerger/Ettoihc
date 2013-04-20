@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel :
+  - Axel : Bouton Lecture aléatoire
   - Valérian :
   - Hugo :
 
@@ -30,7 +30,6 @@ A faire :
     - Corriger suppression dans playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Naviguer dans la barre de progression de la musique
-    - Bouton répéter playlist
     - Bouton Lecture aléatoire
 
 
@@ -50,3 +49,7 @@ A faire :
     - Permettre personnalisation contrôler clavier
     - Ajouter détails du projet dans About et le Read Me
     - Convertir fichiers ogg/autres en mp3
+
+Fait
+
+    - Bouton répéter playlist

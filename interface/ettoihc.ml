@@ -281,6 +281,19 @@ let confirm _ =
   Wrap.biblioSave !biblioForSave;
   res
 
+(* Fenêtre About *)
+
+let about = GWindow.about_dialog
+    ~authors:["Nablah"]
+    ~version:"1.1"
+    ~website:"http://ettoihc.wordpress.com/"
+    ~website_label:"Ettoihc Website"
+    ~position:`CENTER_ON_PARENT
+    ~parent:window
+    ~width: 400
+    ~height: 150
+    ~destroy_with_parent:true ()
+
 let get_extension s =
   let ext = String.sub s ((String.length s) - 4) 4 in
   match ext with
