@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel : Bouton Lecture aléatoire
+  - Axel :
   - Valérian :
   - Hugo :
 
@@ -30,7 +30,6 @@ A faire :
     - Corriger suppression dans playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Naviguer dans la barre de progression de la musique
-    - Bouton Lecture aléatoire
 
 
   o Faible Priorité
@@ -42,6 +41,7 @@ A faire :
     - Ajouter contrôle clavier
     - Barre de recherche de chanson
     - Pouvoir ouvrir/fermer la fenêtre SDL (si impossible de l'intégrer)
+    - Eviter lecture aléatoire d'une musique déjà jouée
 
 
   o BONUS
@@ -53,3 +53,4 @@ A faire :
 Fait
 
     - Bouton répéter playlist
+    - Bouton Lecture aléatoire

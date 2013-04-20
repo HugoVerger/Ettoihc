@@ -4,6 +4,7 @@ let lengthSongString = ref "00:00:00"
 let timeSong = ref 0
 let file_vol = ref 50.
 let repeat = ref false
+let random = ref false
 
 (*---------------------*)
 (*  Structure du menu  *)
@@ -83,10 +84,22 @@ let next_button = GButton.tool_button
   ~label:"Next"
   ~packing:toolbar#insert ()
 
+
+let boxLectureMode =
+  let item = GButton.tool_item
+    ~packing:toolbar#insert () in
+  GPack.vbox
+    ~packing:item#add ()
+
+(* Bouton Aléatoire *)
+let alea_button = GButton.button
+  ~label:"Random"
+  ~packing:boxLectureMode#add ()
+
 (* Bouton Repeat *)
-let repeat_button = GButton.tool_button
+let repeat_button = GButton.button
   ~label:"Repeat"
-  ~packing:toolbar#insert ()
+  ~packing:boxLectureMode#add ()
 
 let separator2 = GButton.separator_tool_item ~packing: toolbar#insert()
 
@@ -201,12 +214,21 @@ let precedent () =
           stop ()
     end
 
-let suivant () =
+let rec suivant () =
   if not (!filedisplay = "") then
     begin
       if (!Current.indexSong != List.length !Current.playList - 1) then
         begin
-          Current.indexSong := !Current.indexSong + 1;
+          let tmp = Random.int (List.length !Current.playList) in
+          if (!random) then
+            begin
+              if (tmp = !Current.indexSong) then
+                suivant ()
+              else
+                Current.indexSong := tmp
+            end
+          else
+            Current.indexSong := !Current.indexSong + 1;
           Current.filepath :=
               Playlist.getFile !Current.indexSong !Current.playList;
           actDisplay !Current.filepath;
@@ -248,6 +270,7 @@ let openFun () =
     end
 
 let connectMenu () =
+  Random.init 42;
   ignore(volume#connect#value_changed    (vol_change volume));
   ignore(next_button#connect#clicked     (fun () -> suivant ()));
   ignore(previous_button#connect#clicked (fun () -> precedent ()));
@@ -255,6 +278,7 @@ let connectMenu () =
   ignore(save_button#connect#clicked     Ettoihc.saveDialog);
   ignore(open_button#connect#clicked     (fun () -> openFun ()));
   ignore(repeat_button#connect#clicked   (fun () -> repeat := not !repeat));
+  ignore(alea_button#connect#clicked     (fun () -> random := not !random));
   ignore(about_button#connect#clicked    (fun () -> 
     ignore(Ettoihc.about#run ());
     Ettoihc.about#misc#hide ()));
