@@ -74,19 +74,33 @@ let scrollPlaylist = GBin.scrolled_window
 
 let colsPlaylist = new GTree.column_list
 let nmbPlaylist = colsPlaylist#add Gobject.Data.int
+let randomPlaylist = colsPlaylist#add Gobject.Data.int
 let songPlaylist = colsPlaylist#add Gobject.Data.string
 let artistPlaylist = colsPlaylist#add Gobject.Data.string
 let pathPlaylist = colsPlaylist#add Gobject.Data.string
 
 let storePlaylist = GTree.list_store colsPlaylist
 
-let playlistView =
-  let model = storePlaylist in
-  let view = GTree.view ~model ~height:350 ~width:350 ~packing: scrollPlaylist#add () in
+let playlistNmb =
   let col = GTree.view_column
     ~renderer:(GTree.cell_renderer_text [], ["text", nmbPlaylist]) () in
   col#set_min_width 20;
-  ignore (view#append_column col);
+  col
+let playlistRandom =
+  let col = GTree.view_column
+    ~renderer:(GTree.cell_renderer_text [], ["text", randomPlaylist]) () in
+  col#set_min_width 20;
+  col
+let playlistView =
+  let model = storePlaylist in
+  let view = GTree.view 
+    ~model
+    ~height:350
+    ~width:350 
+    ~packing: scrollPlaylist#add () in
+  ignore (view#append_column playlistNmb);
+  playlistRandom#set_visible false;
+  ignore (view#append_column playlistRandom);
   let col = GTree.view_column
     ~title:"Song"
     ~renderer:(GTree.cell_renderer_text [], ["text", songPlaylist]) () in

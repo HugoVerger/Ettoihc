@@ -75,11 +75,9 @@ let on_row_activated (view:GTree.view) path column =
   let row = model#get_iter path in
   let pathFile = model#get ~row ~column:Ettoihc.pathBiblio in
   Current.filepath := pathFile;
-  if not (Playlist.addSong pathFile Current.playList) then
+  if not (Playlist.addSong pathFile) then
     begin
-      let playList = !Current.playList in
-      Current.fill (List.nth playList ((List.length playList) -1));
-      Current.indexSong := (List.length playList) - 1;
+      Current.indexSong := !Playlist.nbSong - 1;
       Current.play();
       !Ettoihc.play ()
     end

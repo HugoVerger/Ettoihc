@@ -245,7 +245,7 @@ let menuEqual =
   menu_bar#append file_item
 
 let flange=
-  let fbut = GButton.button
+  let fbut = GButton.toggle_button
     ~show:true
     ~label:"Flange"
     ~relief:`NORMAL
@@ -254,7 +254,7 @@ let flange=
   fbut
 
 let chorus =
-  let cbut = GButton.button
+  let cbut = GButton.toggle_button
     ~show:true
     ~label:"Chorus"
     ~relief:`NORMAL
@@ -263,7 +263,7 @@ let chorus =
   cbut
 
 let lowpass=
-  let lbut = GButton.button
+  let lbut = GButton.toggle_button
     ~show:true
     ~label:"Low Pass"
     ~relief:`NORMAL
@@ -272,7 +272,7 @@ let lowpass=
   lbut
 
 let highpass=
-  let hbut = GButton.button
+  let hbut = GButton.toggle_button
     ~show:true
     ~label:"High Pass"
     ~relief:`NORMAL

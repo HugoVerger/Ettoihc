@@ -5,6 +5,7 @@ let timeSong = ref 0
 let file_vol = ref 50.
 let repeat = ref false
 let random = ref false
+let randomList = []
 
 (*---------------------*)
 (*  Structure du menu  *)
@@ -92,12 +93,12 @@ let boxLectureMode =
     ~packing:item#add ()
 
 (* Bouton Aléatoire *)
-let alea_button = GButton.button
+let alea_button = GButton.toggle_button
   ~label:"Random"
   ~packing:boxLectureMode#add ()
 
 (* Bouton Repeat *)
-let repeat_button = GButton.button
+let repeat_button = GButton.toggle_button
   ~label:"Repeat"
   ~packing:boxLectureMode#add ()
 
@@ -198,15 +199,17 @@ let precedent () =
       if (!Current.indexSong != 0) then
         begin
           Current.indexSong := !Current.indexSong - 1;
-          Current.filepath :=
-          Playlist.getFile !Current.indexSong !Current.playList;
+          let iter = Ettoihc.storePlaylist#iter_children 
+                                              ~nth:(!Current.indexSong) None in
+          Current.filepath := (Ettoihc.storePlaylist#get ~row:iter
+                                                ~column:Ettoihc.pathPlaylist);
           actDisplay !Current.filepath;
           play ()
         end
       else
         if (!repeat) then
           begin
-            Current.indexSong := List.length !Current.playList - 1;
+            Current.indexSong := !Playlist.nbSong - 1;
             Current.play();
             !Ettoihc.play ()
           end
@@ -217,20 +220,13 @@ let precedent () =
 let rec suivant () =
   if not (!filedisplay = "") then
     begin
-      if (!Current.indexSong != List.length !Current.playList - 1) then
+      if (!Current.indexSong != !Playlist.nbSong - 1) then
         begin
-          let tmp = Random.int (List.length !Current.playList) in
-          if (!random) then
-            begin
-              if (tmp = !Current.indexSong) then
-                suivant ()
-              else
-                Current.indexSong := tmp
-            end
-          else
-            Current.indexSong := !Current.indexSong + 1;
-          Current.filepath :=
-              Playlist.getFile !Current.indexSong !Current.playList;
+          Current.indexSong := !Current.indexSong + 1;
+          let iter = Ettoihc.storePlaylist#iter_children 
+                                              ~nth:(!Current.indexSong) None in
+          Current.filepath := (Ettoihc.storePlaylist#get ~row:iter
+                                                ~column:Ettoihc.pathPlaylist);
           actDisplay !Current.filepath;
           play ()
         end
@@ -260,7 +256,7 @@ let openFun () =
         begin
           if !signal = "play" then
             begin
-              Current.indexSong := (List.length !Current.playList) - 1;
+              Current.indexSong := !Playlist.nbSong - 1;
               Current.launchPlaylist ();
               Current.indexSong := !Current.indexSong + 1;
               Current.play();
@@ -268,6 +264,90 @@ let openFun () =
             end
         end
     end
+
+let rec createRandom = function
+  |n when n < !Playlist.nbSong ->
+    begin
+      let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
+      let old = Ettoihc.storePlaylist#get ~row:iter
+                                                 ~column:Ettoihc.nmbPlaylist in
+      let rec findR () =
+        let tmp = Random.int (!Playlist.nbSong + 1) in
+        if tmp = old then
+          findR ()
+        else
+          tmp in
+        let rnd = findR () in
+        let rec iterCheck = function
+          |i when i > n -> false
+          |i ->
+            begin
+              let iter2 = Ettoihc.storePlaylist#iter_children ~nth:i None in
+              let tmp = Ettoihc.storePlaylist#get ~row:iter2
+                                      ~column:Ettoihc.randomPlaylist in
+              if (tmp != rnd) then
+                iterCheck (i + 1)
+              else
+                true
+            end in
+        if not (iterCheck 0) then
+          begin
+            Ettoihc.storePlaylist#set ~row:iter
+                                      ~column:Ettoihc.randomPlaylist rnd;
+            createRandom (n + 1)
+          end
+        else
+          createRandom n
+    end
+  |_ -> ()
+
+let randomFunc () =
+  let compare a b =
+    if a < b then -1
+    else if a > b then 1
+    else 0 in
+  let sort_by_nmb (model:#GTree.model) row1 row2 =
+    let name1 = model#get ~row:row1 ~column:Ettoihc.nmbPlaylist in
+    let name2 = model#get ~row:row2 ~column:Ettoihc.nmbPlaylist in
+    compare name1 name2 in
+  let sort_by_random (model:#GTree.model) row1 row2 =
+    let name1 = model#get ~row:row1 ~column:Ettoihc.randomPlaylist in
+    let name2 = model#get ~row:row2 ~column:Ettoihc.randomPlaylist in
+    compare name1 name2 in
+  Ettoihc.storePlaylist#set_sort_func 0 sort_by_nmb;
+  Ettoihc.storePlaylist#set_sort_func 1 sort_by_random;
+  random := not !random;
+  if (!random) then
+    begin
+      Ettoihc.playlistNmb#set_visible false;
+      Ettoihc.playlistRandom#set_visible true;
+      createRandom 0;
+      let rec actCurrent n =
+        let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
+        let tmp = Ettoihc.storePlaylist#get ~row:iter
+                                            ~column:Ettoihc.pathPlaylist in
+        if (tmp = !Current.filepath) then
+          Current.indexSong := n + 1
+        else
+          actCurrent (n+1) in
+       actCurrent 0;
+      Ettoihc.storePlaylist#set_sort_column_id 1 `ASCENDING;
+    end
+  else
+    begin
+      let rec clean = function
+        |n when n < !Playlist.nbSong ->
+          let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
+          Ettoihc.storePlaylist#set ~row:iter
+                                    ~column:Ettoihc.randomPlaylist 0;
+          clean (n+1)
+        |_ -> () in
+      clean 0;
+      Ettoihc.storePlaylist#set_sort_column_id 0 `ASCENDING;
+      Ettoihc.playlistNmb#set_visible true;
+      Ettoihc.playlistRandom#set_visible false
+    end
+
 
 let connectMenu () =
   Random.init 42;
@@ -278,7 +358,7 @@ let connectMenu () =
   ignore(save_button#connect#clicked     Ettoihc.saveDialog);
   ignore(open_button#connect#clicked     (fun () -> openFun ()));
   ignore(repeat_button#connect#clicked   (fun () -> repeat := not !repeat));
-  ignore(alea_button#connect#clicked     (fun () -> random := not !random));
+  ignore(alea_button#connect#clicked     (fun () -> randomFunc ()));
   ignore(about_button#connect#clicked    (fun () -> 
     ignore(Ettoihc.about#run ());
     Ettoihc.about#misc#hide ()));
@@ -301,6 +381,6 @@ let connectMenu () =
     play ());
   Ettoihc.stop := (fun () ->
     btnpause#misc#hide (); 
-    btnplay#misc#show (); 
+    btnplay#misc#show ();
     actDisplay "");
   ()

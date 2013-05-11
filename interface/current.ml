@@ -1,38 +1,24 @@
 let filepath = ref ""
 let indexSong = ref 0
-let playList = ref []
 
 let play () =
-  if (!playList != []) then
+  if (!Playlist.nbSong != 0) then
     begin
-      let tmp = List.nth !playList !indexSong in
-      let tmp2 = match tmp with (_,_,a) -> a in
-      if (List.length !playList != 0 && 
-                (!Ettoihc.pause || (!filepath != tmp2))) then
-        filepath := tmp2
+      let iter = Ettoihc.storePlaylist#iter_children ~nth:(!indexSong) None in
+      let file = (Ettoihc.storePlaylist#get ~row:iter
+                                            ~column:Ettoihc.pathPlaylist) in
+      if (!Ettoihc.pause || (!filepath != file)) then
+        filepath := file
     end
-
-let fill (song, artist, path) =
-  let iter = Ettoihc.storePlaylist#append () in
-  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist
-                                              (List.length !playList);
-  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.songPlaylist song;
-  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.artistPlaylist artist;
-  Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist path;
-  Ettoihc.playListForSave := !Ettoihc.playListForSave ^ path ^ "\n"
 
 let launchPlaylist () =
   if (Ettoihc.get_extension !filepath) then
-    begin
-      if not (Playlist.addSong !filepath playList) then
-        fill (List.nth !playList ((List.length !playList) -1))
-    end
+    ignore(Playlist.addSong !filepath)
   else
     begin
-      Playlist.cleanPlaylist playList indexSong;
+      Playlist.cleanPlaylist indexSong;
       Wrap.stop_sound();
-      Playlist.addPlaylist !filepath playList;
-      List.iter fill !playList;
+      Playlist.addPlaylist !filepath
     end
 
 let on_row_activated (view:GTree.view) path column =
@@ -44,7 +30,7 @@ let on_row_activated (view:GTree.view) path column =
   !Ettoihc.play ()
 
 let cleanPlaylist () =
-  Playlist.cleanPlaylist playList indexSong;
+  Playlist.cleanPlaylist indexSong;
   filepath := "";
   Ettoihc.storePlaylist#clear ();
   Ettoihc.pause := true;
@@ -52,19 +38,11 @@ let cleanPlaylist () =
   !Ettoihc.stop ()
 
 let rec actNmb = function
-  |n when n = (List.length !playList) -> ()
+  |n when n = !Playlist.nbSong -> ()
   |n ->
     let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
     Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist n;
     actNmb (n+1)
-
-let deleteList n =
-  let elt = List.nth !playList (n - 1) in
-  let rec delete = function
-    |[] -> []
-    |h::t when h = elt-> t
-    |h::t -> h :: delete t in
-  delete !playList
 
 let removeSong path =
   let model = Ettoihc.playlistView#model in
@@ -83,8 +61,7 @@ let removeSong path =
           !Ettoihc.stop ()
         end;
       ignore(Ettoihc.storePlaylist#remove iter);
-      actNmb (nmb);
-      playList := deleteList nmb
+      actNmb (nmb)
     end
   else
     cleanPlaylist ()
