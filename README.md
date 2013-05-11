@@ -15,7 +15,6 @@ A faire :
 
     - Spectre intégré
     - Plusieurs effets visuels
-    - Trier la bibliothèque
     - Ajouter plusieurs types de fichiers audio (OGG, FLAC, ...)
     - Plusieurs normes de tag de chanson
     - Éditer les tags d'une chanson
@@ -54,3 +53,4 @@ Fait
 
     - Bouton répéter playlist
     - Bouton Lecture aléatoire
+    - Trier la bibliothèque

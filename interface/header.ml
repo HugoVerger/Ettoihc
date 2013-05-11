@@ -292,7 +292,7 @@ let connectMenu () =
       begin
         btnpause#misc#show ();
         btnplay#misc#hide ();
-        Current.play (); 
+        Current.play ();
         play ()
       end));
   Ettoihc.play := (fun () -> 

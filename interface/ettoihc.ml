@@ -132,19 +132,26 @@ let pathBiblio = colsBiblio#add Gobject.Data.string
 
 let storeBiblio = GTree.list_store colsBiblio
 
-let biblioView =
-  let model = storeBiblio in
-  let view = GTree.view ~model ~packing: scrollBiblio#add () in
+let colName =
   let col = GTree.view_column
     ~title:"Song"
     ~renderer:(GTree.cell_renderer_text [], ["text", songBiblio]) () in
   col#set_min_width 150;
-  ignore (view#append_column col);
+  col#set_clickable true;
+  col
+let colArtist =
   let col = GTree.view_column
     ~title:"Artist"
     ~renderer:(GTree.cell_renderer_text [], ["text", artistBiblio]) () in
   col#set_min_width 150;
-  ignore (view#append_column col);
+  col#set_clickable true;
+  col
+
+let biblioView =
+  let model = storeBiblio in
+  let view = GTree.view ~model ~packing: scrollBiblio#add () in
+  ignore (view#append_column colName);
+  ignore (view#append_column colArtist);
   let col = GTree.view_column
     ~title:"Path"
     ~renderer:(GTree.cell_renderer_text [], ["text", pathBiblio]) () in
