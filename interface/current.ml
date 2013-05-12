@@ -38,20 +38,22 @@ let cleanPlaylist () =
   !Ettoihc.stop ()
 
 let rec actNmb = function
-  |n when n = !Playlist.nbSong -> ()
+  |n when n > !Playlist.nbSong -> ()
   |n ->
-    let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in
-    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist n;
+    let iter = Ettoihc.storePlaylist#iter_children ~nth:(n- 1) None in
+    Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.nmbPlaylist (n - 1);
     actNmb (n+1)
 
 let removeSong path =
-  let model = Ettoihc.playlistView#model in
-  let row = model#get_iter path in
-  let path = model#get ~row ~column:Ettoihc.pathPlaylist in
-  let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
-  if not (nmb = 1) then
+  if (!Playlist.nbSong = 1) then
+    cleanPlaylist ()
+  else
     begin
-      let iter = Ettoihc.storePlaylist#iter_children ~nth:(nmb - 1) None in
+      let model = Ettoihc.playlistView#model in
+      let row = model#get_iter path in
+      let path = model#get ~row ~column:Ettoihc.pathPlaylist in
+      let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
+      actNmb (nmb + 1);
       if path = !filepath then
         begin
           Ettoihc.pause := true;
@@ -60,11 +62,9 @@ let removeSong path =
           indexSong := 0;
           !Ettoihc.stop ()
         end;
-      ignore(Ettoihc.storePlaylist#remove iter);
-      actNmb (nmb)
+      ignore(Ettoihc.storePlaylist#remove row);
+      Playlist.nbSong := !Playlist.nbSong - 1
     end
-  else
-    cleanPlaylist ()
 
 let view_popup_menu treeview ev p=
   let menu = GMenu.menu () in

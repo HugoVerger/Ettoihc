@@ -24,7 +24,6 @@ A faire :
 
     - Possibilité de remonter/descendre une chanson dans la playlist
     - Pouvoir changer les filtres passe haut passe bas
-    - Corriger suppression dans playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Naviguer dans la barre de progression de la musique
 
@@ -54,3 +53,4 @@ Fait
     - Eviter lecture aléatoire d'une musique déjà jouée
     - Bouton préférence pour affichage colonne
     - Colonnes genre, album … dans biblio
+    - Corriger suppression dans playlist

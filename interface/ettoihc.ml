@@ -319,7 +319,7 @@ let pref () =
     ~position:`CENTER_ON_PARENT () in
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_button_stock `SAVE `SAVE;
-  let frame_horz = GBin.frame ~label:"Library Collumn"    
+  let frame_horz = GBin.frame ~label:"Library Columns"    
     ~packing:dlg#vbox#add () in
   let bbox = GPack.button_box `VERTICAL
     ~spacing:10
