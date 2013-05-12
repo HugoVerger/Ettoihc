@@ -374,6 +374,40 @@ let confirm _ =
   Wrap.biblioSave !biblioForSave;
   res
 
+(* Fenêtre de problème biblio/playlist *)
+
+let prob () =
+  let dlg = GWindow.message_dialog
+    ~message:"<b><big>File Not Found</big>\nDo you want to search it ?</b>\n"
+    ~parent:window
+    ~destroy_with_parent:true
+    ~use_markup:true
+    ~message_type:`ERROR
+    ~position:`CENTER_ON_PARENT
+    ~buttons:GWindow.Buttons.ok_cancel () in
+  let res = dlg#run () = `CANCEL in
+  dlg#destroy ();
+  res
+
+(* Fenêtre de recherche *)
+
+let searchDialog () = 
+  let dlg = GWindow.file_chooser_dialog
+    ~action:`OPEN
+    ~parent:window
+    ~position:`CENTER_ON_PARENT
+    ~title: "Select a music"
+    ~destroy_with_parent:true () in
+  dlg#set_filter music_filter;
+  dlg#add_button_stock `CANCEL `CANCEL;
+  dlg#add_button_stock `OK `OK;
+  let tmp = dlg#run () in
+  dlg#misc#hide ();
+  if tmp = `OK then
+    ("ok", str_op(dlg#filename))
+  else
+    ("", "")
+
 (* Fenêtre About *)
 
 let about = GWindow.about_dialog

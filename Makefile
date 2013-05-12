@@ -54,8 +54,11 @@ depend: .depend
 clean::
 	cd src/ && rm -f *~ *# *.cm? *.o
 	cd interface/ && rm -f *~ *# *.cm? *.o
-	rm -f *~ *# *.o ${BIN} biblio
-	echo "media/wave.mp3" > biblio
+	rm -f *~ *# *.o ${BIN}
+	
+cleanbiblio:
+	rm biblio
+	echo "" > biblio
 
 #http://oandrieu.nerim.net/ocaml/lablgtk/doc/type_GWindow.html
 #http://wiki.njh.eu/OCaml_and_SDL

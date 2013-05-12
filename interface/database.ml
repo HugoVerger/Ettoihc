@@ -30,7 +30,11 @@ let loadBiblio () =
   let ic = open_in "biblio" in
   try
     while true; do
-      Biblio.addSong (input_line ic) biblio;
+      let file = (input_line ic) in
+      if (Sys.file_exists file) then
+        Biblio.addSong file biblio
+      else
+        Ettoihc.biblioForSave := !Ettoihc.biblioForSave ^ file ^ "\n";
     done;
   with End_of_file ->
     close_in ic
@@ -108,10 +112,32 @@ let on_row_activated (view:GTree.view) path column =
   let model = view#model in
   let row = model#get_iter path in
   let pathFile = model#get ~row ~column:Ettoihc.pathBiblio in
-  Current.filepath := pathFile;
-  if not (Playlist.addSong pathFile) then
+  if (Sys.file_exists pathFile) then
     begin
-      Current.indexSong := !Playlist.nbSong - 1;
-      Current.play();
-      !Ettoihc.play ()
+      Current.filepath := pathFile;
+      if not (Playlist.addSong pathFile) then
+        begin
+          Current.indexSong := !Playlist.nbSong - 1;
+          Current.play();
+          !Ettoihc.play ()
+        end
+    end
+  else
+    begin
+      if not (Ettoihc.prob ()) then
+        begin
+          match Ettoihc.searchDialog () with
+            |("ok",f) ->
+              begin
+                Ettoihc.storeBiblio#set ~row ~column:Ettoihc.pathBiblio f;
+                Current.filepath := f;
+                if not (Playlist.addSong f) then
+                begin
+                  Current.indexSong := !Playlist.nbSong - 1;
+                  Current.play();
+                  !Ettoihc.play ()
+                end
+              end
+            |_ -> ()
+        end
     end
