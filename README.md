@@ -22,9 +22,7 @@ A faire :
 
   o Priorité Moyenne
 
-    - Bouton préférence pour affichage colonne
     - Possibilité de remonter/descendre une chanson dans la playlist
-    - Colonnes genre, album … dans biblio
     - Pouvoir changer les filtres passe haut passe bas
     - Corriger suppression dans playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
@@ -40,7 +38,6 @@ A faire :
     - Ajouter contrôle clavier
     - Barre de recherche de chanson
     - Pouvoir ouvrir/fermer la fenêtre SDL (si impossible de l'intégrer)
-    - Eviter lecture aléatoire d'une musique déjà jouée
 
 
   o BONUS
@@ -54,3 +51,6 @@ Fait
     - Bouton répéter playlist
     - Bouton Lecture aléatoire
     - Trier la bibliothèque
+    - Eviter lecture aléatoire d'une musique déjà jouée
+    - Bouton préférence pour affichage colonne
+    - Colonnes genre, album … dans biblio

@@ -15,8 +15,8 @@ let window =
   let wnd = GWindow.window
     ~title:"Ettoihc"
     ~position:`CENTER
-    ~resizable:true
-    ~width:710
+    ~resizable:false
+    ~width:800
     ~height:500 () in
   ignore(wnd#connect#destroy GMain.quit);
   wnd
@@ -142,6 +142,8 @@ let scrollBiblio = GBin.scrolled_window
 let colsBiblio = new GTree.column_list
 let songBiblio = colsBiblio#add Gobject.Data.string
 let artistBiblio = colsBiblio#add Gobject.Data.string
+let albumBiblio = colsBiblio#add Gobject.Data.string
+let genreBiblio = colsBiblio#add Gobject.Data.string
 let pathBiblio = colsBiblio#add Gobject.Data.string
 
 let storeBiblio = GTree.list_store colsBiblio
@@ -160,17 +162,35 @@ let colArtist =
   col#set_min_width 150;
   col#set_clickable true;
   col
-
+let colAlbum =
+  let col = GTree.view_column
+    ~title:"Album"
+    ~renderer:(GTree.cell_renderer_text [], ["text", albumBiblio]) () in
+  col#set_min_width 150;
+  col#set_clickable true;
+  col
+let colGenre =
+  let col = GTree.view_column
+    ~title:"Genre"
+    ~renderer:(GTree.cell_renderer_text [], ["text", genreBiblio]) () in
+  col#set_min_width 50;
+  col#set_clickable true;
+  col
+let colPath =
+  let col = GTree.view_column
+    ~title:"Path"
+    ~renderer:(GTree.cell_renderer_text [], ["text", pathBiblio]) () in
+  col#set_min_width 290;
+  col#set_clickable true;
+  col
 let biblioView =
   let model = storeBiblio in
   let view = GTree.view ~model ~packing: scrollBiblio#add () in
   ignore (view#append_column colName);
   ignore (view#append_column colArtist);
-  let col = GTree.view_column
-    ~title:"Path"
-    ~renderer:(GTree.cell_renderer_text [], ["text", pathBiblio]) () in
-  col#set_min_width 290;
-  ignore (view#append_column col);
+  ignore (view#append_column colAlbum);
+  ignore (view#append_column colGenre);
+  ignore (view#append_column colPath);
   view
 
 (* Contenu onglet 3 *)
@@ -210,7 +230,7 @@ let firstLineBox2Vbox = GPack.vbox
 
 let firstLineBox2 =
   ignore(GMisc.label
-    ~height:10 ~text:"Equalizeur"
+    ~height:10 ~text:"Equalizer"
     ~packing:firstLineBox2Vbox#add ());
   let bb = GPack.hbox
     ~spacing:5
@@ -241,7 +261,7 @@ let openDialog filepath signal =
     ~action:`OPEN
     ~parent:window
     ~position:`CENTER_ON_PARENT
-    ~title: "Chargement d'une musique"
+    ~title: "Select a music"
     ~destroy_with_parent:true () in
   dlg#set_filter music_filter;
   dlg#add_button_stock `CANCEL `CANCEL;
@@ -278,19 +298,70 @@ let saveDialog () =
     ~action:`SAVE
     ~parent:window
     ~position:`CENTER_ON_PARENT
-    ~title:"Sauvegarde de la playlist"
+    ~title:"Save of the playlist"
     ~destroy_with_parent:true () in
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_select_button_stock `SAVE `SAVE;
-  if  (dlg#run () == `SAVE) then
+  if  (dlg#run () = `SAVE) then
        Wrap.playlistSave (str_op(dlg#filename)) !playListForSave;
   dlg#misc#hide ()
+
+(* Fenêtre de préférence *)
+
+let pref () =
+  let dlg = GWindow.dialog
+    ~parent:window
+    ~destroy_with_parent:true
+    ~title:"Properties"
+    ~show:true
+    ~width:200
+    ~height:300
+    ~position:`CENTER_ON_PARENT () in
+  dlg#add_button_stock `CANCEL `CANCEL;
+  dlg#add_button_stock `SAVE `SAVE;
+  let frame_horz = GBin.frame ~label:"Library Collumn"    
+    ~packing:dlg#vbox#add () in
+  let bbox = GPack.button_box `VERTICAL
+    ~spacing:10
+    ~border_width:5
+    ~packing:frame_horz#add () in
+  let titlebtn = GButton.check_button 
+    ~active:colName#visible
+    ~label:"Title"
+    ~packing:bbox#add () in
+  let artistbtn = GButton.check_button 
+    ~active:colArtist#visible
+    ~label:"Artist"
+    ~packing:bbox#add () in
+  let albumbtn = GButton.check_button 
+    ~active:colAlbum#visible
+    ~label:"Album"
+    ~packing:bbox#add () in
+  let genrebtn = GButton.check_button 
+    ~active:colGenre#visible
+    ~label:"Genre"
+    ~packing:bbox#add () in
+  let pathbtn = GButton.check_button 
+    ~active:colPath#visible
+    ~label:"Path"
+    ~packing:bbox#add () in
+  let tmp = dlg#run () in
+  if (tmp = `SAVE) then
+    begin
+      colName#set_visible (titlebtn#active);
+      colArtist#set_visible (artistbtn#active);
+      colAlbum#set_visible (albumbtn#active);
+      colGenre#set_visible (genrebtn#active);
+      colPath#set_visible (pathbtn#active);
+    end;
+    dlg#misc#hide ();
+  ()
 
 (* Fenêtre de confirmation de sortie *)
 
 let confirm _ =
   let dlg = GWindow.message_dialog
-    ~message:"<b><big>Voulez-vous vraiment quitter ?</big></b>\n"
+    ~message:"<b><big>Do you really want to quit ?</big></b>\n"
     ~parent:window
     ~destroy_with_parent:true
     ~use_markup:true

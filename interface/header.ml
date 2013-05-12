@@ -25,8 +25,7 @@ let volbox = GPack.hbox
 let infobar = GButton.toolbar
   ~orientation:`HORIZONTAL
   ~style:`BOTH
-  ~width:80
-  ~packing:(Ettoihc.menubox#pack ~expand:false) ()
+  ~packing:(Ettoihc.menubox#pack ~expand:true) ()
 
 let soundText =
   let scroll = GBin.scrolled_window
@@ -118,6 +117,13 @@ let volume =
     ~adjustment:adj
     ~packing:volbox#add () in
   volume_scale
+
+(* Bouton "Préférence" *)
+let pref_button =
+  let btn = GButton.tool_button
+    ~stock:`PROPERTIES
+    ~packing:infobar#insert () in
+  btn
 
 (* Bouton "A propos" *)
 let about_button =
@@ -362,6 +368,7 @@ let connectMenu () =
   ignore(about_button#connect#clicked    (fun () -> 
     ignore(Ettoihc.about#run ());
     Ettoihc.about#misc#hide ()));
+  ignore(pref_button#connect#clicked     (fun () -> Ettoihc.pref ()));
   ignore(btnpause#connect#clicked        (fun () -> 
     btnplay#misc#show ();
     btnpause#misc#hide ();

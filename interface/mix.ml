@@ -240,7 +240,7 @@ let menuEqual =
     !scaleRef8#set_value 240.;
     !scaleRef9#set_value 220.;
     Wrap.egal_sound "techno"));
-  let file_item = GMenu.menu_item ~label:"Equalizeur already created" () in
+  let file_item = GMenu.menu_item ~label:"Equalizer already created" () in
   file_item#set_submenu file_menu;
   menu_bar#append file_item
 
