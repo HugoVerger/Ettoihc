@@ -1,4 +1,5 @@
 let pause = ref true
+let random = ref false
 let biblioForSave = ref ""
 let playListForSave = ref ""
 let play = ref (fun () -> ())

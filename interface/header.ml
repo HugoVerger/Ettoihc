@@ -4,7 +4,6 @@ let lengthSongString = ref "00:00:00"
 let timeSong = ref 0
 let file_vol = ref 50.
 let repeat = ref false
-let random = ref false
 let randomList = []
 
 (*---------------------*)
@@ -322,8 +321,8 @@ let randomFunc () =
     compare name1 name2 in
   Ettoihc.storePlaylist#set_sort_func 0 sort_by_nmb;
   Ettoihc.storePlaylist#set_sort_func 1 sort_by_random;
-  random := not !random;
-  if (!random) then
+  Ettoihc.random := not !Ettoihc.random;
+  if (!Ettoihc.random) then
     begin
       Ettoihc.playlistNmb#set_visible false;
       Ettoihc.playlistRandom#set_visible true;

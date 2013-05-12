@@ -24,8 +24,12 @@ let launchPlaylist () =
 let on_row_activated (view:GTree.view) path column =
   let model = view#model in
   let row = model#get_iter path in
-  let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
-  indexSong := nmb - 1;
+  let nmb = ref 0 in
+  if (!Ettoihc.random) then
+    nmb := model#get ~row ~column:Ettoihc.randomPlaylist
+  else
+    nmb := model#get ~row ~column:Ettoihc.nmbPlaylist;
+  indexSong := !nmb - 1;
   play ();
   !Ettoihc.play ()
 
@@ -66,16 +70,116 @@ let removeSong path =
       Playlist.nbSong := !Playlist.nbSong - 1
     end
 
+let downSong path =
+  let model = Ettoihc.playlistView#model in
+  let row = model#get_iter path in
+  let path = model#get ~row ~column:Ettoihc.pathPlaylist in
+  
+  if (!Ettoihc.random) then
+    begin
+      let nmb = model#get ~row ~column:Ettoihc.randomPlaylist in
+      if (!Playlist.nbSong != nmb) then
+        begin
+          let iter = model#iter_children ~nth:(nmb) None in
+          let path2 = model#get ~row:iter ~column:Ettoihc.pathPlaylist in
+      
+          if path = !filepath then
+            indexSong := nmb;
+          if path2 = !filepath then
+            indexSong := nmb - 1;
+        
+          Ettoihc.storePlaylist#set ~row:row 
+                                    ~column:Ettoihc.randomPlaylist (nmb+1);
+          Ettoihc.storePlaylist#set ~row:iter
+                                    ~column:Ettoihc.randomPlaylist (nmb);
+          Ettoihc.storePlaylist#set_sort_column_id 1 `ASCENDING
+        end
+    end
+  else
+    begin
+      let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
+      if (!Playlist.nbSong != nmb) then
+        begin
+          let iter = model#iter_children ~nth:(nmb) None in
+          let path2 = model#get ~row:iter ~column:Ettoihc.pathPlaylist in
+      
+          if path = !filepath then
+            indexSong := nmb;
+          if path2 = !filepath then
+            indexSong := nmb - 1;
+        
+          Ettoihc.storePlaylist#set ~row:row
+                                    ~column:Ettoihc.nmbPlaylist (nmb + 1);
+          Ettoihc.storePlaylist#set ~row:iter
+                                    ~column:Ettoihc.nmbPlaylist (nmb);
+          Ettoihc.storePlaylist#set_sort_column_id 0 `ASCENDING
+        end
+    end
+
+let upSong path =
+  let model = Ettoihc.playlistView#model in
+  let row = model#get_iter path in
+  let path = model#get ~row ~column:Ettoihc.pathPlaylist in
+
+  if (!Ettoihc.random) then
+    begin
+      let nmb = model#get ~row ~column:Ettoihc.randomPlaylist in
+      if (nmb != 1) then
+        begin
+          let iter = model#iter_children ~nth:(nmb - 2) None in
+          let path2 = model#get ~row:iter ~column:Ettoihc.pathPlaylist in
+
+          if path = !filepath then
+            indexSong := nmb - 2;
+          if path2 = !filepath then
+            indexSong := nmb - 1;
+
+          Ettoihc.storePlaylist#set ~row:row 
+                                    ~column:Ettoihc.randomPlaylist (nmb - 1);
+          Ettoihc.storePlaylist#set ~row:iter
+                                    ~column:Ettoihc.randomPlaylist (nmb);
+          Ettoihc.storePlaylist#set_sort_column_id 1 `ASCENDING
+        end
+    end
+  else
+    begin
+      let nmb = model#get ~row ~column:Ettoihc.nmbPlaylist in
+      if (nmb != 1) then
+        begin
+          let iter = model#iter_children ~nth:(nmb - 2) None in
+          let path2 = model#get ~row:iter ~column:Ettoihc.pathPlaylist in
+
+          if path = !filepath then
+            indexSong := nmb - 2;
+          if path2 = !filepath then
+            indexSong := nmb - 1;
+
+          Ettoihc.storePlaylist#set ~row:row
+                                    ~column:Ettoihc.nmbPlaylist (nmb - 1);
+          Ettoihc.storePlaylist#set ~row:iter
+                                    ~column:Ettoihc.nmbPlaylist (nmb);
+          Ettoihc.storePlaylist#set_sort_column_id 0 `ASCENDING
+        end
+    end
+
 let view_popup_menu treeview ev p=
   let menu = GMenu.menu () in
+  let upItem = GMenu.menu_item
+    ~label:"Go Up"
+    ~packing:menu#append () in
+  let downItem = GMenu.menu_item
+    ~label:"Go Down"
+    ~packing:menu#append () in
   let cleanItem = GMenu.menu_item
     ~label:"Clean Playlist"
     ~packing:menu#append () in
   let supItem = GMenu.menu_item
     ~label:"Remove"
-    ~packing:menu#append () in
+    ~packing:menu#append() in
   ignore(cleanItem#connect#activate ~callback:(fun () -> cleanPlaylist ()));
   ignore(supItem#connect#activate ~callback:(fun () -> removeSong p));
+  ignore(downItem#connect#activate ~callback:(fun () -> downSong p));
+  ignore(upItem#connect#activate ~callback:(fun () -> upSong p));
   menu#popup
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)

@@ -22,7 +22,6 @@ A faire :
 
   o Priorité Moyenne
 
-    - Possibilité de remonter/descendre une chanson dans la playlist
     - Pouvoir changer les filtres passe haut passe bas
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Naviguer dans la barre de progression de la musique
@@ -54,3 +53,4 @@ Fait
     - Bouton préférence pour affichage colonne
     - Colonnes genre, album … dans biblio
     - Corriger suppression dans playlist
+    - Possibilité de remonter/descendre une chanson dans la playlist
