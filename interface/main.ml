@@ -18,6 +18,8 @@ let _ =
   Header.connectMenu ();
   Header.btnpause#misc#hide ();
   Database.startBiblio ();
+  Mix.startEqualizer ();
   Ettoihc.window#show ();
   GMain.main ();
+  Mix.printEqualizer ();
   Wrap.destroy_sound ()

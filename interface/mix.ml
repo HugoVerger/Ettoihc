@@ -3,7 +3,7 @@ let frequence = [| "29Hz"; "59Hz" ; "119Hz"; "237Hz"; "474Hz";
                    "947Hz"; "2kHz"; "4kHz"; "8kHz"; "15kHz"|]
 let frequences= [| 29.; 59.; 119.; 237.; 474.;
                    947.; 2000.; 4000.; 8000.; 15000.|]
-let defaultEqualizer = ref ["Default"; "Classic"; "Rock"; "Techno"]
+let defaultEqualizer = ref []
 let fonctionAdj = ref []
 
 let distorsion =
@@ -70,7 +70,7 @@ let addFoncAdj name (a,b,c,d,e,f,g,h,i,j) =
     for i = 0 to 9 do
       Wrap.egaliseur frequences.(i) scaleRef.(i)#value;
     done) in
-  fonctionAdj := (name, func) :: !fonctionAdj
+  fonctionAdj := (name, func, (a,b,c,d,e,f,g,h,i,j)) :: !fonctionAdj
 
 let equalizerMenu =
   let box = GPack.hbox ~packing:Ettoihc.boxMenuMix#add () in
@@ -78,21 +78,17 @@ let equalizerMenu =
   combo#set_popdown_strings !defaultEqualizer;
   combo#entry#set_text "Equalizer already created";
   combo#set_case_sensitive true;
-  addFoncAdj "Default" (100.,100.,100.,100.,100.,100.,100.,100.,100.,100.);
-  addFoncAdj "Classic" (100.,100.,100.,100.,100.,100.,58.,58.,58.,48.);
-  addFoncAdj "Rock" (200.,140.,62.5,55.,80.,130.,230.,250.,250.,250.);
-  addFoncAdj "Techno" (200.,160.,95.,62.5,70.,95.,200.,240.,240.,220.);
   
   ignore(combo#list#connect#selection_changed ~callback:(fun()->
     let select = combo#entry#text in
     let existselect = function
-      |(n,_) when n = select -> true
+      |(n,_,_) when n = select -> true
       |_ -> false in
 
     if (List.exists existselect !fonctionAdj) then
       begin
         let f = List.find existselect !fonctionAdj in
-        match f with (n,func) -> func ()
+        match f with (n,func,_) -> func ()
       end));
   combo
 
@@ -114,10 +110,15 @@ let deleteEgalizer () =
   let select = equalizerMenu#entry#text in
   let rec place = function
     |[] -> 0
-    |(n,_)::t when n = select -> 0
+    |(n,_,_)::t when n = select -> 0
     |_::t -> 1 + place t in
   let n = place !fonctionAdj in
-  equalizerMenu#list#clear_items n (n + 1);
+  equalizerMenu#list#clear_items (n) (n+1);
+  let rec deleteE = function
+    |[] -> []
+    |(n,_,_)::t when n = select -> t
+    |h::t -> h :: deleteE t in
+  fonctionAdj := deleteE !fonctionAdj;
   equalizerMenu#entry#set_text "Default"
 
 let menuBoxEgalizer = 
@@ -147,6 +148,42 @@ let egaliseur =
     ignore(GMisc.label ~height:10 ~text:(frequence.(i)) ~packing:box#add ());
     scaleRef.(i) <- adj;
   done
+
+let printEqualizer () =
+  let oc = open_out "bin/equalizer" in
+  let rec printlist = function
+    |[] -> ()
+    |(n,f,(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10))::t -> 
+      begin
+        Printf.fprintf oc "%s\n" n;
+        Printf.fprintf oc "%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n" 
+                           a1 a2 a3 a4 a5 a6 a7 a8 a9 a10;
+        printlist t
+      end in
+  printlist !fonctionAdj;
+  close_out oc
+
+let startEqualizer () =
+  let chan = open_in "bin/equalizer" in
+  try
+    while true; do
+      let name = input_line chan in
+      let a1 = float_of_string (input_line chan) in
+      let a2 = float_of_string (input_line chan) in
+      let a3 = float_of_string (input_line chan) in
+      let a4 = float_of_string (input_line chan) in
+      let a5 = float_of_string (input_line chan) in
+      let a6 = float_of_string (input_line chan) in
+      let a7 = float_of_string (input_line chan) in
+      let a8 = float_of_string (input_line chan) in
+      let a9 = float_of_string (input_line chan) in
+      let a10 = float_of_string (input_line chan) in
+      defaultEqualizer := name::!defaultEqualizer;
+      addFoncAdj name (a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+    done;
+  with End_of_file ->
+    close_in chan;
+  equalizerMenu#set_popdown_strings !defaultEqualizer
 
 let flange=
   let fbut = GButton.toggle_button

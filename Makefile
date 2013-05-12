@@ -54,11 +54,12 @@ depend: .depend
 clean::
 	cd src/ && rm -f *~ *# *.cm? *.o
 	cd interface/ && rm -f *~ *# *.cm? *.o
+	cd bin/ && rm -f *~
 	rm -f *~ *# *.o ${BIN}
 	
-cleanbiblio:
-	rm biblio
-	echo "" > biblio
+cleanBiblio:
+	rm bin/biblio
+	echo "" > bin/biblio
 
 #http://oandrieu.nerim.net/ocaml/lablgtk/doc/type_GWindow.html
 #http://wiki.njh.eu/OCaml_and_SDL

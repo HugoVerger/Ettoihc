@@ -371,7 +371,8 @@ let confirm _ =
     ~buttons:GWindow.Buttons.yes_no () in
   let res = dlg#run () = `NO in
   dlg#destroy ();
-  Wrap.biblioSave !biblioForSave;
+  if not res then
+    Wrap.biblioSave !biblioForSave;
   res
 
 (* Fenêtre de problème biblio/playlist *)

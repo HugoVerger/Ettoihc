@@ -27,7 +27,7 @@ let checkBiblio () =
     end
 
 let loadBiblio () =
-  let ic = open_in "biblio" in
+  let ic = open_in "bin/biblio" in
   try
     while true; do
       let file = (input_line ic) in

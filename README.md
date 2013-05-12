@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel : Possibilité d'enregistrer ses égaliseurs
+  - Axel :
   - Valérian :
   - Hugo :
 
@@ -53,3 +53,4 @@ Fait
     - Corriger suppression dans playlist
     - Possibilité de remonter/descendre une chanson dans la playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
+    - Possibilité d'enregistrer ses égaliseurs
