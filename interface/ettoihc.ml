@@ -229,8 +229,9 @@ let firstLineBox2Vbox = GPack.vbox
   ~homogeneous:false
   ~packing:mixFrame1#add()
 
-let boxMenuMix = GPack.vbox
-  ~homogeneous:true
+let boxMenuMix = GPack.hbox
+  ~homogeneous:false
+  ~height:15
   ~packing:firstLineBox2Vbox#add ()
 
 let boxEqualizerMix = GPack.hbox

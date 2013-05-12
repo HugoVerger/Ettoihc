@@ -1,6 +1,10 @@
 let scaleRef = Array.create 10 (GData.adjustment ())
 let frequence = [| "29Hz"; "59Hz" ; "119Hz"; "237Hz"; "474Hz"; 
                    "947Hz"; "2kHz"; "4kHz"; "8kHz"; "15kHz"|]
+let frequences= [| 29.; 59.; 119.; 237.; 474.;
+                   947.; 2000.; 4000.; 8000.; 15000.|]
+let defaultEqualizer = ref ["Default"; "Classic"; "Rock"; "Techno"]
+let fonctionAdj = ref []
 
 let distorsion =
   let file_dist = ref 0. in
@@ -56,51 +60,76 @@ let echo =
   ignore(GMisc.label ~height:10 ~text:"Echo" ~packing:box#add ());
   echo_scale
 
+let addFoncAdj name (a,b,c,d,e,f,g,h,i,j) =
+  let func = (fun () ->
+    scaleRef.(0)#set_value a; scaleRef.(1)#set_value b;
+    scaleRef.(2)#set_value c; scaleRef.(3)#set_value d;
+    scaleRef.(4)#set_value e; scaleRef.(5)#set_value f;
+    scaleRef.(6)#set_value g; scaleRef.(7)#set_value h;
+    scaleRef.(8)#set_value i; scaleRef.(9)#set_value j;
+    for i = 0 to 9 do
+      Wrap.egaliseur frequences.(i) scaleRef.(i)#value;
+    done) in
+  fonctionAdj := (name, func) :: !fonctionAdj
+
 let equalizerMenu =
-  let combo = GEdit.combo ~packing:Ettoihc.boxMenuMix#add() in
-  combo#set_popdown_strings ["Default"; "Classic"; "Rock"; "Techno"];
+  let box = GPack.hbox ~packing:Ettoihc.boxMenuMix#add () in
+  let combo = GEdit.combo ~packing:box#add() in
+  combo#set_popdown_strings !defaultEqualizer;
   combo#entry#set_text "Equalizer already created";
   combo#set_case_sensitive true;
+  addFoncAdj "Default" (100.,100.,100.,100.,100.,100.,100.,100.,100.,100.);
+  addFoncAdj "Classic" (100.,100.,100.,100.,100.,100.,58.,58.,58.,48.);
+  addFoncAdj "Rock" (200.,140.,62.5,55.,80.,130.,230.,250.,250.,250.);
+  addFoncAdj "Techno" (200.,160.,95.,62.5,70.,95.,200.,240.,240.,220.);
   
   ignore(combo#list#connect#selection_changed ~callback:(fun()->
     let select = combo#entry#text in
-    if select = "Default" then
+    let existselect = function
+      |(n,_) when n = select -> true
+      |_ -> false in
+
+    if (List.exists existselect !fonctionAdj) then
       begin
-        for i = 0 to 9 do
-          scaleRef.(i)#set_value 100.;
-        done;
-        Wrap.egal_sound "default"
-      end
-    else if select = "Classic" then
-      begin
-        for i = 0 to 5 do
-          scaleRef.(i)#set_value 100.;
-        done;
-        scaleRef.(6)#set_value 58.; scaleRef.(7)#set_value 58.;
-        scaleRef.(8)#set_value 58.; scaleRef.(9)#set_value 48.;
-        Wrap.egal_sound "classique"
-      end
-    else if select = "Rock" then
-      begin
-        scaleRef.(0)#set_value 200.; scaleRef.(1)#set_value 140.;
-        scaleRef.(2)#set_value 62.5; scaleRef.(3)#set_value 55.;
-        scaleRef.(4)#set_value 80.;  scaleRef.(5)#set_value 130.;
-        scaleRef.(6)#set_value 230.;
-        for i = 7 to 9 do
-          scaleRef.(i)#set_value 250.;
-        done;
-        Wrap.egal_sound "rock"
-      end
-    else if select = "Techno" then
-      begin
-        scaleRef.(0)#set_value 200.; scaleRef.(1)#set_value 160.;
-        scaleRef.(2)#set_value 95.;  scaleRef.(3)#set_value 62.5;
-        scaleRef.(4)#set_value 70.;  scaleRef.(5)#set_value 95.;
-        scaleRef.(6)#set_value 200.; scaleRef.(7)#set_value 240.;
-        scaleRef.(8)#set_value 240.; scaleRef.(9)#set_value 220.;
-        Wrap.egal_sound "techno"
+        let f = List.find existselect !fonctionAdj in
+        match f with (n,func) -> func ()
       end));
   combo
+
+let saveEgalizer () =
+  let select = equalizerMenu#entry#text in
+  if not (List.mem select !defaultEqualizer) then
+    begin
+      defaultEqualizer := select::!defaultEqualizer;
+      equalizerMenu#set_popdown_strings !defaultEqualizer;
+      addFoncAdj select
+        (scaleRef.(0)#value, scaleRef.(1)#value, scaleRef.(2)#value, 
+         scaleRef.(3)#value, scaleRef.(4)#value, scaleRef.(5)#value,
+         scaleRef.(6)#value, scaleRef.(7)#value, scaleRef.(8)#value, 
+         scaleRef.(9)#value)
+    end;
+  ()
+
+let deleteEgalizer () =
+  let select = equalizerMenu#entry#text in
+  let rec place = function
+    |[] -> 0
+    |(n,_)::t when n = select -> 0
+    |_::t -> 1 + place t in
+  let n = place !fonctionAdj in
+  equalizerMenu#list#clear_items n (n + 1);
+  equalizerMenu#entry#set_text "Default"
+
+let menuBoxEgalizer = 
+  let box = GButton.toolbar
+    ~orientation:`HORIZONTAL ~width:300
+    ~style:`ICONS
+    ~packing:Ettoihc.boxMenuMix#add () in
+  let btnsave = GButton.tool_button ~stock:`ADD ~packing:box#insert () in
+  let btndelete = GButton.tool_button ~stock:`REMOVE ~packing:box#insert () in
+  ignore(btnsave#connect#clicked ~callback: (fun () -> saveEgalizer ()));
+  ignore(btndelete#connect#clicked ~callback: (fun () -> deleteEgalizer ()));
+  box
 
 let egaliseur =
   let egal_change f egal_b() =
@@ -114,7 +143,7 @@ let egaliseur =
     let scale = GRange.scale `VERTICAL
       ~draw_value:true ~value_pos:`BOTTOM ~show:true
       ~digits: 0 ~inverted:true ~adjustment:adj ~packing:box#add () in
-    ignore(scale#connect#value_changed (egal_change 29. scale));
+    ignore(scale#connect#value_changed (egal_change frequences.(i) scale));
     ignore(GMisc.label ~height:10 ~text:(frequence.(i)) ~packing:box#add ());
     scaleRef.(i) <- adj;
   done
