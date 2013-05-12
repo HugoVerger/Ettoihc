@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel :
+  - Axel : Possibilité d'enregistrer ses égaliseurs
   - Valérian :
   - Hugo :
 
@@ -29,7 +29,6 @@ A faire :
   o Faible Priorité
 
     - Afficher pochette album
-    - Possibilité d'enregistrer ses égaliseurs
     - Ajouter Balance audio
     - Possibilité de passer l'affichage spectre/effets en plein écran
     - Ajouter contrôle clavier

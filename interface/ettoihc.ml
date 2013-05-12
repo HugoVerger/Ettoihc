@@ -229,15 +229,14 @@ let firstLineBox2Vbox = GPack.vbox
   ~homogeneous:false
   ~packing:mixFrame1#add()
 
-let firstLineBox2 =
-  ignore(GMisc.label
-    ~height:10 ~text:"Equalizer"
-    ~packing:firstLineBox2Vbox#add ());
-  let bb = GPack.hbox
+let boxMenuMix = GPack.vbox
+  ~homogeneous:true
+  ~packing:firstLineBox2Vbox#add ()
+
+let boxEqualizerMix = GPack.hbox
     ~spacing:5
     ~border_width:10
-    ~packing:firstLineBox2Vbox#add() in
-  bb
+    ~packing:firstLineBox2Vbox#add()
 
 let secondLine =
   let mixFrame2 =GBin.frame
