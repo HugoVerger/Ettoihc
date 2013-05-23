@@ -206,9 +206,9 @@ let on_button_pressed treeview ev =
   else
     false
     
-    
+
 (* Tracé en arrière-plan. *)
-let back = GDraw.pixmap ~width:350 ~height:350 ()
+let back = GDraw.pixmap ~width:512 ~height:350 ()
 
 (* Boîte à outils pour le dessin. *)
 let drawing =
@@ -217,7 +217,7 @@ let drawing =
 
 let reset_draw () =
   back#set_foreground (`NAME "#000000");
-  back#rectangle ~x:0 ~y:0 ~width:350 ~height:350 ~filled:true ();
+  back#rectangle ~x:0 ~y:0 ~width:512 ~height:350 ~filled:true ();
   drawing#put_pixmap ~x:0 ~y:0 back#pixmap
 
 let set_draw () =
@@ -225,7 +225,7 @@ let set_draw () =
   let n = ref 0 in
   let tab = Array.make 512 0. in
   Wrap.spectre_sound (tab);
-  while (!n <= 350) do
+  while (!n < 512) do
     let elt = min ((Array.get tab !n) *. 100. *. 350.) 350. in
     back#line ~x:(!n) ~y:(350 - int_of_float(elt)) ~x:(!n) ~y:0;
     n := !n + 1

@@ -119,7 +119,7 @@ let playlistView =
 
 let drawing_area =
   GMisc.drawing_area
-    ~width:350
+    ~width:512
     ~height:350
     ~packing: lecturePage#add ()
 
