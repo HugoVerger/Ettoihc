@@ -226,7 +226,7 @@ let set_draw () =
   let tab = Array.make 512 0. in
   Wrap.spectre_sound (tab);
   while (!n < 512) do
-    let elt = min ((Array.get tab !n) *. 100. *. 350.) 350. in
+    let elt = min ((Array.get tab !n) *. 20. *. 350.) 350. in
     back#line ~x:(!n) ~y:(350 - int_of_float(elt)) ~x:(!n) ~y:0;
     n := !n + 1
   done;
