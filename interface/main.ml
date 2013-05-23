@@ -1,7 +1,10 @@
-let timer = GMain.Timeout.add ~ms:1 ~callback:(fun () -> 
+let timer = GMain.Timeout.add ~ms:10 ~callback:(fun () -> 
   Header.actTimeLine Header.timeLine ();
   if not (!Ettoihc.pause) then
-    Wrap.spectre ();
+    begin
+      Current.reset_draw ();
+      Current.set_draw ()
+    end;
   if (!Header.lengthSong = !Header.timeSong) then
     Header.suivant ();
   true)

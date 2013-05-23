@@ -117,12 +117,11 @@ let playlistView =
     ~renderer:(GTree.cell_renderer_text [], ["text", pathPlaylist]) ());
   view
 
-let socket = ignore(GWindow.socket
-    ~show:true ~width:350 
-    ~height:350 ~packing:lecturePage#add ());
-  Wrap.init_sdl ()(*;
-  let n = (bob#get_oid) in
-  Wrap.spectreTest n*)
+let drawing_area =
+  GMisc.drawing_area
+    ~width:350
+    ~height:350
+    ~packing: lecturePage#add ()
 
 (* Contenu onglet 2 *)
 

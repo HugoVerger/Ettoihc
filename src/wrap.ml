@@ -20,8 +20,4 @@ external egal_sound:    string-> unit   = "ocaml_egaliseur"
 external lpasse_sound:  unit  -> unit   = "ocaml_lpasse"
 external hpasse_sound:  unit  -> unit   = "ocaml_hpasse"
 
-(*external spectreTest:   int   -> unit   = "spectreTest"
-external sdlTest:   unit   -> unit = "do_sdl_stuff"*)
-external spectre:	unit	-> unit = "ocaml_spectre"
-external init_sdl:	unit	-> unit = "ocaml_initSDL"
-external destroy_sdl:	unit	-> unit = "ocaml_destroySDL"
+external spectre_sound: float array -> unit = "ocaml_spectrum"

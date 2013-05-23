@@ -13,7 +13,6 @@ A faire :
 
   o Haute Priorité
 
-    - Spectre intégré
     - Plusieurs effets visuels
     - Ajouter plusieurs types de fichiers audio (OGG, FLAC, ...)
     - Plusieurs normes de tag de chanson
@@ -44,6 +43,7 @@ A faire :
 
 Fait
 
+    - Spectre intégré
     - Bouton répéter playlist
     - Bouton Lecture aléatoire
     - Trier la bibliothèque

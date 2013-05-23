@@ -206,36 +206,6 @@ value ocaml_hpasse (value v)
   return v;
 }
 
-
-/*char winhack[1024]; 
-SDL_Surface *display;
-
-value do_sdl_stuff()
-{
-  draw(getChannel());
-
-  return Val_unit; 
-} 
-
-void clear(void) 
-{
-  SDL_Event event; 
-  event.type = SDL_USEREVENT; 
-  event.user.code = 0; 
-  SDL_PushEvent( &event ); 
-}
-
-value spectreTest (value v)
-{
-  snprintf( winhack, sizeof winhack, "SDL_WINDOWID=%i", Int_val(v));
-  SDL_putenv(winhack);
-  SDL_Init( SDL_INIT_VIDEO );
-  display = SDL_SetVideoMode(512, 512, 0, 0);
-  clear(); 
-
-  return Val_unit;
-}*/
-
 value ocaml_spectre (value v)
 {
   draw(getChannel());
@@ -252,4 +222,28 @@ value ocaml_initSDL (value v)
 {
   initSDL();
   return v;
+}
+
+
+void spectreSong (float spectum[512])
+{
+  FMOD_CHANNEL* channel;
+  
+  channel = getChannel ();
+  
+  FMOD_Channel_GetSpectrum(channel, spectum, 512, 0,
+                          FMOD_DSP_FFT_WINDOW_RECT);
+}
+
+value ocaml_spectrum (value float_array)
+{
+  float spectre[512];
+  
+  spectreSong(spectre);
+
+  for (int i = 0; i < 512; i++)
+  {
+    Store_double_field(float_array, i, spectre[i]);
+  }
+  return Val_unit;
 }
