@@ -22,9 +22,8 @@ let checkBiblio () =
       addBiblio (List.length !biblio - 1)
     end
   else
-    begin
+    if not (Sys.is_directory !Current.filepath) then
       Biblio.addPlaylist filepath biblio
-    end
 
 let loadBiblio () =
   let ic = open_in "bin/biblio" in

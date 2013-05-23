@@ -422,6 +422,7 @@ let about = GWindow.about_dialog
     ~height: 150
     ~destroy_with_parent:true ()
 
+
 let get_extension s =
   let ext = String.sub s ((String.length s) - 4) 4 in
   match ext with

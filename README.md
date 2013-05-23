@@ -31,6 +31,7 @@ A faire :
     - Possibilité de passer l'affichage spectre/effets en plein écran
     - Ajouter contrôle clavier
     - Barre de recherche de chanson
+    - Ajout de dossiers recherche aussi dans les dossiers fils (s'arrête pour l'instant au premier niveau)
 
 
   o BONUS
@@ -52,3 +53,4 @@ Fait
     - Possibilité de remonter/descendre une chanson dans la playlist
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Possibilité d'enregistrer ses égaliseurs
+    - Possibilité d'ajout de dossiers de musique

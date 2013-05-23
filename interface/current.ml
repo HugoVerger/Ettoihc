@@ -16,9 +16,12 @@ let launchPlaylist () =
     ignore(Playlist.addSong !filepath)
   else
     begin
-      Playlist.cleanPlaylist indexSong;
-      Wrap.stop_sound();
-      Playlist.addPlaylist !filepath
+      if not (Sys.is_directory !filepath) then
+        begin
+          Playlist.cleanPlaylist indexSong;
+          Wrap.stop_sound();
+          Playlist.addPlaylist !filepath
+        end
     end
 
 let on_row_activated (view:GTree.view) path column =
