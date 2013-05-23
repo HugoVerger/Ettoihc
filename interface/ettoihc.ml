@@ -378,6 +378,7 @@ let confirm _ =
 
 let prob () =
   let dlg = GWindow.message_dialog
+    ~title:"File Not Found"
     ~message:"<b><big>File Not Found</big>\nDo you want to search it ?</b>\n"
     ~parent:window
     ~destroy_with_parent:true

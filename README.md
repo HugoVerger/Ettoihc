@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel :
+  - Axel : Ajouter Balance audio
   - Valérian :
   - Hugo :
 
@@ -28,11 +28,9 @@ A faire :
   o Faible Priorité
 
     - Afficher pochette album
-    - Ajouter Balance audio
     - Possibilité de passer l'affichage spectre/effets en plein écran
     - Ajouter contrôle clavier
     - Barre de recherche de chanson
-    - Pouvoir ouvrir/fermer la fenêtre SDL (si impossible de l'intégrer)
 
 
   o BONUS

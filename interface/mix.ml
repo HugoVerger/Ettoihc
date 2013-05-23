@@ -160,7 +160,7 @@ let printEqualizer () =
                            a1 a2 a3 a4 a5 a6 a7 a8 a9 a10;
         printlist t
       end in
-  printlist !fonctionAdj;
+  printlist (List.rev !fonctionAdj);
   close_out oc
 
 let startEqualizer () =
@@ -183,7 +183,8 @@ let startEqualizer () =
     done;
   with End_of_file ->
     close_in chan;
-  equalizerMenu#set_popdown_strings !defaultEqualizer
+  equalizerMenu#set_popdown_strings !defaultEqualizer;
+  equalizerMenu#entry#set_text "Default"
 
 let flange=
   let fbut = GButton.toggle_button
