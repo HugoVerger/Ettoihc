@@ -1,5 +1,6 @@
 let timer = GMain.Timeout.add ~ms:10 ~callback:(fun () -> 
-  Header.actTimeLine Header.timeLine ();
+  if (!Header.timeSet) then
+    Header.actTimeLine ();
   if not (!Ettoihc.pause) then
     begin
       Current.reset_draw ();

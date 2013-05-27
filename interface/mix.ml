@@ -221,3 +221,23 @@ let highpass=
     ~packing:Ettoihc.secondLine#add() in
   ignore(hbut#connect#clicked ~callback:Wrap.hpasse_sound);
   hbut
+
+let x = ref 0.0
+
+let test1=
+  let hbut = GButton.button
+    ~show:true
+    ~label:"Add x"
+    ~relief:`NORMAL
+    ~packing:Ettoihc.secondLine#add() in
+  ignore(hbut#connect#clicked ~callback:(fun () -> x := 30.; Wrap.soundDim !x 30.0 30.0));
+  hbut
+  
+let test2=
+  let hbut = GButton.button
+    ~show:true
+    ~label:"Add x"
+    ~relief:`NORMAL
+    ~packing:Ettoihc.secondLine#add() in
+  ignore(hbut#connect#clicked ~callback:(fun () -> x := -35.; Wrap.soundDim !x (-35.0) (-35.0)));
+  hbut

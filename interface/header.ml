@@ -1,8 +1,8 @@
 let filedisplay = ref ""
 let lengthSong = ref 0
-let lengthSongString = ref "00:00:00"
 let timeSong = ref 0
 let file_vol = ref 50.
+let timeSet = ref true
 let repeat = ref false
 let randomList = []
 
@@ -39,7 +39,27 @@ let soundText =
   txt#misc#modify_font_by_name "Monospace 10";
   txt
 
-let timeLine = GRange.progress_bar 
+let timeText1 = GMisc.label
+  ~width:40
+  ~text:"00:00:00"
+  ~packing:Ettoihc.timeLinebox#add ()
+
+let adjTime = GData.adjustment
+  ~value:0.
+  ~lower:0.
+  ~upper:1010.
+  ~step_incr:1. ()
+let timeLine = 
+  let b = GPack.hbox
+    ~width:630
+    ~packing:Ettoihc.timeLinebox#add () in
+  GRange.scale `HORIZONTAL
+    ~adjustment:adjTime
+    ~packing:b#add ()
+
+let timeText2 = GMisc.label
+  ~width:40
+  ~text:"00:00:00"
   ~packing:Ettoihc.timeLinebox#add ()
 
 
@@ -145,23 +165,30 @@ let actLengthSong () =
   let minS = (if min < 10 then "0" else "") ^ string_of_int (min) in
   let secS = (if sec < 10 then "0" else "") ^ string_of_int (sec) in
   let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
-  lengthSongString := minS ^ ":" ^ secS ^ ":" ^ msS
+  timeText2#set_text (minS ^ ":" ^ secS ^ ":" ^ msS)
 
-let actTimeLine pbar () =
+let actTimeLine () =
   timeSong := Wrap.time_sound ();
   if (!lengthSong = 0) then
-    pbar#set_fraction 0.
+    adjTime#set_value 0.
   else
-    pbar#set_fraction ((float)!timeSong /. (float)!lengthSong);
+    adjTime#set_value ((float)!timeSong *. 1000. /. (float)!lengthSong);
   let min = (!timeSong / 1000) / 60 in
   let sec = (!timeSong / 1000) mod 60 in
   let ms = (!timeSong / 10) mod 100 in
   let minS = (if min < 10 then "0" else "") ^ string_of_int (min) in
   let secS = (if sec < 10 then "0" else "") ^ string_of_int (sec) in
   let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
-  let timeS = minS ^ ":" ^ secS ^ ":" ^ msS in
-  pbar#set_text (timeS ^ " / " ^ !lengthSongString)
+  timeText1#set_text (minS ^ ":" ^ secS ^ ":" ^ msS)
 
+let mouse t ev =
+  Ettoihc.pause := true;
+  Wrap.pause_sound ();
+  let x = GdkEvent.Button.x ev in
+  adjTime#set_value ((x -. 13.5) /. 0.63);
+  Wrap.setTime (adjTime#value /. 1000.);
+  timeSet := true;
+  true
 
 let actDisplay filepath =
   if (filepath = "") then
@@ -184,6 +211,7 @@ let actDisplay filepath =
 let play () =
   Wrap.play_sound(!Current.filepath);
   actLengthSong ();
+  adjTime#set_value 0.;
   actDisplay !Current.filepath;
   Ettoihc.pause := false
 
@@ -193,7 +221,7 @@ let stop () =
   Current.indexSong := 0;
   Ettoihc.pause := true;
   Wrap.stop_sound();
-  lengthSongString := "00:00:00";
+  timeText2#set_text "00:00:00";
   btnpause#misc#hide ();
   btnplay#misc#show ();
   Current.play () (* Prépare prochaine musique *)
@@ -389,7 +417,7 @@ let connectMenu () =
   ignore(open_button#connect#clicked     (fun () -> openFun ()));
   ignore(repeat_button#connect#clicked   (fun () -> repeat := not !repeat));
   ignore(alea_button#connect#clicked     (fun () -> randomFunc ()));
-  ignore(about_button#connect#clicked    (fun () -> 
+  ignore(about_button#connect#clicked    (fun () ->
     ignore(Ettoihc.about#run ());
     Ettoihc.about#misc#hide ()));
   ignore(pref_button#connect#clicked     (fun () -> Ettoihc.pref ()));
@@ -414,4 +442,6 @@ let connectMenu () =
     btnpause#misc#hide (); 
     btnplay#misc#show ();
     actDisplay "");
+  ignore(timeLine#event#connect#button_press (mouse timeLine));
+  ignore(timeLine#event#connect#button_release (fun ev -> Ettoihc.pause := false; Wrap.pause_sound ();true));
   ()

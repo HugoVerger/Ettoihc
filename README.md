@@ -22,7 +22,6 @@ A faire :
   o Priorité Moyenne
 
     - Pouvoir changer les filtres passe haut passe bas
-    - Naviguer dans la barre de progression de la musique
 
 
   o Faible Priorité
@@ -54,3 +53,4 @@ Fait
     - Vérifier que le fichier existe lorsque la biblio est chargée
     - Possibilité d'enregistrer ses égaliseurs
     - Possibilité d'ajout de dossiers de musique
+    - Naviguer dans la barre de progression de la musique

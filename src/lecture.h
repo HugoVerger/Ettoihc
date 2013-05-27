@@ -14,6 +14,8 @@ long getLength(FMOD_SOUND *sound);
 
 long getTime();
 
+void setTime(FMOD_SOUND *sound, float t);
+
 FMOD_CHANNEL* getChannel();
 
 void pauseSong (FMOD_SYSTEM *systemSong);
