@@ -1,11 +1,9 @@
 let timer = GMain.Timeout.add ~ms:10 ~callback:(fun () -> 
   if (!Header.timeSet) then
     Header.actTimeLine ();
+  Current.reset_draw ();
   if not (!Ettoihc.pause) then
-    begin
-      Current.reset_draw ();
-      Current.set_draw ()
-    end;
+    Current.set_draw ();
   if (!Header.lengthSong = !Header.timeSong) then
     Header.suivant ();
   true)

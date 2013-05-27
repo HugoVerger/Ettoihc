@@ -219,18 +219,18 @@ let drawing =
   new GDraw.drawable Ettoihc.drawing_area#misc#window
 
 let reset_draw () =
-  back#set_foreground (`NAME "#000000");
+  back#set_foreground (`NAME "#ffffff");
   back#rectangle ~x:0 ~y:0 ~width:512 ~height:350 ~filled:true ();
   drawing#put_pixmap ~x:0 ~y:0 back#pixmap
 
 let set_draw () =
-  back#set_foreground (`NAME "#ffffff");
+  back#set_foreground (`NAME "#000000");
   let n = ref 0 in
   let tab = Array.make 512 0. in
   Wrap.spectre_sound (tab);
   while (!n < 512) do
     let elt = min ((Array.get tab !n) *. 20. *. 350.) 350. in
-    back#line ~x:(!n) ~y:(350 - int_of_float(elt)) ~x:(!n) ~y:0;
+    back#line ~x:(!n) ~y:350 ~x:(!n) ~y:(350 - int_of_float(elt));
     n := !n + 1
   done;
   drawing#put_pixmap ~x:0 ~y:0 back#pixmap

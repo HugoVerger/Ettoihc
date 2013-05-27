@@ -40,8 +40,6 @@ A faire :
     - Convertir fichiers ogg/autres en mp3
 
 Bugs
-    - Cliquer sur la timeline avec playlist vide
-        -> Spectre bizare se lance
     - Balance à seulement 3 positions
         -> Impossible d'ajuster mieux que droite, gauche ou les deux
 

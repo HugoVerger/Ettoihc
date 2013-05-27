@@ -42,6 +42,7 @@ let soundText =
 let timeText1 = GMisc.label
   ~width:40
   ~text:"00:00:00"
+  ~show:false
   ~packing:Ettoihc.timeLinebox#add ()
 
 let adjTime = GData.adjustment
@@ -55,11 +56,13 @@ let timeLine =
     ~packing:Ettoihc.timeLinebox#add () in
   GRange.scale `HORIZONTAL
     ~adjustment:adjTime
+    ~show:false
     ~packing:b#add ()
 
 let timeText2 = GMisc.label
   ~width:40
   ~text:"00:00:00"
+  ~show:false
   ~packing:Ettoihc.timeLinebox#add ()
 
 
@@ -213,6 +216,9 @@ let play () =
   actLengthSong ();
   adjTime#set_value 0.;
   actDisplay !Current.filepath;
+  timeLine#misc#show ();
+  timeText1#misc#show ();
+  timeText2#misc#show ();
   Ettoihc.pause := false
 
 let stop () =
@@ -223,6 +229,9 @@ let stop () =
   Wrap.stop_sound();
   timeText2#set_text "00:00:00";
   btnpause#misc#hide ();
+  timeLine#misc#hide ();
+  timeText1#misc#hide ();
+  timeText2#misc#hide ();
   btnplay#misc#show ();
   Current.play () (* Prépare prochaine musique *)
 
@@ -444,5 +453,8 @@ let connectMenu () =
     btnplay#misc#show ();
     actDisplay "");
   ignore(timeLine#event#connect#button_press (mouse timeLine));
-  ignore(timeLine#event#connect#button_release (fun ev -> Ettoihc.pause := false; Wrap.pause_sound ();true));
+  ignore(timeLine#event#connect#button_release (fun ev -> 
+    Ettoihc.pause := false; 
+    Wrap.pause_sound ();
+    true));
   ()
