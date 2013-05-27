@@ -9,8 +9,6 @@
 
 void create_pl(char *name, char *s);
 
-void save_biblio(char *s);
-
 /*void del_pl(char* pathname);
 
 void add_song(char* playlist_name, char* song_path);

@@ -59,8 +59,7 @@ let addSong filepath biblio =
           tracknum := (string_of_int(t.Meta.Id3v1.tracknum));
           genre := getGenre(t.Meta.Id3v1.genre);
         end;
-      biblio := !biblio @ [(!title,!artist,!album,!genre,filepath)];
-      Ettoihc.biblioForSave := !Ettoihc.biblioForSave ^ filepath ^ "\n"
+      biblio := !biblio @ [(!title,!artist,!album,!genre,filepath)]
     end
 
 let addPlaylist filepath biblio =
@@ -70,4 +69,20 @@ let addPlaylist filepath biblio =
       addSong (input_line ic) biblio;
     done;
   with End_of_file ->
-    close_in ic);
+    close_in ic)
+    
+let saveBiblio () =
+  let oc = open_out "bin/biblio" in
+  let store = Ettoihc.storeBiblio in
+  let first = store#get_iter_first in
+  begin
+  match first with
+  |Some iter ->
+    Printf.fprintf oc "%s\n"(store#get ~row:iter ~column:Ettoihc.pathBiblio);
+
+    while store#iter_next iter do
+      Printf.fprintf oc "%s\n"(store#get ~row:iter ~column:Ettoihc.pathBiblio)
+    done
+  |None -> ()
+  end;
+  close_out oc

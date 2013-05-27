@@ -4,7 +4,6 @@
 external soundDim:      float -> float -> float -> unit = "ocaml_3D"
 external playlistSave:  string-> string -> unit = "ocaml_playlist"
 external egaliseur:     float -> float  -> unit = "ocaml_egaliseur"
-external biblioSave:    string-> unit   = "ocaml_biblio"
 external init_sound:    unit  -> unit   = "ocaml_init"
 external destroy_sound:	unit  -> unit   = "ocaml_destroy"
 external play_sound:    string-> unit   = "ocaml_play"

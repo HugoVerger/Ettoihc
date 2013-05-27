@@ -16,12 +16,3 @@ void create_pl(char *name, char *s)
   w = write(fp,s,strlen(s));w++;
   close (fp);
 }
-
-void save_biblio(char *s)
-{
-  int fp, w;
-
-  fp = open("bin/biblio",O_RDWR|O_CREAT|O_TRUNC,0666);
-  w = write(fp,s,strlen(s));w++;
-  close (fp);
-}

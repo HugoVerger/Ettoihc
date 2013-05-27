@@ -54,3 +54,4 @@ Fait
     - Possibilité d'enregistrer ses égaliseurs
     - Possibilité d'ajout de dossiers de musique
     - Naviguer dans la barre de progression de la musique
+    - Suppression dans la biblio ajoutée

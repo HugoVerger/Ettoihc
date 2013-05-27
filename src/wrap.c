@@ -74,12 +74,6 @@ value ocaml_playlist (value n,value s)
   return Val_unit;
 }
 
-value ocaml_biblio (value s)
-{
-  save_biblio(String_val(s));
-  return Val_unit;
-}
-
 value ocaml_distortion (value v)
 {
   distortion = distortion_event(systemSong, distortion, Double_val(v));

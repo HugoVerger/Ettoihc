@@ -19,6 +19,8 @@ let _ =
             ~callback:(Current.on_button_pressed Ettoihc.playlistView));
   ignore(Ettoihc.biblioView#connect#row_activated
             ~callback: (Database.on_row_activated Ettoihc.biblioView));
+  ignore(Ettoihc.biblioView#event#connect#button_press
+            ~callback:(Database.on_button_pressed Ettoihc.biblioView));
   Header.connectMenu ();
   Header.btnpause#misc#hide ();
   Database.startBiblio ();
@@ -26,4 +28,5 @@ let _ =
   Ettoihc.window#show ();
   GMain.main ();
   Mix.printEqualizer ();
+  Biblio.saveBiblio ();
   Wrap.destroy_sound ()

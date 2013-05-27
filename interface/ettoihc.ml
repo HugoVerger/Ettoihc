@@ -1,6 +1,5 @@
 let pause = ref true
 let random = ref false
-let biblioForSave = ref ""
 let playListForSave = ref ""
 let play = ref (fun () -> ())
 let stop = ref (fun () -> ())
@@ -370,8 +369,6 @@ let confirm _ =
     ~buttons:GWindow.Buttons.yes_no () in
   let res = dlg#run () = `NO in
   dlg#destroy ();
-  if not res then
-    Wrap.biblioSave !biblioForSave;
   res
 
 (* Fenêtre de problème biblio/playlist *)
