@@ -375,7 +375,7 @@ let randomFunc () =
   Ettoihc.storePlaylist#set_sort_func 0 sort_by_nmb;
   Ettoihc.storePlaylist#set_sort_func 1 sort_by_random;
   Ettoihc.random := not !Ettoihc.random;
-  if (!Ettoihc.random) then
+  if (!Ettoihc.random && !Playlist.nbSong > 0) then
     begin
       Ettoihc.playlistNmb#set_visible false;
       Ettoihc.playlistRandom#set_visible true;
@@ -393,6 +393,7 @@ let randomFunc () =
     end
   else
     begin
+      alea_button#set_active false;
       let rec clean = function
         |n when n < !Playlist.nbSong ->
           let iter = Ettoihc.storePlaylist#iter_children ~nth:n None in

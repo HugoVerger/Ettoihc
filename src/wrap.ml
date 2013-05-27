@@ -1,7 +1,6 @@
 (*
   Fonctions C
 *)
-external soundDim:      float -> float -> float -> unit = "ocaml_3D"
 external playlistSave:  string-> string -> unit = "ocaml_playlist"
 external egaliseur:     float -> float  -> unit = "ocaml_egaliseur"
 external init_sound:    unit  -> unit   = "ocaml_init"
@@ -19,5 +18,6 @@ external flange_sound:  unit  -> unit   = "ocaml_flange"
 external chorus_sound:  unit  -> unit   = "ocaml_chorus"
 external lpasse_sound:  unit  -> unit   = "ocaml_lpasse"
 external hpasse_sound:  unit  -> unit   = "ocaml_hpasse"
+external soundPan:      float -> unit   = "ocaml_pan"
 
 external spectre_sound: float array -> unit = "ocaml_spectrum"

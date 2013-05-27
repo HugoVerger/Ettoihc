@@ -5,7 +5,7 @@ Ettoihc
 Projet second semestre SPE EPITA
 
 Développement en cours :
-  - Axel : Ajouter Balance audio
+  - Axel :
   - Valérian :
   - Hugo :
 
@@ -39,6 +39,12 @@ A faire :
     - Ajouter détails du projet dans About et le Read Me
     - Convertir fichiers ogg/autres en mp3
 
+Bugs
+    - Cliquer sur la timeline avec playlist vide
+        -> Spectre bizare se lance
+    - Balance à seulement 3 positions
+        -> Impossible d'ajuster mieux que droite, gauche ou les deux
+
 Fait
 
     - Spectre intégré
@@ -55,3 +61,4 @@ Fait
     - Possibilité d'ajout de dossiers de musique
     - Naviguer dans la barre de progression de la musique
     - Suppression dans la biblio ajoutée
+    - Ajouter Balance audio

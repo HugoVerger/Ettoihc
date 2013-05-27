@@ -222,22 +222,27 @@ let highpass=
   ignore(hbut#connect#clicked ~callback:Wrap.hpasse_sound);
   hbut
 
-let x = ref 0.0
 
-let test1=
-  let hbut = GButton.button
+let pan =
+  let adj= GData.adjustment 
+    ~value:10.
+    ~lower:0.
+    ~upper:30.
+    ~step_incr:10. () in
+  let box = GPack.vbox
+    ~height: 130
+    ~homogeneous:false
+    ~spacing:0
+    ~packing:(Ettoihc.firstLineBox1#pack ~expand:false) () in
+  let pan_scale = GRange.scale `HORIZONTAL
+    ~draw_value:false
+    ~value_pos:`BOTTOM
     ~show:true
-    ~label:"Add x"
-    ~relief:`NORMAL
-    ~packing:Ettoihc.secondLine#add() in
-  ignore(hbut#connect#clicked ~callback:(fun () -> x := 30.; Wrap.soundDim !x 30.0 30.0));
-  hbut
-  
-let test2=
-  let hbut = GButton.button
-    ~show:true
-    ~label:"Add x"
-    ~relief:`NORMAL
-    ~packing:Ettoihc.secondLine#add() in
-  ignore(hbut#connect#clicked ~callback:(fun () -> x := -35.; Wrap.soundDim !x (-35.0) (-35.0)));
-  hbut
+    ~adjustment:adj
+    ~packing:box#add () in
+  ignore(pan_scale#connect#value_changed (fun () ->
+      if (pan_scale#adjustment#value = 0.) then Wrap.soundPan (-1.)
+      else if (pan_scale#adjustment#value = 20.) then Wrap.soundPan 255.
+      else Wrap.soundPan 0.));
+  ignore(GMisc.label ~height:10 ~text:"Pan" ~packing:box#add ());
+  pan_scale

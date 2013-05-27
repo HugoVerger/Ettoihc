@@ -209,7 +209,7 @@ let boxLine1 =
 
 let firstLineBox1 =
   let mixFrame1 = GBin.frame
-    ~width:80
+    ~width:220
     ~height:260
     ~border_width:0
     ~packing:boxLine1#add () in
@@ -229,7 +229,8 @@ let firstLineBox2Vbox = GPack.vbox
 
 let boxMenuMix = GPack.hbox
   ~homogeneous:false
-  ~height:15
+  ~height:20
+  ~border_width:10
   ~packing:firstLineBox2Vbox#add ()
 
 let boxEqualizerMix = GPack.hbox

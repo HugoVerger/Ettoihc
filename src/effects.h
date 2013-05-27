@@ -20,4 +20,4 @@ FMOD_DSP* high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass);
 
 FMOD_DSP* egaliseur (FMOD_SYSTEM* system, FMOD_DSP* dsp, float center, float gain);
 
-void set3D (FMOD_SYSTEM* system, FMOD_VECTOR oldpos, FMOD_VECTOR pos);
+void setPan (FMOD_CHANNEL* channel, int pan);

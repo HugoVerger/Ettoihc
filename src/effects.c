@@ -97,17 +97,9 @@ FMOD_DSP* high_pass_event(FMOD_SYSTEM* system,FMOD_DSP* high_pass)
   return high_pass;
 }
 
-void set3D (FMOD_SYSTEM* system, FMOD_VECTOR oldpos, FMOD_VECTOR pos)
+void setPan (FMOD_CHANNEL* channel, int pan)
 {
-  FMOD_VECTOR forward        = { 0.0f, 0.0f, 1.0f };
-  FMOD_VECTOR up             = { 0.0f, 1.0f, 0.0f };
-  FMOD_VECTOR vel;
-  
-  vel.x = (pos.x - oldpos.x) * (1000 / 20);
-  vel.y = (pos.y - oldpos.y) * (1000 / 20);
-  vel.z = (pos.z - oldpos.z) * (1000 / 20);
-  
-  FMOD_System_Set3DListenerAttributes(system, 0, &pos, &vel, &forward, &up);
+  FMOD_Channel_SetPan (channel, pan);
 }
 
 

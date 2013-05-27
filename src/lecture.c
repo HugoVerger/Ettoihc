@@ -34,7 +34,6 @@ FMOD_SOUND* playSong (FMOD_SYSTEM *systemSong, FMOD_SOUND *sound, char *name)
   {
     ERRCHECK(FMOD_System_CreateSound(systemSong, name,
                                      FMOD_CREATESTREAM, 0, &sound));
-    FMOD_Sound_Set3DMinMaxDistance(sound, 4.0f, 10000.0f);
     ERRCHECK(FMOD_Sound_SetMode(sound, FMOD_LOOP_OFF));
     ERRCHECK(FMOD_System_PlaySound(systemSong, FMOD_CHANNEL_FREE, sound, 0, &channel));
   }

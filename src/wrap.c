@@ -98,15 +98,10 @@ value ocaml_chorus (value v)
   return v ;
 }
 
-value ocaml_3D (value a, value b, value c)
+value ocaml_pan (value a)
 {
-  FMOD_VECTOR pos = {Double_val(a), Double_val(b), Double_val(c)};
-  
-  set3D (systemSong, listenerpos, pos);
-  
-  listenerpos = pos;
-  FMOD_System_Update(systemSong);
-  
+  int t = (int)Double_val(a);
+  setPan (getChannel(), t);
   return Val_unit;
 }
 
