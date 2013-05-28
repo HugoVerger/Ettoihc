@@ -222,7 +222,6 @@ let highpass=
   ignore(hbut#connect#clicked ~callback:Wrap.hpasse_sound);
   hbut
 
-
 let pan =
   let adj= GData.adjustment 
     ~value:10.

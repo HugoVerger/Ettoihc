@@ -1,5 +1,7 @@
 let pause = ref true
 let random = ref false
+let color1 = ref "#ffffff"
+let color2 = ref "#000000"
 let playListForSave = ref ""
 let play = ref (fun () -> ())
 let stop = ref (fun () -> ())
@@ -384,6 +386,26 @@ let tagW file =
 
 (* Fenêtre de préférence *)
 
+let convert_hexa n =
+  let string_of_char = String.make 1 in
+  let s1 = ref '0' and s2 = ref '0' in
+  if n/256 > 15 then
+    begin
+      let tmp = (n /256 / 16) in
+      if tmp > 9 then
+        begin
+          let tmp2 = tmp + 65 - 10 in
+          s1 := Char.chr tmp2
+        end
+    end;
+  let tmp = (n /256 mod 16) in
+  if tmp > 9 then
+    begin
+      let tmp2 = tmp + 65 - 10 in
+      s2 := Char.chr tmp2
+    end;
+  (string_of_char !s1) ^ string_of_char (!s2)
+
 let pref () =
   let dlg = GWindow.dialog
     ~parent:window
@@ -391,7 +413,7 @@ let pref () =
     ~title:"Properties"
     ~show:true
     ~width:200
-    ~height:300
+    ~height:350
     ~position:`CENTER_ON_PARENT () in
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_button_stock `SAVE `SAVE;
@@ -421,6 +443,40 @@ let pref () =
     ~active:colPath#visible
     ~label:"Path"
     ~packing:bbox#add () in
+  
+  let frame = GBin.frame ~label:"Spectre colors"    
+    ~packing:dlg#vbox#add () in
+  let bbox = GPack.button_box `VERTICAL
+    ~spacing:10
+    ~border_width:5
+    ~packing:frame#add () in  
+    
+  let d = GWindow.color_selection_dialog
+    ~parent:window
+    ~destroy_with_parent:true
+    ~position:`CENTER_ON_PARENT () in
+  ignore(d#ok_button#connect#clicked (fun () -> 
+    let c = d#colorsel#color in
+    let c1 = "#" ^ convert_hexa (Gdk.Color.red c) in
+    let c2 = c1 ^ convert_hexa (Gdk.Color.green c) in
+    color2 := c2 ^ convert_hexa(Gdk.Color.blue c)));
+  let btn = GButton.button ~label:"Change Bars" ~packing:bbox#add () in
+  ignore(GMisc.image ~stock:`COLOR_PICKER ~packing:btn#set_image ());
+  ignore(btn#connect#clicked (fun () -> ignore (d#run ()); d#misc#hide ()));  
+  
+  let d = GWindow.color_selection_dialog
+    ~parent:window
+    ~destroy_with_parent:true
+    ~position:`CENTER_ON_PARENT () in
+  ignore(d#ok_button#connect#clicked (fun () -> 
+    let c = d#colorsel#color in
+    let c1 = "#" ^ convert_hexa (Gdk.Color.red c) in
+    let c2 = c1 ^ convert_hexa (Gdk.Color.green c) in
+    color1 := c2 ^ convert_hexa(Gdk.Color.blue c)));
+  let btn = GButton.button ~label:"Change Background" ~packing:bbox#add () in
+  ignore(GMisc.image ~stock:`COLOR_PICKER ~packing:btn#set_image ());
+  ignore(btn#connect#clicked (fun () -> ignore (d#run ()); d#misc#hide ()));  
+  
   let tmp = dlg#run () in
   if (tmp = `SAVE) then
     begin

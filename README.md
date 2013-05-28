@@ -60,3 +60,4 @@ Fait
     - Suppression dans la biblio ajoutée
     - Ajouter Balance audio
     - Éditer les tags d'une chanson
+    - Personnalisation couleurs spectre
