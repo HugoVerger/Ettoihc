@@ -16,7 +16,6 @@ A faire :
     - Plusieurs effets visuels
     - Ajouter plusieurs types de fichiers audio (OGG, FLAC, ...)
     - Plusieurs normes de tag de chanson
-    - Éditer les tags d'une chanson
 
 
   o Priorité Moyenne
@@ -60,3 +59,4 @@ Fait
     - Naviguer dans la barre de progression de la musique
     - Suppression dans la biblio ajoutée
     - Ajouter Balance audio
+    - Éditer les tags d'une chanson

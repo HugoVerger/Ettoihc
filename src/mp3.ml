@@ -56,6 +56,29 @@ module Id3v1 = struct
     close_in ic;
     res
 
+  let write filename t ar al y c n  =
+    let oc = open_out_gen [Open_wronly; Open_binary] 0o666 filename in
+    try
+      let len = out_channel_length oc in
+      if has_tag filename
+      then seek_out oc (len - 128)
+      else seek_out oc len;
+      let put s len =
+        let l = String.length s in
+        for i = 0 to min l len - 1 do output_char oc s.[i] done;
+        for i = l to len - 1 do output_byte oc 0 done in
+      output_string oc "TAG";
+      put t 30;
+      put ar 30;
+      put al 30;
+      put y 4;
+      put c 29;
+      output_byte oc n;
+      output_byte oc 148;
+      close_out oc
+    with x ->
+      close_out oc; raise x
+
   let write_file filename tag =
     let oc = open_out_gen [Open_wronly; Open_binary] 0o666 filename in
     try

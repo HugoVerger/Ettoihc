@@ -12,6 +12,7 @@ module Id3v1 = struct
   let has_tag = Mp3.Id3v1.has_tag
   let read = Mp3.Id3v1.read_file
   let write t f = Mp3.Id3v1.write_file f t
+  let writeFile f t ar al y c n = Mp3.Id3v1.write f t ar al y c n
   let merge = Mp3.Id3v1.merge
   let no_tag = Mp3.Id3v1.no_tag
 

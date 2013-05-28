@@ -142,14 +142,31 @@ let on_row_activated (view:GTree.view) path column =
 let removeSong path =
   let model = Ettoihc.biblioView#model in
   let row = model#get_iter path in
-  ignore(Ettoihc.storeBiblio#remove row)
+  let pathFile = model#get ~row ~column:Ettoihc.pathBiblio in
+  ignore(Ettoihc.storeBiblio#remove row);
+  let rec delete = function
+    |[] -> []
+    |(_,_,_,_,file)::t when file = pathFile -> t
+    |_::t -> delete t in
+  biblio := delete !biblio
 
 let view_popup_menu treeview ev p=
   let menu = GMenu.menu () in
   let supItem = GMenu.menu_item
     ~label:"Remove"
     ~packing:menu#append() in
+  let tagItem = GMenu.menu_item
+    ~label:"Edit Tag"
+    ~packing:menu#append() in
   ignore(supItem#connect#activate ~callback:(fun () -> removeSong p));
+  ignore(tagItem#connect#activate ~callback:(fun () -> 
+    let model = Ettoihc.biblioView#model in
+    let row = model#get_iter p in
+    let path = model#get ~row ~column:Ettoihc.pathBiblio in
+    Ettoihc.tagW path;
+    removeSong p;
+    Biblio.addSong path biblio;
+    addBiblio (List.length !biblio - 1)));
   menu#popup
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)

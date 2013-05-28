@@ -306,6 +306,82 @@ let saveDialog () =
        Wrap.playlistSave (str_op(dlg#filename)) !playListForSave;
   dlg#misc#hide ()
 
+(* Changement tag*)
+
+let tagW file =
+  let dlg = GWindow.dialog
+    ~parent:window
+    ~destroy_with_parent:true
+    ~title:"Edit Tag"
+    ~show:true
+    ~width:200
+    ~height:300
+    ~position:`CENTER_ON_PARENT () in
+  dlg#add_button_stock `CANCEL `CANCEL;
+  dlg#add_button_stock `SAVE `SAVE;
+  
+  let t = Meta.v1_of_v2 (Meta.read_both_as_v2 file) in
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Number" ~packing:b#add ());
+  let tracknum = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  tracknum#buffer#set_text (string_of_int(t.Meta.Id3v1.tracknum));
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Title" ~packing:b#add ());
+  let title = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  title#buffer#set_text t.Meta.Id3v1.title;
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Artist" ~packing:b#add ());
+  let artist = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  artist#buffer#set_text t.Meta.Id3v1.artist;
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Album" ~packing:b#add ());
+  let album = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  album#buffer#set_text t.Meta.Id3v1.album;
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Year" ~packing:b#add ()); 
+  let year = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  year#buffer#set_text t.Meta.Id3v1.year;
+  
+  let b = GPack.hbox
+    ~homogeneous:false ~height:10 ~border_width:10
+    ~packing:dlg#vbox#add () in
+  ignore(GMisc.label ~width:80 ~height:10 ~text:"Comment" ~packing:b#add ());
+  let comment = GText.view
+    ~width:110 ~editable: true ~cursor_visible: true ~packing:b#add () in
+  comment#buffer#set_text t.Meta.Id3v1.comment;
+    
+  if dlg#run () == `SAVE then
+    begin
+      Meta.Id3v1.writeFile file 
+                           (title#buffer#get_text ())
+                           (artist#buffer#get_text ())
+                           (album#buffer#get_text ())
+                           (year#buffer#get_text ())
+                           (comment#buffer#get_text ())
+                           (int_of_string (tracknum#buffer#get_text ()))
+    end;
+  dlg#destroy ()
+
 (* Fenêtre de préférence *)
 
 let pref () =
