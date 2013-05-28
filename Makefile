@@ -5,15 +5,15 @@ BAKF=${_DATE}-Prog
 
 ################# C Compilation #################
 CC= clang
-CFLAGS= -W -Wall -pedantic -std=c99 -O2 -I  `ocamlc -where` `pkg-config --cflags --libs sdl` 
-CS= src/wrap.c src/lecture.c src/spectre.c src/effects.c src/playlist.c
+CFLAGS= -W -Wall -pedantic -std=c99 -O2 -I  `ocamlc -where`
+CS= src/wrap.c src/lecture.c src/effects.c src/playlist.c
 HS=${CS:.c=.h}
 OS=${CS:.c=.o}
-CO=  wrap.o lecture.o spectre.o effects.o playlist.o
+CO=  wrap.o lecture.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
+OFLAGS= -I lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
 OLIB=-cclib fmod/lib/libfmodex64.so -cclib libSDL.so
 OCOPT=ocamlopt
 OCAMLC=ocamlc

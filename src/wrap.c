@@ -1,10 +1,8 @@
 #include <caml/alloc.h>
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
-#include <SDL.h> 
 #include "lecture.h"
 #include "playlist.h"
-#include "spectre.h"
 #include "effects.h"
 
 FMOD_SYSTEM     *systemSong = NULL;
@@ -135,24 +133,6 @@ value ocaml_lpasse (value v)
 value ocaml_hpasse (value v)
 {
   high_pass = high_pass_event(systemSong, high_pass);
-  return v;
-}
-
-value ocaml_spectre (value v)
-{
-  draw(getChannel());
-  return v;
-}
-
-value ocaml_destroySDL (value v)
-{
-  destroySDL();
-  return v;
-}
-
-value ocaml_initSDL (value v)
-{
-  initSDL();
   return v;
 }
 
