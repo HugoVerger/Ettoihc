@@ -13,7 +13,7 @@ CO=  wrap.o lecture.o effects.o playlist.o
 .SUFFIXES: .c .h
 
 ############### Compilation OCaML ###############
-OFLAGS= -I lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
+OFLAGS= -I +lablgtk2 -I src -I interface -I fmod/inc -I fmod/lib
 OLIB=-cclib fmod/lib/libfmodex64.so
 OCOPT=ocamlopt
 OCAMLC=ocamlc
