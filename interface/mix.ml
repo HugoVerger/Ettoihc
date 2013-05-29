@@ -149,8 +149,8 @@ let egaliseur =
     scaleRef.(i) <- adj;
   done
 
-let printEqualizer () = ()
-  (*let oc = open_out "bin/equalizer" in
+let printEqualizer () =
+  let oc = open_out "bin/equalizer" in
   let rec printlist = function
     |[] -> ()
     |(n,f,(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10))::t -> 
@@ -161,7 +161,7 @@ let printEqualizer () = ()
         printlist t
       end in
   printlist (List.rev !fonctionAdj);
-  close_out oc*)
+  close_out oc
 
 let startEqualizer () =
   let chan = open_in "bin/equalizer" in
