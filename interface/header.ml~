@@ -14,9 +14,9 @@
                        (Sys.readdir !Current.filepath);
           end
       else
-        (*begin
-          if !signal = "play" then
-            begin
+        begin
+          (*if !signal = "play" then
+            begin*)
               if not (Sys.is_directory !Current.filepath) then
                 begin
                   Current.indexSong := !Playlist.nbSong - 1;
@@ -40,5 +40,5 @@
                     end
                 end
             end
-        end*)
+        end
     end

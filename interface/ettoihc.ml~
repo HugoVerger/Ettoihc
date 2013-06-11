@@ -23,7 +23,7 @@ let openDialog filepath signal =
   dlg#set_filter music_filter;
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_button_stock `MEDIA_PLAY `MEDIA_PLAY;
-  dlg#add_button_stock (`STOCK "Add Biblio") (`STOCK "Add Biblio");
+  dlg#add_button_stock (`STOCK "Add Biblio") (`STOCK "Add Biblio");*)
   let tmp = dlg#run () in
   if tmp = (`STOCK "Add Biblio") then
     begin
@@ -45,7 +45,7 @@ let openDialog filepath signal =
             end;
         end;
     end;
-  dlg#misc#hide ()*)
+  dlg#misc#hide ()
 
 (* Fenêtre de sauvegarde *)
 

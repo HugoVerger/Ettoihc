@@ -3,8 +3,8 @@
   Current.reset_draw ();
   if not (!Ettoihc.pause) then
     Current.set_draw ();
-  (*if (!Header.lengthSong = !Header.timeSong) then
-    Header.suivant ();*)
+  if (!Header.lengthSong = !Header.timeSong) then
+    Header.suivant ();
   true)
 
 let _ =

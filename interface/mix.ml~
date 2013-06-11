@@ -6,7 +6,7 @@ let frequences= [| 29.; 59.; 119.; 237.; 474.;
 let defaultEqualizer = ref []
 let fonctionAdj = ref []
 
-let distorsion =
+(*let distorsion =
   let file_dist = ref 0. in
   let dist_change dist_b() =
     file_dist := dist_b#adjustment#value;
@@ -31,9 +31,9 @@ let distorsion =
     ~packing:box#add () in
   ignore(dist_scale#connect#value_changed (dist_change dist_scale));
   ignore(GMisc.label ~height:10 ~text:"Distorsion" ~packing:box#add ());
-  dist_scale
+  dist_scale*)
 
-let echo =
+(*let echo =
   let file_echo = ref 0. in
   let echo_change echo_b() =
     file_echo := echo_b#adjustment#value;
@@ -77,7 +77,7 @@ let equalizerMenu =
   let combo = GEdit.combo ~packing:box#add() in
   combo#set_popdown_strings !defaultEqualizer;
   combo#entry#set_text "Equalizer already created";
-  combo#set_case_sensitive true;
+  combo#set_case_sensitive true;*)
   
   ignore(combo#list#connect#selection_changed ~callback:(fun()->
     let select = combo#entry#text in
@@ -90,7 +90,7 @@ let equalizerMenu =
         let f = List.find existselect !fonctionAdj in
         match f with (n,func,_) -> func ()
       end));
-  combo
+  (*combo
 
 let saveEgalizer () =
   let select = equalizerMenu#entry#text in
@@ -127,12 +127,12 @@ let menuBoxEgalizer =
     ~style:`ICONS
     ~packing:Ettoihc.boxMenuMix#add () in
   let btnsave = GButton.tool_button ~stock:`ADD ~packing:box#insert () in
-  let btndelete = GButton.tool_button ~stock:`REMOVE ~packing:box#insert () in
+  let btndelete = GButton.tool_button ~stock:`REMOVE ~packing:box#insert () in*)
   ignore(btnsave#connect#clicked ~callback: (fun () -> saveEgalizer ()));
   ignore(btndelete#connect#clicked ~callback: (fun () -> deleteEgalizer ()));
-  box
+  (*box*)
 
-let egaliseur =
+(*let egaliseur =
   let egal_change f egal_b() =
     Wrap.egaliseur f (egal_b#adjustment#value) in
   for i = 0 to 9 do
@@ -186,7 +186,7 @@ let startEqualizer () =
   equalizerMenu#set_popdown_strings !defaultEqualizer;
   equalizerMenu#entry#set_text "Default"
 
-let flange=
+(*let flange=
   let fbut = GButton.toggle_button
     ~show:true
     ~label:"Flange"
@@ -244,4 +244,4 @@ let pan =
       else if (pan_scale#adjustment#value = 20.) then Wrap.soundPan 255.
       else Wrap.soundPan 0.));
   ignore(GMisc.label ~height:10 ~text:"Pan" ~packing:box#add ());
-  pan_scale
+  pan_scale*)
