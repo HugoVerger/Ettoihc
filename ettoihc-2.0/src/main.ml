@@ -22,7 +22,11 @@ let openFun () =
 
 let timer = GMain.Timeout.add ~ms:10 ~callback:(fun () ->
   if not (!Header.pause) then
-    Header.actTimeLine ();
+    begin
+      Header.actTimeLine ();
+      Draw.reset ();
+      Draw.drawSpectre ()
+    end;
   if (!Header.length = !Header.time) then
     Header.next ();
   true)

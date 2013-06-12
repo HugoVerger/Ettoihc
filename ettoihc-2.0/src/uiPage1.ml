@@ -79,3 +79,9 @@ let drawing_area = GMisc.drawing_area
   ~width:512
   ~height:350
   ~packing: page#add ()
+
+let back = GDraw.pixmap ~width:512 ~height:350 ()
+
+let drawing =
+  drawing_area#misc#realize ();
+  new GDraw.drawable drawing_area#misc#window

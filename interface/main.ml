@@ -1,15 +1,15 @@
 (*let timer = GMain.Timeout.add ~ms:10 ~callback:(fun () ->
-  Header.actTimeLine ();*)
+  Header.actTimeLine ();
   Current.reset_draw ();
   if not (!Ettoihc.pause) then
     Current.set_draw ();
-  (*if (!Header.lengthSong = !Header.timeSong) then
-    Header.suivant ();*)
+  if (!Header.lengthSong = !Header.timeSong) then
+    Header.suivant ();
   true)
 
 let _ =
-  (*Wrap.init_sound();*)
-  ignore(Ettoihc.window#event#connect#delete Ettoihc.confirm);
+  (Wrap.init_sound();
+  ignore(Ettoihc.window#event#connect#delete Ettoihc.confirm);*)
   ignore(Ettoihc.playlistView#connect#row_activated
             ~callback: (Current.on_row_activated Ettoihc.playlistView));
   ignore(Ettoihc.playlistView#event#connect#button_press

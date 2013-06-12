@@ -19,7 +19,7 @@ OCOPT=ocamlopt
 OCAMLC=ocamlc
 CMXA= bigarray.cmxa lablgtk.cmxa unix.cmxa
 CMA= bigarray.cma lablgtk.cma unix.cma
-ML= src/wrap.ml src/ui.ml src/uiHeader.ml src/uiPage1.ml src/uiPage2.ml src/uiPage3.ml src/mp3.ml src/meta.ml src/header.ml src/effects.ml src/playlist.ml src/biblio.ml src/main.ml
+ML= src/wrap.ml src/ui.ml src/uiHeader.ml src/uiPage1.ml src/uiPage2.ml src/uiPage3.ml src/mp3.ml src/meta.ml src/header.ml src/playlist.ml src/draw.ml src/biblio.ml src/effects.ml src/main.ml
 MLI=${ML:.ml=.mli}
 CMO=${ML:.ml=.cmo}
 CMX=${ML:.ml=.cmx}

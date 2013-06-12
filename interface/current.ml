@@ -209,7 +209,7 @@ let on_button_pressed treeview ev =
   else
     false
     
-
+(*
 (* Tracé en arrière-plan. *)
 let back = GDraw.pixmap ~width:512 ~height:350 ()
 
@@ -233,4 +233,4 @@ let set_draw () =
     back#line ~x:(!n) ~y:350 ~x:(!n) ~y:(350 - int_of_float(elt));
     n := !n + 1
   done;
-  drawing#put_pixmap ~x:0 ~y:0 back#pixmap
+  drawing#put_pixmap ~x:0 ~y:0 back#pixmap*)
