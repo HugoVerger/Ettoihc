@@ -3,9 +3,9 @@
   Ettoihc.openDialog Current.filepath signal;
   if not (!signal = "cancel") then
     begin
-      if !signal = "biblio" then*)
+      if !signal = "biblio" then
         if not (Sys.is_directory !Current.filepath) then
-          (*Database.checkBiblio ()*)
+          Database.checkBiblio ()
         else
           begin
             let tmp = !Current.filepath in
@@ -15,8 +15,8 @@
           end
       else
         begin
-          (*if !signal = "play" then
-            begin*)
+          if !signal = "play" then
+            begin
               if not (Sys.is_directory !Current.filepath) then
                 begin
                   Current.indexSong := !Playlist.nbSong - 1;
@@ -40,5 +40,5 @@
                     end
                 end
             end
-        end
+        end*)
     end

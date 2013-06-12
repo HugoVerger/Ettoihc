@@ -51,7 +51,7 @@ let playlistPath = GTree.view_column
   ~title:"Path"
   ~renderer:(GTree.cell_renderer_text [], ["text", path]) ()
 
-let playlistView =
+let view =
   let scroll = GBin.scrolled_window
     ~hpolicy: `AUTOMATIC
     ~vpolicy: `ALWAYS

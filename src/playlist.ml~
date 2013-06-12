@@ -1,4 +1,4 @@
-let nbSong = ref 0
+(*let nbSong = ref 0
 
 let addSong filepath =
   let rec checkExist n =
@@ -39,7 +39,7 @@ let addSong filepath =
       Ettoihc.storePlaylist#set ~row:iter ~column:Ettoihc.pathPlaylist filepath;
       Ettoihc.playListForSave := !Ettoihc.playListForSave ^ filepath ^ "\n"
     end;
-  tmp
+  tmp*)
 
 let cleanPlaylist indexSong =
   nbSong := 0;

@@ -2,7 +2,6 @@
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
 #include "lecture.h"
-#include "playlist.h"
 #include "effects.h"
 
 FMOD_SYSTEM     *systemSong = NULL;
@@ -64,12 +63,6 @@ value ocaml_init (value v)
 {
   systemSong = initSystemSon(systemSong);
   return v;
-}
-
-value ocaml_playlist (value n,value s)
-{
-  create_pl(String_val(n),String_val(s));
-  return Val_unit;
 }
 
 value ocaml_distortion (value v)

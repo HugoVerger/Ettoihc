@@ -1,5 +1,17 @@
                       (** Page Library **)
 
+let nbSong = ref 0
+
+let popup () =
+  let menu = GMenu.menu () in
+  ignore (GMenu.menu_item
+    ~label:"Remove"
+    ~packing:menu#append());
+  ignore (GMenu.menu_item
+    ~label:"Edit Tag"
+    ~packing:menu#append());
+  menu
+
 let page =
   let onglet = GPack.vbox () in
   let name = GMisc.label
@@ -9,7 +21,7 @@ let page =
   onglet
 
 let cols = new GTree.column_list
-let song = cols#add Gobject.Data.string
+let title = cols#add Gobject.Data.string
 let artist = cols#add Gobject.Data.string
 let album = cols#add Gobject.Data.string
 let genre = cols#add Gobject.Data.string
@@ -20,7 +32,7 @@ let store = GTree.list_store cols
 let colName =
   let col = GTree.view_column
     ~title:"Title"
-    ~renderer:(GTree.cell_renderer_text [], ["text", song]) () in
+    ~renderer:(GTree.cell_renderer_text [], ["text", title]) () in
   col#set_min_width 150;
   col#set_clickable true;
   col
@@ -57,7 +69,7 @@ let colPath =
   col#set_clickable true;
   col
 
-let biblioView =
+let view =
   let scroll = GBin.scrolled_window
     ~hpolicy: `AUTOMATIC
     ~vpolicy: `ALWAYS

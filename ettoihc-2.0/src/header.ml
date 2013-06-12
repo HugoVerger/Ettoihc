@@ -216,28 +216,29 @@ let next () =
     stop ()
 
 let save () =
+  let str_op = function
+    |Some x -> x
+    |_ -> failwith "Need a file" in
+
+  let rec print file =
+    let oc = open_out file in
+    let store = UiPage1.store in
+    let first = store#get_iter_first in
+    begin
+      match first with
+      |Some iter ->
+        Printf.fprintf oc "%s\n"(store#get ~row:iter ~column:UiPage1.path);
+
+        while store#iter_next iter do
+          Printf.fprintf oc "%s\n"(store#get ~row:iter ~column:UiPage1.path)
+        done
+      |None -> ()
+      end;
+      close_out oc in
+
   let dlg = Ui.save () in
   if (dlg#run () = `SAVE) then
-    begin
-      let playlistSave = ref "" in
-      let store = UiPage1.store in
-      let first = store#get_iter_first in
-      let str_op = function
-        |Some x -> x
-        |_ -> failwith "Need a file" in
-
-      match first with
-        |Some iter ->
-          let elt = store#get ~row: iter ~column: UiPage1.path in
-          playlistSave := !playlistSave ^ elt;
-          
-          while store#iter_next iter do
-            let elt = store#get ~row: iter ~column: UiPage1.path in
-            playlistSave := !playlistSave ^ elt
-          done
-        |None -> ();
-      Wrap.playlistSave (str_op(dlg#filename)) !playlistSave
-    end;
+    print (str_op(dlg#filename) ^ ".m3u");
   dlg#destroy ()
 
 let repeatFun () =

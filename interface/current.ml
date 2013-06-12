@@ -9,7 +9,7 @@ let play () =
                                             ~column:Ettoihc.pathPlaylist) in
       if (!Ettoihc.pause || (!filepath != file)) then
         filepath := file
-    end*)
+    end
 
 let launchPlaylist () =
   if (Ettoihc.get_extension !filepath) then
@@ -22,7 +22,7 @@ let launchPlaylist () =
           Wrap.stop_sound();
           Playlist.addPlaylist !filepath
         end
-    end
+    end*)
 
 let on_row_activated (view:GTree.view) path column =
   let model = view#model in

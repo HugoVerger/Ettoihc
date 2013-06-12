@@ -47,11 +47,11 @@ let cleanPlaylist indexSong =
   Ettoihc.playListForSave := "";
   Ettoihc.pause := true
 
-let addPlaylist filepath =
+(*let addPlaylist filepath =
   let ic = open_in filepath in
   try
     while true; do
       ignore(addSong (input_line ic));
     done;
   with End_of_file ->
-    close_in ic
+    close_in ic*)

@@ -1,7 +1,7 @@
-let filepath = ref ""
+(*let filepath = ref ""
 let indexSong = ref 0
 
-(*let play () =
+let play () =
   if (!Playlist.nbSong != 0) then
     begin
       let iter = Ettoihc.storePlaylist#iter_children ~nth:(!indexSong) None in

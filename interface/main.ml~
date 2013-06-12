@@ -3,8 +3,8 @@
   Current.reset_draw ();
   if not (!Ettoihc.pause) then
     Current.set_draw ();
-  if (!Header.lengthSong = !Header.timeSong) then
-    Header.suivant ();
+  (*if (!Header.lengthSong = !Header.timeSong) then
+    Header.suivant ();*)
   true)
 
 let _ =
@@ -19,11 +19,11 @@ let _ =
   ignore(Ettoihc.biblioView#event#connect#button_press
             ~callback:(Database.on_button_pressed Ettoihc.biblioView));
   (*Header.connectMenu ();
-  Header.btnpause#misc#hide ();*)
+  Header.btnpause#misc#hide ();
   Database.startBiblio ();
-  (*Mix.startEqualizer ();
+  Mix.startEqualizer ();
   Ettoihc.window#show ();
   GMain.main ();
-  Mix.printEqualizer ();*)
+  Mix.printEqualizer ()
   Biblio.saveBiblio ();
-  (*Wrap.destroy_sound ()*)
+  Wrap.destroy_sound ()*)

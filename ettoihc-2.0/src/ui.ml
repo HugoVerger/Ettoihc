@@ -43,7 +43,7 @@ let openDlg () =
   dlg#set_filter filter;
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_button_stock `MEDIA_PLAY `MEDIA_PLAY;
-  dlg#add_button_stock (`STOCK "Add Biblio") (`STOCK "Add Biblio");
+  dlg#add_button_stock (`STOCK "Add Library") (`STOCK "Add Library");
   dlg
 
 

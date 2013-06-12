@@ -1,9 +1,9 @@
-(*let pause = ref true*)
+(*let pause = ref true
 let random = ref false
-(*let color1 = ref "#ffffff"
-let color2 = ref "#000000"*)
+let color1 = ref "#ffffff"
+let color2 = ref "#000000"
 let playListForSave = ref ""
-(*let play = ref (fun () -> ())
+let play = ref (fun () -> ())
 let stop = ref (fun () -> ())
 
 let str_op = function
@@ -270,14 +270,14 @@ let confirm _ =
     ~use_markup:true
     ~message_type:`ERROR
     ~position:`CENTER_ON_PARENT
-    ~buttons:GWindow.Buttons.ok_cancel () in*)
+    ~buttons:GWindow.Buttons.ok_cancel () in
   let res = dlg#run () = `CANCEL in
   dlg#destroy ();
   res
 
 (* Fenêtre de recherche *)
 
-(*let searchDialog () = 
+let searchDialog () = 
   let dlg = GWindow.file_chooser_dialog
     ~action:`OPEN
     ~parent:window
@@ -286,7 +286,7 @@ let confirm _ =
     ~destroy_with_parent:true () in
   dlg#set_filter music_filter;
   dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_button_stock `OK `OK;*)
+  dlg#add_button_stock `OK `OK;
   let tmp = dlg#run () in
   dlg#misc#hide ();
   if tmp = `OK then
@@ -299,4 +299,4 @@ let get_extension s =
   let ext = String.sub s ((String.length s) - 4) 4 in
   match ext with
     |".mp3"-> true
-    |_ -> false
+    |_ -> false*)

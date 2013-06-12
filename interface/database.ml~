@@ -137,7 +137,7 @@ let on_row_activated (view:GTree.view) path column =
               end
             |_ -> ()
         end
-    end
+    end*)
     
 let removeSong path =
   let model = Ettoihc.biblioView#model in
@@ -191,4 +191,4 @@ let on_button_pressed treeview ev =
       true
     end
   else
-    false*)
+    false
