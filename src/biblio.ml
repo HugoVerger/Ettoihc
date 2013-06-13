@@ -177,6 +177,11 @@ let connectSort () =
 
 (** Handling Mouse Control **)
 
+let removeSong p =
+  let row = UiPage2.store#get_iter p in
+  ignore(UiPage2.store#remove row);
+  UiPage2.nbSong := !UiPage2.nbSong - 1
+
 let doubleClickLeft (view:GTree.view) path column =
   let str_op = function
     |Some x -> x
@@ -188,35 +193,62 @@ let doubleClickLeft (view:GTree.view) path column =
 
   if (Sys.file_exists file) then
     Playlist.add file
-  else if ((Ui.missing ())#run ()) = `OK then
-      begin
-        let dlg = Ui.search () in
-        if (dlg#run ()) = `OK then
-          begin
-            let file = str_op(dlg#filename) in
-            UiPage2.store#set ~row ~column:UiPage2.path file;
-            Playlist.add file
-          end;
-        dlg#misc#hide ()
-      end
+  else
+    begin
+      let prob = Ui.missing () in
+      if (prob#run ()) = `OK then
+        begin
+          let dlg = Ui.search () in
+          if (dlg#run ()) = `OK then
+            begin
+              let file = str_op(dlg#filename) in
+              removeSong path;
+              Playlist.add file
+            end;
+          dlg#destroy ()
+        end;
+      prob#destroy ()
+    end
 
+let editTag file =
+  let dlg = (Ui.tag ()) in
+
+  let t = Meta.v1_of_v2 (Meta.read_both_as_v2 file) in
+
+  (List.nth !Ui.tagViewList 0)#buffer#set_text t.Meta.Id3v1.comment;
+  (List.nth !Ui.tagViewList 1)#buffer#set_text t.Meta.Id3v1.year;
+  (List.nth !Ui.tagViewList 2)#buffer#set_text t.Meta.Id3v1.album;
+  (List.nth !Ui.tagViewList 3)#buffer#set_text t.Meta.Id3v1.artist;
+  (List.nth !Ui.tagViewList 4)#buffer#set_text t.Meta.Id3v1.title;
+  (List.nth !Ui.tagViewList 5)#buffer#set_text 
+    (string_of_int(t.Meta.Id3v1.tracknum));
+
+  if (dlg#run ()) == `SAVE then
+    begin
+      Meta.Id3v1.writeFile file 
+         ((List.nth !Ui.tagViewList 4)#buffer#get_text ())
+         ((List.nth !Ui.tagViewList 3)#buffer#get_text ())
+         ((List.nth !Ui.tagViewList 2)#buffer#get_text ())
+         ((List.nth !Ui.tagViewList 1)#buffer#get_text ())
+         ((List.nth !Ui.tagViewList 0)#buffer#get_text ())
+         (int_of_string ((List.nth !Ui.tagViewList 5)#buffer#get_text ()))
+    end;
+  dlg#destroy ()
 
 let popupMenu treeview ev p =
   let menu = UiPage2.popup () in
   let items = menu#children in
 
-  ignore((List.nth items 0)#connect#activate ~callback:(fun () ->
-    let row = UiPage2.store#get_iter p in
-    ignore(UiPage2.store#remove row);
-    UiPage2.nbSong := !UiPage2.nbSong - 1));
+  ignore((List.nth items 0)#connect#activate 
+    ~callback:(fun () -> removeSong p));
 
-  (*ignore((List.nth items 0)#connect#activate ~callback:(fun () ->
+  ignore((List.nth items 1)#connect#activate ~callback:(fun () ->
     let row = UiPage2.store#get_iter p in
-    let path = UiPage2.store#get ~row ~column:UiPage2.path in
-    Ettoihc.tagW path;
+    let file = UiPage2.store#get ~row ~column:UiPage2.path in
+    editTag file;
     removeSong p;
-    Biblio.addSong path biblio;
-    addBiblio (List.length !biblio - 1)));*)
+    add file));
+
   menu#popup
     ~button:(GdkEvent.Button.button ev)
     ~time:(GdkEvent.Button.time ev)
@@ -247,4 +279,4 @@ let connectUI () =
   ignore(UiPage2.view#connect#row_activated
             ~callback: (doubleClickLeft UiPage2.view));
   ignore(UiPage2.view#event#connect#button_press
-            ~callback: (clickRight UiPage2.view));
+            ~callback: (clickRight UiPage2.view))

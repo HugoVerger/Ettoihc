@@ -43,6 +43,7 @@ let _ =
   ignore(UiHeader.openB#connect#clicked openFun);
   Header.connectUI ();
   Playlist.connectSort ();
+  Playlist.connectUI ();
   Biblio.connectSort ();
   Biblio.connectUI ();
   Effects.connectUI ();

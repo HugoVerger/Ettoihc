@@ -281,7 +281,7 @@ let rec createRandom = function
     end
   |_ -> ()
 
-let random () =
+let randomFun () =
   random := not !random;
   if (!random && !UiPage1.nbSong > 1) then
     begin
@@ -339,7 +339,7 @@ let connectUI () =
   ignore(UiHeader.next#connect#clicked                  next);
   ignore(UiHeader.save#connect#clicked                  save);
   ignore(UiHeader.repeat#connect#clicked                repeatFun);
-  ignore(UiHeader.alea#connect#clicked                  random);
+  ignore(UiHeader.alea#connect#clicked                  randomFun);
   ignore(UiHeader.volume#connect#value_changed          volume);
   ignore(UiHeader.about#connect#clicked                 about);
   ignore(UiHeader.pref#connect#clicked                  properties);

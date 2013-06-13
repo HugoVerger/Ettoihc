@@ -2,6 +2,22 @@
 
 let nbSong = ref 0
 
+let popup () =
+  let menu = GMenu.menu () in
+  ignore (GMenu.menu_item
+    ~label: "Go Up"
+    ~packing: menu#append());
+  ignore (GMenu.menu_item
+    ~label: "Go Down"
+    ~packing: menu#append());
+  ignore (GMenu.menu_item
+    ~label: "Remove"
+    ~packing: menu#append());
+  ignore (GMenu.menu_item
+    ~label: "Clean Playlist"
+    ~packing: menu#append());
+  menu
+
 (** Actual playlist **)
 
 let page =
