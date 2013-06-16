@@ -18,14 +18,17 @@ let actLengthSong () =
   let msS = (if ms < 10 then "0" else "") ^ string_of_int (ms) in
   UiHeader.timeTotal#set_text (minS ^ ":" ^ secS ^ ":" ^ msS)
 
-let actDisplay iter =
+let actDisplay path iter =
   let title = (UiPage1.store#get 
     ~row:iter
     ~column: UiPage1.title) in
   let artist = (UiPage1.store#get 
     ~row:iter
     ~column: UiPage1.artist) in
-  UiHeader.soundText#buffer#set_text (title ^ " - " ^ artist)
+  if title = "" then
+    UiHeader.soundText#buffer#set_text path
+  else
+    UiHeader.soundText#buffer#set_text (title ^ " - " ^ artist)
 
 let actTimeLine () =
   time := Wrap.time_sound ();
@@ -157,7 +160,7 @@ let play () =
       Wrap.play_sound file;
       pause := false;
 
-      actDisplay iter;
+      actDisplay file iter;
       actLengthSong ()
     end
 
@@ -179,12 +182,13 @@ let stop () =
   UiHeader.timeTotal#misc#hide ();
   UiHeader.soundText#buffer#set_text "";
 
+  time := 0;
   indexSong := 1;
   pause := true;
   Wrap.stop_sound ()
 
 let previous () =
-  if (!UiPage1.nbSong > 0) && (!indexSong > 1) then
+  if (!UiPage1.nbSong > 0) & (!indexSong > 1) then
     begin
       pause := true;
       indexSong := !indexSong - 1;
@@ -200,20 +204,23 @@ let previous () =
     stop ()
 
 let next () =
-  if (!UiPage1.nbSong > 0) && (!indexSong < !UiPage1.nbSong) then
+  if ((!UiPage1.nbSong > 0) && (!indexSong < !UiPage1.nbSong)) then
     begin
       pause := true;
       indexSong := !indexSong + 1;
       play ()
     end
-  else if (!UiPage1.nbSong > 0) && (!repeat) then
+  else 
     begin
-      pause := true;
-      indexSong := 1;
-      play ();
+      if ((!UiPage1.nbSong > 0) && (!repeat)) then
+        begin
+          pause := true;
+          indexSong := 1;
+          play ()
+        end
+      else
+        stop ()
     end
-  else
-    stop ()
 
 let save () =
   let str_op = function
@@ -252,7 +259,7 @@ let rec createRandom = function
 
       let rec findNewNmb () =
         let tmp = Random.int (!UiPage1.nbSong + 1) in
-        if tmp = old then
+        if tmp = old || tmp = 0 then
           findNewNmb ()
         else
           tmp in

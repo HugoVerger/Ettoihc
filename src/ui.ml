@@ -83,20 +83,21 @@ let search () =
 let tagViewList = ref []
 
 let tag () =
+  tagViewList := [];
   let dlg = GWindow.dialog
     ~parent: window
     ~destroy_with_parent: true
     ~title: "Edit Tag"
     ~show: true
-    ~width: 200
-    ~height: 300
+    ~width: 300
+    ~height: 400
     ~position: `CENTER_ON_PARENT () in
   dlg#add_button_stock `CANCEL `CANCEL;
   dlg#add_button_stock `SAVE `SAVE;
   
-  let names = [| "Number"; "Title"; "Artist"; "Album"; "Year"; "Comment" |] in
+  let names = [| "Number"; "Title"; "Artist"; "Album"; "Year"; "Genre"; "Comment" |] in
 
-  for i = 0 to 5 do
+  for i = 0 to 6 do
 
     let b = GPack.hbox
       ~homogeneous: false
@@ -116,6 +117,7 @@ let tag () =
   tagViewList := view :: !tagViewList;
 
   done;
+  tagViewList := List.rev !tagViewList;
   dlg
 
 

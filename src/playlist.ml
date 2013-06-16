@@ -31,14 +31,18 @@ let rec add file =
          && ext ".mp3" file 
          && not(checkExist file 0) then
       begin
-        let t = Meta.v1_of_v2 (Meta.read_both_as_v2 file) in
+        let t = Meta.read file in
         let iter = UiPage1.store#append () in
         UiPage1.nbSong := !UiPage1.nbSong + 1;
         UiPage1.store#set ~row:iter ~column:UiPage1.nmb !UiPage1.nbSong;
         UiPage1.store#set ~row:iter ~column:UiPage1.random !UiPage1.nbSong;
-        UiPage1.store#set ~row:iter ~column:UiPage1.title t.Meta.Id3v1.title;
-        UiPage1.store#set ~row:iter ~column:UiPage1.artist t.Meta.Id3v1.artist;
+        UiPage1.store#set ~row:iter ~column:UiPage1.title
+          (Meta.giveInfo ["TIT2"] t);
+        UiPage1.store#set ~row:iter ~column:UiPage1.artist 
+          (Meta.giveInfo ["TPE1"; "TPE2"] t);
         UiPage1.store#set ~row:iter ~column:UiPage1.path file;
+        Header.indexSong := !UiPage1.nbSong;
+        Header.pause := true;
         Header.play ()
       end
     else if (Sys.file_exists file ) && (ext ".m3u" file) then
